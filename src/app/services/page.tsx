@@ -77,6 +77,7 @@ function ServicesContent() {
       initialCategory={searchParams.get("category") || "All"}
       initialLocation={searchParams.get("location") || ""}
       initialSort={searchParams.get("sort") || "recommended"}
+      initialFeatured={searchParams.get("featured") === "true"}
       searchParamsString={searchParamsString}
     />
   );
@@ -87,12 +88,14 @@ function ServicesBrowser({
   initialCategory,
   initialLocation,
   initialSort,
+  initialFeatured,
   searchParamsString,
 }: {
   initialQ: string;
   initialCategory: string;
   initialLocation: string;
   initialSort: string;
+  initialFeatured: boolean;
   searchParamsString: string;
 }) {
   const router = useRouter();
@@ -102,7 +105,7 @@ function ServicesBrowser({
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [selectedLocation, setSelectedLocation] = useState(initialLocation);
   const [sortBy, setSortBy] = useState(initialSort);
-  const [onlyFeatured, setOnlyFeatured] = useState(false);
+  const [onlyFeatured, setOnlyFeatured] = useState(initialFeatured);
 
   const [services, setServices] = useState<Service[]>([]);
   const [total, setTotal] = useState(0);
@@ -135,15 +138,14 @@ function ServicesBrowser({
           search: searchQuery.trim() || undefined,
           location: selectedLocation.trim() || undefined,
           sort,
+          featured: onlyFeatured || undefined,
           page: p,
           limit: 9,
         });
 
         const mapped = data.services.map(toService);
-        // Apply featured filter client-side
-        const filtered = onlyFeatured ? mapped.filter((s) => s.featured) : mapped;
 
-        setServices(append ? (prev) => [...prev, ...filtered] : filtered);
+        setServices(append ? (prev) => [...prev, ...mapped] : mapped);
         setTotal(data.total);
         setPage(data.page);
         setTotalPages(data.totalPages);

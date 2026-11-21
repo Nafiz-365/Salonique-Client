@@ -86,6 +86,7 @@ export async function fetchServices(params?: {
   category?: string;
   search?: string;
   sort?: string;
+  featured?: boolean;
   page?: number;
   limit?: number;
   location?: string;
@@ -94,6 +95,7 @@ export async function fetchServices(params?: {
   if (params?.category) qs.set("category", params.category);
   if (params?.search) qs.set("search", params.search);
   if (params?.sort) qs.set("sort", params.sort);
+  if (params?.featured) qs.set("featured", "true");
   if (params?.page) qs.set("page", String(params.page));
   if (params?.limit) qs.set("limit", String(params.limit));
   if (params?.location) qs.set("location", params.location);
