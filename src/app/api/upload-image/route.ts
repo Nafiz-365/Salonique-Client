@@ -3,7 +3,8 @@ import { NextResponse } from "next/server";
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
 export async function POST(request: Request) {
-  const apiKey = process.env.IMGBB_API_KEY;
+  const apiKey =
+    process.env.IMGBB_API_KEY || process.env.NEXT_PUBLIC_IMGBB_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
       { error: "Image upload is not configured." },

@@ -38,7 +38,7 @@ Set values locally or in the deployment environment. Never commit actual credent
 - `NEXT_PUBLIC_API_BASE_URL`
 - `GOOGLE_CLIENT_ID` (optional)
 - `GOOGLE_CLIENT_SECRET` (optional)
-- `IMGBB_API_KEY`
+- `IMGBB_API_KEY` (recommended; the legacy `NEXT_PUBLIC_IMGBB_API_KEY` is also read only by the server upload route)
 
 ## Links
 
