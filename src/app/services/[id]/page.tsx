@@ -133,7 +133,7 @@ export default function ServiceDetailPage({
     }
 
     if (user.role === "admin") {
-      toast.error("Admins cannot submit customer appointment requests. Please switch to customer view.");
+      toast.error("Admin accounts cannot book appointments. Please use a customer account.");
       return;
     }
 
@@ -500,7 +500,7 @@ export default function ServiceDetailPage({
 
                       {user?.role === "admin" && (
                         <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium">
-                          Admins cannot submit customer appointment requests. Switch to Customer mode to book.
+                          Admin accounts are for management only. Sign in with a customer account to book.
                         </div>
                       )}
 

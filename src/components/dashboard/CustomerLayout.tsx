@@ -13,8 +13,8 @@ import {
   User as UserIcon,
   LogOut,
   Sparkles,
-  ShieldCheck,
   ChevronRight,
+  Loader2,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -28,13 +28,30 @@ export function CustomerLayout({ children }: { children: React.ReactNode }) {
     if (!isLoading) {
       if (!isAuthenticated) {
         toast.error("Please sign in to access your customer dashboard.");
-        router.push("/sign-in");
+        router.replace("/sign-in");
+      } else if (user?.role === "admin") {
+        router.replace("/admin");
       } else if (user?.isBlocked || user?.status === "suspended") {
         toast.error("Your account has been blocked by administrator. Access restricted.");
         logout();
       }
     }
-  }, [isLoading, isAuthenticated, user, router, logout]);
+  }, [isLoading, isAuthenticated, user?.role, user?.isBlocked, user?.status, router, logout]);
+
+  if (
+    isLoading ||
+    !isAuthenticated ||
+    user?.role !== "customer" ||
+    user.isBlocked ||
+    user.status === "suspended"
+  ) {
+    return (
+      <div className="flex min-h-screen items-center justify-center gap-2 bg-neutral-50 text-sm text-neutral-500">
+        <Loader2 className="size-4 animate-spin" />
+        <span>Opening your customer dashboard...</span>
+      </div>
+    );
+  }
 
   const navItems = [
     {
@@ -79,7 +96,7 @@ export function CustomerLayout({ children }: { children: React.ReactNode }) {
                   Welcome back, {user?.name?.split(" ")[0] || "Valued Client"}
                 </h1>
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-neutral-100 text-neutral-800">
-                  {user?.role === "admin" ? "Admin View" : "Client"}
+                  Customer
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-neutral-500 mt-0.5">
@@ -122,18 +139,6 @@ export function CustomerLayout({ children }: { children: React.ReactNode }) {
                 </Link>
               );
             })}
-
-            {user?.role === "admin" && (
-              <div className="pt-3 mt-3 border-t border-neutral-100">
-                <Link
-                  href="/admin"
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-bold text-indigo-700 bg-indigo-50/70 hover:bg-indigo-100 transition-colors"
-                >
-                  <ShieldCheck className="w-4 h-4" />
-                  <span>Switch to Admin</span>
-                </Link>
-              </div>
-            )}
 
             <div className="pt-3 mt-3 border-t border-neutral-100">
               <button

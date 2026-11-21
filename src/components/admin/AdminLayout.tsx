@@ -19,6 +19,7 @@ import {
   Menu,
   X,
   ChevronRight,
+  Loader2,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -33,13 +34,22 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     if (!isLoading) {
       if (!isAuthenticated) {
         toast.error("Please sign in as Administrator to access this page.");
-        router.push("/sign-in");
+        router.replace("/sign-in");
       } else if (user?.role !== "admin") {
         toast.error("Access denied: You do not have administrator permissions.");
-        router.push("/dashboard");
+        router.replace("/dashboard");
       }
     }
-  }, [isLoading, isAuthenticated, user, router]);
+  }, [isLoading, isAuthenticated, user?.role, router]);
+
+  if (isLoading || !isAuthenticated || user?.role !== "admin") {
+    return (
+      <div className="flex min-h-screen items-center justify-center gap-2 bg-neutral-50 text-sm text-neutral-500">
+        <Loader2 className="size-4 animate-spin" />
+        <span>Checking administrator access...</span>
+      </div>
+    );
+  }
 
   const menuItems = [
     {
@@ -202,13 +212,6 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
             })}
 
             <div className="pt-3 mt-3 border-t border-neutral-100">
-              <Link
-                href="/dashboard"
-                className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50"
-              >
-                <UserIcon className="w-3.5 h-3.5" />
-                <span>Customer Dashboard</span>
-              </Link>
               <button
                 type="button"
                 onClick={logout}

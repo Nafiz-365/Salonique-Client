@@ -209,22 +209,6 @@ function NavbarContent({ pathname }: { pathname: string }) {
                                       </div>
 
                                       <div className="space-y-0.5">
-                                          <NextLink
-                                              href="/dashboard/appointments"
-                                              className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-neutral-700 hover:bg-neutral-100 transition-colors"
-                                          >
-                                              <Calendar className="w-4 h-4 text-neutral-500" />
-                                              <span>My Appointments</span>
-                                          </NextLink>
-
-                                          <NextLink
-                                              href="/dashboard"
-                                              className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-neutral-700 hover:bg-neutral-100 transition-colors"
-                                          >
-                                              <LayoutDashboard className="w-4 h-4 text-neutral-500" />
-                                              <span>Customer Dashboard</span>
-                                          </NextLink>
-
                                           {user.role === "admin" && (
                                               <NextLink
                                                   href="/admin"
@@ -237,13 +221,31 @@ function NavbarContent({ pathname }: { pathname: string }) {
                                               </NextLink>
                                           )}
 
-                                          <NextLink
+                                          {user.role === "customer" && (
+                                              <>
+                                                  <NextLink
+                                              href="/dashboard/appointments"
+                                              className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-neutral-700 hover:bg-neutral-100 transition-colors"
+                                                  >
+                                              <Calendar className="w-4 h-4 text-neutral-500" />
+                                              <span>My Appointments</span>
+                                                  </NextLink>
+                                                  <NextLink
+                                              href="/dashboard"
+                                              className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-neutral-700 hover:bg-neutral-100 transition-colors"
+                                                  >
+                                              <LayoutDashboard className="w-4 h-4 text-neutral-500" />
+                                              <span>Customer Dashboard</span>
+                                                  </NextLink>
+                                                  <NextLink
                                               href="/dashboard/profile"
                                               className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-neutral-700 hover:bg-neutral-100 transition-colors"
-                                          >
+                                                  >
                                               <UserIcon className="w-4 h-4 text-neutral-500" />
                                               <span>Profile & Settings</span>
-                                          </NextLink>
+                                                  </NextLink>
+                                              </>
+                                          )}
 
                                           <div className="border-t border-neutral-100 my-1 pt-1">
                                               <button
@@ -359,20 +361,6 @@ function NavbarContent({ pathname }: { pathname: string }) {
                               <div className="pt-2 pb-1 px-3 text-xs font-semibold text-neutral-400 uppercase tracking-wider">
                                   Account
                               </div>
-                              <NextLink
-                                  href="/dashboard/appointments"
-                                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-neutral-800 hover:bg-neutral-100"
-                              >
-                                  <Calendar className="w-4 h-4 text-neutral-500" />
-                                  <span>My Appointments</span>
-                              </NextLink>
-                              <NextLink
-                                  href="/dashboard"
-                                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-neutral-800 hover:bg-neutral-100"
-                              >
-                                  <LayoutDashboard className="w-4 h-4 text-neutral-500" />
-                                  <span>Customer Dashboard</span>
-                              </NextLink>
                               {user?.role === "admin" && (
                                   <NextLink
                                       href="/admin"
@@ -381,6 +369,31 @@ function NavbarContent({ pathname }: { pathname: string }) {
                                       <ShieldCheck className="w-4 h-4 text-indigo-600" />
                                       <span>Admin Console</span>
                                   </NextLink>
+                              )}
+                              {user?.role === "customer" && (
+                                  <>
+                                      <NextLink
+                                          href="/dashboard/appointments"
+                                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-neutral-800 hover:bg-neutral-100"
+                                      >
+                                          <Calendar className="w-4 h-4 text-neutral-500" />
+                                          <span>My Appointments</span>
+                                      </NextLink>
+                                      <NextLink
+                                          href="/dashboard"
+                                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-neutral-800 hover:bg-neutral-100"
+                                      >
+                                          <LayoutDashboard className="w-4 h-4 text-neutral-500" />
+                                          <span>Customer Dashboard</span>
+                                      </NextLink>
+                                      <NextLink
+                                          href="/dashboard/profile"
+                                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-neutral-800 hover:bg-neutral-100"
+                                      >
+                                          <UserIcon className="w-4 h-4 text-neutral-500" />
+                                          <span>Profile & Settings</span>
+                                      </NextLink>
+                                  </>
                               )}
                               <button
                                   type="button"

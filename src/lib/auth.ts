@@ -65,6 +65,7 @@ export const auth = betterAuth({
       role: {
         type: "string",
         defaultValue: "customer",
+        input: false,
       },
       phone: {
         type: "string",
@@ -73,10 +74,12 @@ export const auth = betterAuth({
       status: {
         type: "string",
         defaultValue: "active",
+        input: false,
       },
       isBlocked: {
         type: "boolean",
         defaultValue: false,
+        input: false,
       },
     },
   },

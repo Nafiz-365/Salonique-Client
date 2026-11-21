@@ -1,8 +1,14 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { Sparkles, ShieldCheck, MapPin, Clock, Phone, Mail } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export function Footer() {
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
+
   return (
     <footer className="bg-neutral-900 text-white pt-16 pb-12 border-t border-neutral-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -165,14 +171,9 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard" className="hover:text-white transition-colors">
-                  Customer Portal
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-rose-400" />
-                  <span>Admin Management</span>
+                <Link href={isAdmin ? "/admin" : "/dashboard"} className="hover:text-white transition-colors flex items-center gap-1.5">
+                  {isAdmin && <ShieldCheck className="w-3.5 h-3.5 text-rose-400" />}
+                  <span>{isAdmin ? "Admin Console" : "Customer Portal"}</span>
                 </Link>
               </li>
               <li>
