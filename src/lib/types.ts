@@ -92,7 +92,7 @@ export interface Transaction {
   customerEmail: string;
   serviceName: string;
   amount: number;
-  status: "succeeded" | "pending" | "refunded";
+  status: "paid" | "failed" | "succeeded" | "pending" | "refunded";
   paymentMethod: string;
   date: string;
 }

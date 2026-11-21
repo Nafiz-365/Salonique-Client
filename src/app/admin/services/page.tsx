@@ -35,7 +35,7 @@ const DEFAULT_FORM = {
   duration: 60,
   shortDescription: "",
   description: "",
-  image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1000&q=80",
+  image: "",
   location: "SoHo, New York",
   specialistName: "Salonique Specialist",
   specialistRole: "Senior Stylist",
@@ -80,7 +80,7 @@ export default function AdminServicesPage() {
   };
 
   const loadServices = () => {
-    bffGet<{ services: ApiService[]; total: number }>("/services?limit=200")
+    bffGet<{ services: ApiService[]; total: number }>("/admin/services")
       .then((data) => setServices(data.services ?? []))
       .catch((err) => setError(err.message))
       .finally(() => setIsLoading(false));
@@ -141,7 +141,7 @@ export default function AdminServicesPage() {
       return;
     }
     if (!formData.image.trim()) {
-      toast.error("Please upload or provide an image for this service");
+      toast.error("Please upload an image for this service");
       return;
     }
 
@@ -186,7 +186,11 @@ export default function AdminServicesPage() {
   };
 
   const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Delete "${name}"? This will also cancel related appointments.`)) return;
+    if (
+      !confirm(
+        `Delete "${name}"? Cancel pending or confirmed unpaid appointments first.`
+      )
+    ) return;
     setIsDeleting(id);
     try {
       await bffDelete(`/services/${id}`);
@@ -507,7 +511,7 @@ export default function AdminServicesPage() {
                   Service Image (Image Upload) *
                 </label>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
                     <label className="px-4 py-2 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-bold cursor-pointer flex items-center gap-2 shadow-xs transition-colors shrink-0">
                       <Upload className="w-3.5 h-3.5" />
                       <span>{isUploadingImage ? "Uploading..." : "Upload Image File"}</span>
@@ -519,13 +523,6 @@ export default function AdminServicesPage() {
                         className="hidden"
                       />
                     </label>
-                    <input
-                      type="url"
-                      value={formData.image}
-                      onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                      placeholder="https://... (or choose photo from file)"
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-900"
-                    />
                   </div>
                   {formData.image && (
                     <div className="flex items-center gap-3 pt-1">

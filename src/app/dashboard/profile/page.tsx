@@ -62,6 +62,10 @@ function ProfileEditor({ user }: { user: AuthUser }) {
         phone,
         avatar,
       });
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update profile."
+      );
     } finally {
       setIsSaving(false);
     }

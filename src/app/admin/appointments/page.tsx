@@ -118,7 +118,7 @@ export default function AdminAppointmentsPage() {
           </div>
 
           <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto">
-            {["All", "pending", "confirmed", "completed", "cancelled"].map((s) => (
+            {["All", "pending", "confirmed", "cancelled"].map((s) => (
               <button
                 key={s}
                 type="button"
@@ -182,8 +182,6 @@ export default function AdminAppointmentsPage() {
                               ? "bg-emerald-100 text-emerald-800"
                               : apt.status === "pending"
                               ? "bg-amber-100 text-amber-800"
-                              : apt.status === "completed"
-                              ? "bg-blue-100 text-blue-800"
                               : "bg-neutral-100 text-neutral-500"
                           }`}
                         >

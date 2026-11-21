@@ -5,7 +5,7 @@ import { AdminLayout } from "@/components/admin/AdminLayout";
 import { useAuth } from "@/context/AuthContext";
 import { uploadToImgBB } from "@/lib/upload-image";
 import { toast } from "sonner";
-import { ShieldCheck, User, Mail, Upload, Check } from "lucide-react";
+import { ShieldCheck, User, Mail, Phone, Upload, Check } from "lucide-react";
 import Image from "next/image";
 
 export default function AdminProfilePage() {
@@ -13,6 +13,7 @@ export default function AdminProfilePage() {
 
   const [name, setName] = useState(user?.name || "");
   const [email] = useState(user?.email || "");
+  const [phone, setPhone] = useState(user?.phone || "");
   const [avatar, setAvatar] = useState(user?.avatar || "");
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -38,15 +39,22 @@ export default function AdminProfilePage() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
       toast.error("Name cannot be empty");
       return;
     }
     setIsSaving(true);
-    updateProfile({ name, avatar });
-    setIsSaving(false);
+    try {
+      await updateProfile({ name, phone, avatar });
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update profile."
+      );
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -114,6 +122,21 @@ export default function AdminProfilePage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-200 text-sm font-semibold text-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider mb-1.5">
+              Phone Number
+            </label>
+            <div className="relative">
+              <Phone className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-200 text-sm font-semibold text-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900"
               />
             </div>

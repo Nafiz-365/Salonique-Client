@@ -61,11 +61,14 @@ export interface ApiAppointment {
 export interface ApiTransaction {
   _id: string;
   appointmentId: string;
+  appointmentDate?: string;
+  stripeSessionId?: string;
   customerName: string;
   customerEmail: string;
   serviceName: string;
   amount: number;
-  status: "succeeded" | "pending" | "refunded";
+  currency?: string;
+  status: "paid" | "failed" | "succeeded" | "pending" | "refunded";
   paymentMethod: string;
   date: string;
 }

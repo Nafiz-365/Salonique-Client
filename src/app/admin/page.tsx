@@ -16,32 +16,37 @@ export default function AdminOverviewPage() {
   const [services, setServices] = useState<ApiService[]>([]);
   const [appointments, setAppointments] = useState<ApiAppointment[]>([]);
   const [transactions, setTransactions] = useState<ApiTransaction[]>([]);
+  const [registeredCustomersCount, setRegisteredCustomersCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     Promise.all([
-      bffGet<{ services: ApiService[]; total: number }>("/services?limit=100"),
+      bffGet<{ services: ApiService[]; total: number }>("/admin/services"),
       bffGet<{ appointments: ApiAppointment[] }>("/all-appointments"),
       bffGet<{ transactions: ApiTransaction[] }>("/transactions"),
+      bffGet<{ users: { id: string }[] }>("/users"),
     ])
-      .then(([svcData, aptData, txData]) => {
+      .then(([svcData, aptData, txData, userData]) => {
         setServices(svcData.services ?? []);
         setAppointments(aptData.appointments ?? []);
         setTransactions(txData.transactions ?? []);
+        setRegisteredCustomersCount(userData.users?.length ?? 0);
       })
       .catch((err) => setError(err.message))
       .finally(() => setIsLoading(false));
   }, []);
 
-  const totalRevenue = transactions.filter((t) => t.status === "succeeded").reduce((acc, t) => acc + t.amount, 0);
-  const successfulPaymentsCount = transactions.filter((t) => t.status === "succeeded").length;
+  const totalRevenue = transactions
+    .filter((t) => t.status === "paid" || t.status === "succeeded")
+    .reduce((acc, t) => acc + t.amount, 0);
+  const successfulPaymentsCount = transactions.filter(
+    (t) => t.status === "paid" || t.status === "succeeded"
+  ).length;
   const activeServicesCount = services.filter((s) => s.isActive).length;
   const pendingAppointmentsCount = appointments.filter((a) => a.status === "pending").length;
   const confirmedAppointmentsCount = appointments.filter((a) => a.status === "confirmed").length;
   const cancelledAppointmentsCount = appointments.filter((a) => a.status === "cancelled").length;
-  const usersSet = new Set(appointments.map((a) => a.userEmail));
-
   return (
     <AdminLayout>
       <div className="space-y-8">
@@ -84,9 +89,9 @@ export default function AdminOverviewPage() {
               <div className="bg-white p-5 rounded-2xl border border-neutral-200/80 shadow-xs">
                 <span className="text-xs font-semibold text-neutral-500 block">Registered Customers</span>
                 <span className="text-2xl font-extrabold text-neutral-900 mt-1 block">
-                  {usersSet.size}
+                  {registeredCustomersCount}
                 </span>
-                <span className="text-[11px] text-neutral-400">Unique booking clients</span>
+                <span className="text-[11px] text-neutral-400">Customer accounts</span>
               </div>
 
               {/* 2. Total Active Services */}
@@ -275,14 +280,16 @@ export default function AdminOverviewPage() {
                         <td className="py-4 px-6">
                           <span
                             className={`inline-block px-2.5 py-1 rounded-full text-[11px] font-bold uppercase ${
-                              txn.status === "succeeded"
+                              txn.status === "paid" || txn.status === "succeeded"
                                 ? "bg-emerald-100 text-emerald-800"
                                 : txn.status === "refunded"
                                 ? "bg-blue-100 text-blue-800"
                                 : "bg-amber-100 text-amber-800"
                             }`}
                           >
-                            {txn.status}
+                            {txn.status === "paid" || txn.status === "succeeded"
+                              ? "Paid"
+                              : txn.status}
                           </span>
                         </td>
                         <td className="py-4 px-6 text-neutral-600">{formatDate(txn.date)}</td>

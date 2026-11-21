@@ -28,7 +28,7 @@ interface AuthContextType {
   loginWithGoogle: () => Promise<void>;
   register: (name: string, email: string, password: string, image?: string) => Promise<boolean>;
   logout: () => Promise<void>;
-  updateProfile: (data: Partial<AuthUser>) => void;
+  updateProfile: (data: Partial<AuthUser>) => Promise<void>;
 }
 
 // ─── Context ─────────────────────────────────────────────────────────────────
@@ -56,7 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           rawUser.image ||
           "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
         role: ((rawUser as Record<string, unknown>).role as "customer" | "admin") ?? "customer",
-        phone: ((rawUser as Record<string, unknown>).phone as string) ?? "+1 (555) 019-2831",
+        phone: ((rawUser as Record<string, unknown>).phone as string) ?? "",
         memberSince: "November 2026",
         status: ((rawUser as Record<string, unknown>).status as "active" | "suspended") ?? "active",
         isBlocked: Boolean((rawUser as Record<string, unknown>).isBlocked),
@@ -134,15 +134,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // ── updateProfile ──────────────────────────────────────────────────────────
   const updateProfile = async (data: Partial<AuthUser>) => {
-    if (!user) return;
-    // Persist to Better Auth server so changes survive page reload
-    authClient.updateUser({
+    if (!user) {
+      throw new Error("You must be signed in to update your profile.");
+    }
+
+    const { error } = await authClient.updateUser({
       name: data.name ?? user.name,
       image: data.avatar ?? data.image ?? user.avatar,
-    }).catch(() => {
-      // Non-fatal: local override still applied even if network request fails
+      phone: data.phone ?? user.phone,
     });
-    setLocalOverride({ ...user, ...data });
+    if (error) {
+      throw new Error(error.message || "Failed to update profile.");
+    }
+
+    setLocalOverride({
+      ...user,
+      ...data,
+      image: data.image ?? data.avatar ?? user.image,
+      avatar: data.avatar ?? data.image ?? user.avatar,
+    });
     toast.success("Profile updated successfully");
   };
 

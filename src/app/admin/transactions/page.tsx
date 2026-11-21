@@ -27,7 +27,7 @@ export default function AdminTransactionsPage() {
   );
 
   const totalRevenue = transactions
-    .filter((t) => t.status === "succeeded")
+    .filter((t) => t.status === "paid" || t.status === "succeeded")
     .reduce((acc, t) => acc + t.amount, 0);
 
   return (
@@ -88,9 +88,10 @@ export default function AdminTransactionsPage() {
               <table className="w-full text-left text-xs">
                 <thead className="bg-neutral-50/70 border-b border-neutral-100 text-neutral-500 font-bold uppercase tracking-wider">
                   <tr>
-                    <th className="py-3.5 px-6">Stripe Ref / ID</th>
+                    <th className="py-3.5 px-6">Stripe Session</th>
                     <th className="py-3.5 px-6">Customer</th>
                     <th className="py-3.5 px-6">Related Service</th>
+                    <th className="py-3.5 px-6">Appointment Date</th>
                     <th className="py-3.5 px-6">Amount</th>
                     <th className="py-3.5 px-6">Currency</th>
                     <th className="py-3.5 px-6">Payment Status</th>
@@ -101,28 +102,37 @@ export default function AdminTransactionsPage() {
                   {filtered.map((txn) => (
                     <tr key={txn._id} className="hover:bg-neutral-50/50 transition-colors">
                       <td className="py-4 px-6 font-mono text-neutral-500 text-[11px]">
-                        {txn._id.startsWith("cs_") ? txn._id.slice(0, 14) + "..." : txn._id.slice(-10)}
+                        {txn.stripeSessionId
+                          ? `${txn.stripeSessionId.slice(0, 16)}...`
+                          : "—"}
                       </td>
                       <td className="py-4 px-6">
                         <p className="font-bold text-neutral-900">{txn.customerName}</p>
                         <p className="text-neutral-400 text-[11px]">{txn.customerEmail}</p>
                       </td>
                       <td className="py-4 px-6 font-medium text-neutral-800">{txn.serviceName}</td>
+                      <td className="py-4 px-6 text-neutral-600">
+                        {txn.appointmentDate ? formatDate(txn.appointmentDate) : "—"}
+                      </td>
                       <td className="py-4 px-6 font-extrabold text-neutral-900">
                         {formatPrice(txn.amount)}
                       </td>
-                      <td className="py-4 px-6 text-neutral-600 font-semibold text-xs">USD ($)</td>
+                      <td className="py-4 px-6 text-neutral-600 font-semibold text-xs">
+                        {txn.currency || "USD"}
+                      </td>
                       <td className="py-4 px-6">
                         <span
                           className={`inline-block px-2.5 py-1 rounded-full text-[11px] font-bold uppercase ${
-                            txn.status === "succeeded"
+                            txn.status === "paid" || txn.status === "succeeded"
                               ? "bg-emerald-100 text-emerald-800"
                               : txn.status === "refunded"
                               ? "bg-blue-100 text-blue-800"
                               : "bg-amber-100 text-amber-800"
                           }`}
                         >
-                          {txn.status}
+                          {txn.status === "paid" || txn.status === "succeeded"
+                            ? "Paid"
+                            : txn.status}
                         </span>
                       </td>
                       <td className="py-4 px-6 text-neutral-600">{formatDate(txn.date)}</td>
