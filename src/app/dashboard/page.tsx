@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { bffGet, bffPatch, ApiAppointment } from "@/lib/server-api";
 import { formatPrice, formatDuration, formatDate } from "@/lib/utils";
 import { toast } from "sonner";
+import { CheckoutButton } from "@/components/checkout/CheckoutButton";
 import {
   Calendar,
   Clock,
@@ -156,13 +157,13 @@ export default function DashboardOverviewPage() {
 
               <div className="flex items-center gap-3 self-end md:self-auto shrink-0">
                 {nextUpcoming.paymentStatus === "unpaid" && nextUpcoming.status === "confirmed" && (
-                  <Link
-                    href={`/checkout/${nextUpcoming._id}`}
+                  <CheckoutButton
+                    appointmentId={nextUpcoming._id}
                     className="px-4 py-2.5 rounded-full bg-neutral-900 hover:bg-black text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition-colors"
                   >
                     <CreditCard className="w-3.5 h-3.5" />
                     <span>Pay {formatPrice(nextUpcoming.servicePrice)}</span>
-                  </Link>
+                  </CheckoutButton>
                 )}
                 {nextUpcoming.paymentStatus === "unpaid" && nextUpcoming.status === "pending" && (
                   <span className="text-[11px] font-semibold text-amber-700 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-200">
@@ -282,12 +283,12 @@ export default function DashboardOverviewPage() {
                         </td>
                         <td className="py-4 px-6 text-right">
                           {apt.paymentStatus === "unpaid" && apt.status === "confirmed" ? (
-                            <Link
-                              href={`/checkout/${apt._id}`}
+                            <CheckoutButton
+                              appointmentId={apt._id}
                               className="px-3 py-1.5 rounded-lg bg-neutral-900 text-white font-semibold text-xs hover:bg-black"
                             >
                               Pay Now
-                            </Link>
+                            </CheckoutButton>
                           ) : (
                             <span className="text-neutral-400 text-xs">—</span>
                           )}
@@ -335,13 +336,13 @@ export default function DashboardOverviewPage() {
                       </div>
                     </div>
                     {apt.paymentStatus === "unpaid" && apt.status === "confirmed" && (
-                      <Link
-                        href={`/checkout/${apt._id}`}
+                      <CheckoutButton
+                        appointmentId={apt._id}
                         className="w-full py-2 rounded-xl bg-neutral-900 text-white text-xs font-bold flex items-center justify-center gap-1.5"
                       >
                         <CreditCard className="w-3.5 h-3.5" />
                         <span>Pay {formatPrice(apt.servicePrice)}</span>
-                      </Link>
+                      </CheckoutButton>
                     )}
                   </div>
                 ))}

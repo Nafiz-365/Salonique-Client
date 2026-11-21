@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { bffGet, bffPatch, ApiAppointment } from "@/lib/server-api";
 import { formatPrice, formatDuration, formatDate } from "@/lib/utils";
 import { toast } from "sonner";
+import { CheckoutButton } from "@/components/checkout/CheckoutButton";
 import {
   Calendar,
   Clock,
@@ -186,13 +187,13 @@ export default function MyAppointmentsPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       {apt.paymentStatus === "unpaid" && apt.status === "confirmed" && (
-                        <Link
-                          href={`/checkout/${apt._id}`}
+                        <CheckoutButton
+                          appointmentId={apt._id}
                           className="px-4 py-2 rounded-full bg-neutral-900 hover:bg-black text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition-colors"
                         >
                           <CreditCard className="w-3.5 h-3.5" />
                           <span>Pay Now</span>
-                        </Link>
+                        </CheckoutButton>
                       )}
                       {apt.paymentStatus === "unpaid" && apt.status === "pending" && (
                         <span className="text-[11px] font-semibold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
