@@ -20,6 +20,7 @@ import {
   X,
   ChevronRight,
 } from "lucide-react";
+import Image from "next/image";
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -112,9 +113,12 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
               </Link>
 
               <div className="flex items-center gap-2 pl-2 border-l border-neutral-800">
-                <img
+                <Image
                   src={user?.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80"}
                   alt={user?.name || "Admin"}
+                  width={32}
+                  height={32}
+                  unoptimized
                   className="w-8 h-8 rounded-full object-cover border border-neutral-700"
                 />
                 <span className="hidden lg:block text-xs font-semibold text-neutral-200">

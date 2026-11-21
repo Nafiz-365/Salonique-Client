@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { fetchService, bffPost, ApiService } from "@/lib/server-api";
+import Image from "next/image";
 
 const TIME_SLOTS = [
   "09:00 AM", "10:00 AM", "11:30 AM", "01:00 PM",
@@ -251,8 +252,15 @@ export default function ServiceDetailPage({
             <div className="lg:col-span-7 space-y-8">
               {/* Image Gallery */}
               <div className="space-y-3">
-                <div className="aspect-[16/10] rounded-3xl overflow-hidden border border-neutral-200/80 shadow-md bg-neutral-100">
-                  <img src={activeImage} alt={service.name} className="w-full h-full object-cover" />
+                <div className="aspect-16/10 rounded-3xl overflow-hidden border border-neutral-200/80 shadow-md bg-neutral-100">
+                  <Image
+                    src={activeImage}
+                    alt={service.name}
+                    width={1200}
+                    height={750}
+                    unoptimized
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 {service.gallery && service.gallery.length > 1 && (
                   <div className="flex items-center gap-3 overflow-x-auto pb-1">
@@ -267,7 +275,14 @@ export default function ServiceDetailPage({
                             : "border-transparent opacity-70 hover:opacity-100"
                         }`}
                       >
-                        <img src={img} alt={`${service.name} ${idx}`} className="w-full h-full object-cover" />
+                        <Image
+                          src={img}
+                          alt={`${service.name} ${idx}`}
+                          width={80}
+                          height={64}
+                          unoptimized
+                          className="w-full h-full object-cover"
+                        />
                       </button>
                     ))}
                   </div>
@@ -300,9 +315,12 @@ export default function ServiceDetailPage({
               {/* Specialist */}
               <div className="p-5 rounded-2xl bg-neutral-50 border border-neutral-200/80 flex items-center justify-between">
                 <div className="flex items-center gap-3.5">
-                  <img
+                  <Image
                     src={service.specialist.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=specialist"}
                     alt={service.specialist.name}
+                    width={56}
+                    height={56}
+                    unoptimized
                     className="w-14 h-14 rounded-full object-cover border border-neutral-200"
                   />
                   <div>

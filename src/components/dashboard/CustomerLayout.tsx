@@ -16,6 +16,7 @@ import {
   ShieldCheck,
   ChevronRight,
 } from "lucide-react";
+import Image from "next/image";
 
 export function CustomerLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -64,9 +65,12 @@ export function CustomerLayout({ children }: { children: React.ReactNode }) {
         {/* Welcome Header */}
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-neutral-200/80 shadow-xs mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <img
+            <Image
               src={user?.avatar || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80"}
               alt={user?.name || "Customer"}
+              width={64}
+              height={64}
+              unoptimized
               className="w-16 h-16 rounded-full object-cover border-2 border-neutral-900/10 shadow-sm"
             />
             <div>

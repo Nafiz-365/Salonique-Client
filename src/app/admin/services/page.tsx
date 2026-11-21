@@ -21,6 +21,7 @@ import {
   AlertCircle,
   Upload,
 } from "lucide-react";
+import Image from "next/image";
 
 const CATEGORIES: CategoryType[] = [
   "Hair", "Nails", "Facial", "Massage",
@@ -294,9 +295,12 @@ export default function AdminServicesPage() {
                     <tr key={service._id} className="hover:bg-neutral-50/50 transition-colors">
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-3">
-                          <img
+                          <Image
                             src={service.image}
                             alt={service.name}
+                            width={48}
+                            height={40}
+                            unoptimized
                             className="w-12 h-10 rounded-xl object-cover border border-neutral-200 shrink-0"
                           />
                           <div>
@@ -525,9 +529,12 @@ export default function AdminServicesPage() {
                   </div>
                   {formData.image && (
                     <div className="flex items-center gap-3 pt-1">
-                      <img
+                      <Image
                         src={formData.image}
                         alt="Service preview"
+                        width={56}
+                        height={56}
+                        unoptimized
                         className="w-14 h-14 rounded-xl object-cover border border-neutral-200"
                       />
                       <span className="text-xs text-neutral-500 font-medium truncate">

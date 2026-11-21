@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -233,9 +234,12 @@ export default function SignUpPage() {
                 </div>
                 {imageUrl && (
                   <div className="flex items-center gap-2 pt-1">
-                    <img
+                    <Image
                       src={imageUrl}
                       alt="Avatar preview"
+                      width={32}
+                      height={32}
+                      unoptimized
                       className="w-8 h-8 rounded-full object-cover border border-neutral-200"
                     />
                     <span className="text-[11px] text-emerald-600 font-semibold">

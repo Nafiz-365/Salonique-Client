@@ -3,6 +3,7 @@
 import React, { useRef } from "react";
 import { INITIAL_REVIEWS } from "@/lib/data";
 import { Star, CheckCircle2, ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import Image from "next/image";
 
 export function ReviewCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -83,9 +84,12 @@ export function ReviewCarousel() {
 
               {/* Reviewer info */}
               <div className="pt-6 mt-4 border-t border-neutral-100 flex items-center gap-3">
-                <img
+                <Image
                   src={review.userAvatar}
                   alt={review.userName}
+                  width={40}
+                  height={40}
+                  unoptimized
                   className="w-10 h-10 rounded-full object-cover border border-neutral-200"
                 />
                 <div className="flex-1 min-w-0">

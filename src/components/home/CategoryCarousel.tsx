@@ -11,6 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import Image from "next/image";
 
 interface CategoryItem {
   name: string;
@@ -124,32 +125,37 @@ export function CategoryCarousel() {
           {CATEGORIES.map((cat) => {
             const Icon = cat.icon;
             return (
-              <Link
-                key={cat.name}
-                href={`/services?category=${cat.slug}`}
-                className="group shrink-0 flex flex-col items-center w-36 sm:w-44 text-center transition-transform hover:-translate-y-1"
-              >
-                <div className="relative w-full aspect-square rounded-2xl overflow-hidden mb-3 border border-neutral-100 shadow-sm group-hover:shadow-md transition-all">
-                  <img
-                    src={cat.image}
-                    alt={cat.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-                  <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center gap-1.5 text-white">
-                    <div className="w-6 h-6 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center">
-                      <Icon className="w-3.5 h-3.5 text-white" />
+                <Link
+                    key={cat.name}
+                    href={`/services?category=${cat.slug}`}
+                    className="group shrink-0 flex flex-col items-center w-36 sm:w-44 text-center transition-transform hover:-translate-y-1"
+                >
+                    <div className="relative w-full aspect-square rounded-2xl overflow-hidden mb-3 border border-neutral-100 shadow-sm group-hover:shadow-md transition-all">
+                        <Image
+                            src={cat.image}
+                            alt={cat.name}
+                            width={400}
+                            height={400}
+                            unoptimized
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent" />
+                        <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center gap-1.5 text-white">
+                            <div className="w-6 h-6 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center">
+                                <Icon className="w-3.5 h-3.5 text-white" />
+                            </div>
+                            <span className="text-xs font-semibold drop-shadow-xs truncate">
+                                {cat.name}
+                            </span>
+                        </div>
                     </div>
-                    <span className="text-xs font-semibold drop-shadow-xs truncate">
-                      {cat.name}
+                    <span className="text-sm font-bold text-neutral-900 group-hover:text-black">
+                        {cat.name}
                     </span>
-                  </div>
-                </div>
-                <span className="text-sm font-bold text-neutral-900 group-hover:text-black">
-                  {cat.name}
-                </span>
-                <span className="text-[11px] text-neutral-500">{cat.count}</span>
-              </Link>
+                    <span className="text-[11px] text-neutral-500">
+                        {cat.count}
+                    </span>
+                </Link>
             );
           })}
         </div>

@@ -6,6 +6,7 @@ import { useAuth, type AuthUser } from "@/context/AuthContext";
 import { uploadToImgBB } from "@/lib/upload-image";
 import { toast } from "sonner";
 import { User, Mail, Phone, Upload, Check } from "lucide-react";
+import Image from "next/image";
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -78,9 +79,12 @@ function ProfileEditor({ user }: { user: AuthUser }) {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Avatar Preview & Upload */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-5">
-            <img
+            <Image
               src={avatar || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80"}
               alt={name}
+              width={80}
+              height={80}
+              unoptimized
               className="w-20 h-20 rounded-full object-cover border-2 border-neutral-200 shadow-sm shrink-0"
             />
             <div className="flex-1 space-y-2">

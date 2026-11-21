@@ -17,6 +17,7 @@ import {
   Sparkles,
   Loader2,
 } from "lucide-react";
+import Image from "next/image";
 
 export default function MyAppointmentsPage() {
   const { user, isAuthenticated } = useAuth();
@@ -144,9 +145,12 @@ export default function MyAppointmentsPage() {
 
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                   <div className="flex items-start gap-4">
-                    <img
+                    <Image
                       src={apt.serviceImage || "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=200&q=80"}
                       alt={apt.serviceName}
+                      width={80}
+                      height={80}
+                      unoptimized
                       className="w-20 h-20 rounded-2xl object-cover border border-neutral-200 shrink-0"
                     />
                     <div className="space-y-1">

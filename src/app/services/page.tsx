@@ -332,7 +332,7 @@ function ServicesBrowser({
                 key={i}
                 className="rounded-3xl border border-neutral-200 overflow-hidden animate-pulse"
               >
-                <div className="bg-neutral-100 aspect-[4/3]" />
+                <div className="bg-neutral-100 aspect-4/3" />
                 <div className="p-5 space-y-3">
                   <div className="h-4 bg-neutral-100 rounded w-3/4" />
                   <div className="h-3 bg-neutral-100 rounded w-1/2" />
