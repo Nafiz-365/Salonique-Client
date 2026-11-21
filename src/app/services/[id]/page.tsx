@@ -22,6 +22,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { fetchService, bffPost, ApiService } from "@/lib/server-api";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 
 const TIME_SLOTS = [
@@ -429,13 +432,14 @@ export default function ServiceDetailPage({
                         <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider mb-2">
                           1. Select Appointment Date
                         </label>
-                        <input
+                        <Input
+                          id="appointment-date"
                           type="date"
                           value={selectedDate}
                           onChange={(e) => setSelectedDate(e.target.value)}
                           min={new Date().toISOString().split("T")[0]}
                           required
-                          className="w-full px-4 py-2.5 rounded-xl border border-neutral-200 text-sm font-semibold text-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900 bg-neutral-50/50"
+                          className="h-11 w-full rounded-xl bg-neutral-50/50 px-4 text-sm font-semibold"
                         />
                       </div>
 
@@ -446,18 +450,16 @@ export default function ServiceDetailPage({
                         </label>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                           {TIME_SLOTS.map((time) => (
-                            <button
+                            <Button
+                              variant={selectedTime === time ? "default" : "outline"}
+                              size="sm"
                               key={time}
                               type="button"
                               onClick={() => setSelectedTime(time)}
-                              className={`py-2 px-1 text-center rounded-xl text-xs font-semibold transition-all ${
-                                selectedTime === time
-                                  ? "bg-neutral-900 text-white shadow-xs"
-                                  : "bg-neutral-50 hover:bg-neutral-100 text-neutral-700 border border-neutral-100"
-                              }`}
+                              className="h-9 w-full rounded-xl px-1 text-center text-xs font-semibold"
                             >
                               {time}
-                            </button>
+                            </Button>
                           ))}
                         </div>
                       </div>
@@ -467,12 +469,12 @@ export default function ServiceDetailPage({
                         <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider mb-2">
                           3. Special Requests (Optional)
                         </label>
-                        <textarea
+                        <Textarea
                           value={notes}
                           onChange={(e) => setNotes(e.target.value)}
                           placeholder="Allergies, color preference, specific concerns..."
                           rows={2}
-                          className="w-full p-3 rounded-xl border border-neutral-200 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-neutral-900 placeholder:text-neutral-400"
+                          className="min-h-20 rounded-xl p-3 text-xs font-medium placeholder:text-neutral-400 sm:text-sm"
                         />
                       </div>
 
@@ -508,10 +510,10 @@ export default function ServiceDetailPage({
                         </div>
                       )}
 
-                      <button
+                      <Button
                         type="submit"
                         disabled={isSubmitting || user?.role === "admin" || !service.isActive}
-                        className="w-full py-4 rounded-full bg-neutral-900 hover:bg-black text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-neutral-900/10 hover:shadow-xl transition-all disabled:opacity-50"
+                        className="h-12 w-full rounded-full text-sm font-bold shadow-lg shadow-neutral-900/10 hover:shadow-xl"
                       >
                         {isSubmitting ? (
                           <>
@@ -524,7 +526,7 @@ export default function ServiceDetailPage({
                             <ArrowRight className="w-4 h-4" />
                           </>
                         )}
-                      </button>
+                      </Button>
 
                       <p className="text-[11px] text-center text-neutral-400">
                         Free cancellation up to 24 hours prior. Zero upfront booking fee.

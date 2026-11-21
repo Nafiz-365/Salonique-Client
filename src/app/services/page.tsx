@@ -7,6 +7,18 @@ import { Footer } from "@/components/common/Footer";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { Service } from "@/lib/types";
 import { fetchServices, ApiService } from "@/lib/server-api";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Search,
   MapPin,
@@ -14,7 +26,6 @@ import {
   RotateCcw,
   AlertCircle,
   X,
-  ChevronDown,
   Loader2,
 } from "lucide-react";
 
@@ -198,18 +209,16 @@ function ServicesBrowser({
           {/* Quick Category Pills */}
           <div className="flex items-center gap-2 overflow-x-auto pt-6 pb-2 hide-scrollbar">
             {CATEGORIES.map((cat) => (
-              <button
+              <Button
+                variant={selectedCategory.toLowerCase() === cat.toLowerCase() ? "default" : "outline"}
+                size="sm"
                 key={cat}
                 type="button"
                 onClick={() => handleCategoryClick(cat)}
-                className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
-                  selectedCategory.toLowerCase() === cat.toLowerCase()
-                    ? "bg-neutral-900 text-white shadow-xs"
-                    : "bg-white text-neutral-700 hover:bg-neutral-100 border border-neutral-200"
-                }`}
+                className="h-8 rounded-full px-4 text-xs font-semibold"
               >
                 {cat}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
@@ -222,71 +231,88 @@ function ServicesBrowser({
           {/* Search */}
           <div className="relative w-full md:w-80">
             <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
+            <Input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Filter by treatment or stylist..."
-              className="w-full pl-9 pr-8 py-2 rounded-xl text-xs sm:text-sm font-medium border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"
+              className="h-10 w-full rounded-xl bg-neutral-50/50 pl-9 pr-8 text-xs font-medium focus-visible:bg-white sm:text-sm"
             />
             {searchQuery && (
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 type="button"
                 onClick={() => setSearchQuery("")}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700"
+                aria-label="Clear service search"
+                className="absolute right-1.5 top-1/2 size-7 -translate-y-1/2 text-neutral-400 hover:text-neutral-700"
               >
                 <X className="w-3.5 h-3.5" />
-              </button>
+              </Button>
             )}
           </div>
 
           {/* Location */}
           <div className="relative w-full md:w-64">
             <MapPin className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
+            <Input
               type="text"
               value={selectedLocation}
               onChange={(e) => setSelectedLocation(e.target.value)}
               placeholder="Location (e.g. SoHo)"
-              className="w-full pl-9 pr-8 py-2 rounded-xl text-xs sm:text-sm font-medium border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"
+              className="h-10 w-full rounded-xl bg-neutral-50/50 pl-9 pr-8 text-xs font-medium focus-visible:bg-white sm:text-sm"
             />
             {selectedLocation && (
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 type="button"
                 onClick={() => setSelectedLocation("")}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700"
+                aria-label="Clear location filter"
+                className="absolute right-1.5 top-1/2 size-7 -translate-y-1/2 text-neutral-400 hover:text-neutral-700"
               >
                 <X className="w-3.5 h-3.5" />
-              </button>
+              </Button>
             )}
           </div>
 
           {/* Sort + Reset */}
           <div className="flex items-center gap-3 w-full md:w-auto justify-end">
             <div className="relative w-full md:w-48">
-              <select
+              <Select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="w-full py-2 pl-3 pr-8 rounded-xl text-xs sm:text-sm font-semibold border border-neutral-200 bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900 appearance-none cursor-pointer"
+                onValueChange={(value) => {
+                  if (value) setSortBy(value);
+                }}
               >
+                <SelectTrigger
+                  aria-label="Sort services"
+                  className="h-10 w-full rounded-xl px-3 text-xs font-semibold sm:text-sm"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
                 {SORT_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
+                  <SelectItem key={opt.value} value={opt.value}>
                     {opt.label}
-                  </option>
+                  </SelectItem>
                 ))}
-              </select>
-              <ChevronDown className="w-4 h-4 text-neutral-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </SelectContent>
+              </Select>
             </div>
 
             {hasFilters && (
-              <button
+              <Button
+                variant="outline"
+                size="icon"
                 type="button"
                 onClick={resetFilters}
-                className="p-2 rounded-xl border border-neutral-200 text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 transition-colors shrink-0"
+                className="size-10 shrink-0 rounded-xl text-neutral-600 hover:text-neutral-900"
                 title="Reset all filters"
+                aria-label="Reset all filters"
               >
                 <RotateCcw className="w-4 h-4" />
-              </button>
+              </Button>
             )}
           </div>
         </div>
@@ -299,18 +325,19 @@ function ServicesBrowser({
             ) : (
               <>
                 Showing{" "}
-                <span className="font-bold text-neutral-900">{services.length}</span>
+                <Badge variant="secondary" className="font-bold text-neutral-900">
+                  {services.length}
+                </Badge>
                 {" "}of{" "}
                 <span className="font-bold text-neutral-900">{total}</span> results
               </>
             )}
           </div>
           <label className="flex items-center gap-2 text-xs font-semibold text-neutral-700 cursor-pointer">
-            <input
-              type="checkbox"
+            <Checkbox
               checked={onlyFeatured}
-              onChange={(e) => setOnlyFeatured(e.target.checked)}
-              className="rounded border-neutral-300 text-neutral-900 focus:ring-neutral-900"
+              onCheckedChange={(checked) => setOnlyFeatured(checked === true)}
+              aria-label="Show featured services only"
             />
             <span>Featured Only</span>
           </label>
@@ -328,17 +355,10 @@ function ServicesBrowser({
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div
+              <Skeleton
                 key={i}
-                className="rounded-3xl border border-neutral-200 overflow-hidden animate-pulse"
-              >
-                <div className="bg-neutral-100 aspect-4/3" />
-                <div className="p-5 space-y-3">
-                  <div className="h-4 bg-neutral-100 rounded w-3/4" />
-                  <div className="h-3 bg-neutral-100 rounded w-1/2" />
-                  <div className="h-3 bg-neutral-100 rounded w-full" />
-                </div>
-              </div>
+                className="aspect-4/3 rounded-3xl border border-neutral-200"
+              />
             ))}
           </div>
         ) : services.length > 0 ? (
@@ -352,11 +372,13 @@ function ServicesBrowser({
             {/* Load More */}
             {page < totalPages && (
               <div className="mt-12 text-center">
-                <button
+                <Button
+                  variant="outline"
+                  size="lg"
                   type="button"
                   onClick={() => loadServices(page + 1, true)}
                   disabled={isLoadingMore}
-                  className="px-8 py-3 rounded-full bg-white border border-neutral-300 hover:border-neutral-900 font-bold text-sm text-neutral-900 transition-all shadow-xs disabled:opacity-60 flex items-center gap-2 mx-auto"
+                  className="mx-auto h-11 rounded-full px-8 text-sm font-bold shadow-xs"
                 >
                   {isLoadingMore ? (
                     <>
@@ -369,7 +391,7 @@ function ServicesBrowser({
                       Load More Services
                     </>
                   )}
-                </button>
+                </Button>
               </div>
             )}
           </>
@@ -386,13 +408,15 @@ function ServicesBrowser({
               We couldn&apos;t find any services matching your filters. Try clearing
               your search keyword or switching categories.
             </p>
-            <button
+            <Button
+              variant="default"
+              size="lg"
               type="button"
               onClick={resetFilters}
-              className="px-6 py-2.5 rounded-full bg-neutral-900 text-white text-xs font-semibold hover:bg-black transition-colors"
+              className="h-10 rounded-full px-6 text-xs font-semibold"
             >
               Reset Filters
-            </button>
+            </Button>
           </div>
         )}
       </div>

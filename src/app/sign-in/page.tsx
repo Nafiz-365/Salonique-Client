@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -77,7 +79,7 @@ export default function SignInPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0">
-        <div className="bg-white py-8 px-6 sm:px-10 rounded-3xl border border-neutral-200/80 shadow-xl space-y-6">
+        <Card className="space-y-6 rounded-3xl border border-neutral-200/80 bg-white px-6 py-8 shadow-xl sm:px-10">
 
           {/* Google Sign-in */}
           <Button
@@ -117,40 +119,42 @@ export default function SignInPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider mb-1.5">
+              <label htmlFor="email" className="block text-xs font-bold text-neutral-800 uppercase tracking-wider mb-1.5">
                 Email Address
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
+                <Input
+                  id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="name@example.com"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-200 text-sm font-semibold text-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900"
+                  className="h-11 rounded-xl pl-10 pr-4 text-sm font-semibold"
                 />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider">
+                <label htmlFor="password" className="block text-xs font-bold text-neutral-800 uppercase tracking-wider">
                   Password
                 </label>
-                <a href="#" className="text-xs text-neutral-500 hover:text-neutral-900">
-                  Forgot?
-                </a>
+                <Link href="/help" className="text-xs text-neutral-500 hover:text-neutral-900">
+                  Need help?
+                </Link>
               </div>
               <div className="relative">
                 <Lock className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
+                <Input
+                  id="password"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-neutral-200 text-sm font-semibold text-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900"
+                  className="h-11 rounded-xl pl-10 pr-12 text-sm font-semibold"
                 />
                 <Button
                   variant="ghost"
@@ -174,7 +178,7 @@ export default function SignInPage() {
               <ArrowRight className="w-4 h-4" />
             </Button>
           </form>
-        </div>
+        </Card>
       </div>
     </div>
   );

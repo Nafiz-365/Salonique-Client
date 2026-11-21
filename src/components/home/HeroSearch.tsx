@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { fetchServices } from "@/lib/server-api";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const POPULAR_LOCATIONS = [
   "All Locations",
@@ -112,6 +114,7 @@ export function HeroSearch() {
                   width={2000}
                   height={1000}
                   unoptimized
+                  loading="eager"
                   className="w-full h-full object-cover opacity-25 filter brightness-75 contrast-125"
               />
               <div className="absolute inset-0 bg-linear-to-b from-neutral-950/80 via-neutral-900/90 to-neutral-950" />
@@ -136,14 +139,16 @@ export function HeroSearch() {
 
                   {/* CTA Button: Explore Salon Services */}
                   <div className="pt-2">
-                      <button
+                      <Button
+                          variant="secondary"
+                          size="lg"
                           type="button"
                           onClick={() => router.push("/services")}
-                          className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-white text-neutral-950 hover:bg-neutral-100 font-extrabold text-sm shadow-xl hover:scale-105 transition-all"
+                          className="h-12 rounded-full bg-white px-7 text-sm font-bold text-neutral-950 shadow-xl hover:scale-105 hover:bg-neutral-100"
                       >
                           <span>Explore Salon Services</span>
                           <ArrowRight className="w-4 h-4 text-neutral-900" />
-                      </button>
+                      </Button>
                   </div>
               </div>
 
@@ -160,7 +165,7 @@ export function HeroSearch() {
                           </label>
                           <div className="flex items-center gap-2">
                               <Search className="w-4 h-4 text-neutral-400 shrink-0" />
-                              <input
+                              <Input
                                   type="text"
                                   value={query}
                                   onChange={(e) => {
@@ -175,16 +180,19 @@ export function HeroSearch() {
                                       setDateTimeOpen(false);
                                   }}
                                   placeholder="Haircut, Balayage, Nails, Facial..."
-                                  className="w-full text-sm font-semibold text-neutral-900 placeholder:text-neutral-400 placeholder:font-normal bg-transparent focus:outline-none"
+                                  className="h-auto rounded-none border-0 bg-transparent px-0 py-0 text-sm font-semibold text-neutral-900 shadow-none placeholder:font-normal placeholder:text-neutral-400 focus-visible:ring-0"
                               />
                               {query && (
-                                  <button
+                                  <Button
+                                      variant="ghost"
+                                      size="icon"
                                       type="button"
                                       onClick={() => setQuery("")}
-                                      className="p-1 text-neutral-400 hover:text-neutral-600 rounded-full"
+                                      aria-label="Clear service search"
+                                      className="size-7 shrink-0 rounded-full text-neutral-400 hover:text-neutral-600"
                                   >
                                       <X className="w-3.5 h-3.5" />
-                                  </button>
+                                  </Button>
                               )}
                           </div>
 
@@ -198,14 +206,15 @@ export function HeroSearch() {
                                   </div>
                                   <div className="space-y-1">
                                       {suggestions.map((item) => (
-                                          <button
+                                          <Button
+                                              variant="ghost"
                                               key={item.id}
                                               type="button"
                                               onClick={() => {
                                                   setQuery(item.name);
                                                   setQueryOpen(false);
                                               }}
-                                              className="w-full text-left px-2.5 py-2 rounded-xl text-sm font-medium hover:bg-neutral-100 flex items-center justify-between group transition-colors"
+                                              className="h-auto w-full justify-between rounded-xl px-2.5 py-2 text-left text-sm font-medium group"
                                           >
                                               <div className="flex flex-col">
                                                   <span className="text-neutral-900 group-hover:font-semibold">
@@ -218,7 +227,7 @@ export function HeroSearch() {
                                               <span className="text-xs font-semibold text-neutral-900">
                                                   ${item.price}
                                               </span>
-                                          </button>
+                                          </Button>
                                       ))}
                                   </div>
                               </div>
@@ -239,12 +248,12 @@ export function HeroSearch() {
                               className="flex items-center gap-2 cursor-pointer"
                           >
                               <MapPin className="w-4 h-4 text-neutral-400 shrink-0" />
-                              <input
+                              <Input
                                   type="text"
                                   value={location}
                                   onChange={(e) => setLocation(e.target.value)}
                                   placeholder="Where? (e.g. SoHo, New York)"
-                                  className="w-full text-sm font-semibold text-neutral-900 placeholder:text-neutral-400 placeholder:font-normal bg-transparent focus:outline-none"
+                                  className="h-auto rounded-none border-0 bg-transparent px-0 py-0 text-sm font-semibold text-neutral-900 shadow-none placeholder:font-normal placeholder:text-neutral-400 focus-visible:ring-0"
                               />
                               <ChevronDown className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
                           </div>
@@ -257,7 +266,8 @@ export function HeroSearch() {
                                   </div>
                                   <div className="space-y-1">
                                       {POPULAR_LOCATIONS.map((loc) => (
-                                          <button
+                                          <Button
+                                              variant="ghost"
                                               key={loc}
                                               type="button"
                                               onClick={() => {
@@ -268,13 +278,13 @@ export function HeroSearch() {
                                                   );
                                                   setLocationOpen(false);
                                               }}
-                                              className="w-full text-left px-2.5 py-1.5 rounded-xl text-sm font-medium text-neutral-800 hover:bg-neutral-100 flex items-center justify-between"
+                                              className="h-auto w-full justify-between rounded-xl px-2.5 py-1.5 text-left text-sm font-medium text-neutral-800"
                                           >
                                               <span>{loc}</span>
                                               {location === loc && (
                                                   <Check className="w-4 h-4 text-neutral-900" />
                                               )}
-                                          </button>
+                                          </Button>
                                       ))}
                                   </div>
                               </div>
@@ -311,7 +321,7 @@ export function HeroSearch() {
                                           <label className="block text-xs font-bold text-neutral-700 uppercase mb-2">
                                               Select Appointment Date
                                           </label>
-                                          <input
+                                          <Input
                                               type="date"
                                               value={selectedDate}
                                               onChange={(e) =>
@@ -324,7 +334,7 @@ export function HeroSearch() {
                                                       .toISOString()
                                                       .split("T")[0]
                                               }
-                                              className="w-full px-3 py-2 rounded-xl border border-neutral-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-neutral-900"
+                                              className="h-10 w-full rounded-xl px-3 text-sm font-medium"
                                           />
                                       </div>
 
@@ -334,44 +344,45 @@ export function HeroSearch() {
                                           </label>
                                           <div className="grid grid-cols-2 gap-1.5 max-h-40 overflow-y-auto">
                                               {TIME_SLOTS.map((time) => (
-                                                  <button
+                                                  <Button
+                                                      variant={selectedTime === time ? "default" : "outline"}
+                                                      size="sm"
                                                       key={time}
                                                       type="button"
                                                       onClick={() =>
                                                           setSelectedTime(time)
                                                       }
-                                                      className={`px-2.5 py-1.5 rounded-lg text-xs font-medium text-left truncate transition-colors ${
-                                                          selectedTime === time
-                                                              ? "bg-neutral-900 text-white font-semibold"
-                                                              : "bg-neutral-50 hover:bg-neutral-100 text-neutral-800"
-                                                      }`}
+                                                      className="h-8 w-full justify-start truncate px-2.5 text-left text-xs"
                                                   >
                                                       {time}
-                                                  </button>
+                                                  </Button>
                                               ))}
                                           </div>
                                       </div>
 
                                       <div className="pt-2 border-t border-neutral-100 flex justify-between items-center">
-                                          <button
+                                          <Button
+                                              variant="ghost"
+                                              size="sm"
                                               type="button"
                                               onClick={() => {
                                                   setSelectedDate("");
                                                   setSelectedTime("Any time");
                                               }}
-                                              className="text-xs font-semibold text-neutral-500 hover:text-neutral-900"
+                                              className="h-8 text-xs font-semibold text-neutral-500 hover:text-neutral-900"
                                           >
                                               Reset
-                                          </button>
-                                          <button
+                                          </Button>
+                                          <Button
+                                              size="sm"
                                               type="button"
                                               onClick={() =>
                                                   setDateTimeOpen(false)
                                               }
-                                              className="px-3.5 py-1.5 rounded-full bg-neutral-900 text-white text-xs font-semibold hover:bg-black"
+                                              className="h-8 rounded-full px-4 text-xs font-semibold"
                                           >
                                               Apply
-                                          </button>
+                                          </Button>
                                       </div>
                                   </div>
                               </div>
@@ -380,13 +391,14 @@ export function HeroSearch() {
 
                       {/* Primary Search CTA Button */}
                       <div className="p-1 md:p-0">
-                          <button
+                          <Button
+                              size="lg"
                               type="submit"
-                              className="w-full md:w-auto h-12 md:h-12 px-6 rounded-xl md:rounded-full bg-neutral-900 hover:bg-black text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all"
+                              className="h-12 w-full rounded-xl px-6 text-sm font-bold shadow-md hover:shadow-lg md:w-auto md:rounded-full"
                           >
                               <Search className="w-4 h-4 stroke-[2.5]" />
                               <span>Search</span>
-                          </button>
+                          </Button>
                       </div>
                   </form>
 
@@ -395,49 +407,59 @@ export function HeroSearch() {
                       <span className="font-semibold text-neutral-700">
                           Trending:
                       </span>
-                      <button
+                      <Button
+                          variant="secondary"
+                          size="sm"
                           type="button"
                           onClick={() => router.push("/services?category=Hair")}
-                          className="px-2.5 py-1 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition-colors"
+                          className="h-7 rounded-full px-2.5 text-xs"
                       >
                           Balayage
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                          variant="secondary"
+                          size="sm"
                           type="button"
                           onClick={() =>
                               router.push("/services?category=Nails")
                           }
-                          className="px-2.5 py-1 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition-colors"
+                          className="h-7 rounded-full px-2.5 text-xs"
                       >
                           Russian Manicure
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                          variant="secondary"
+                          size="sm"
                           type="button"
                           onClick={() =>
                               router.push("/services?category=Facial")
                           }
-                          className="px-2.5 py-1 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition-colors"
+                          className="h-7 rounded-full px-2.5 text-xs"
                       >
                           HydraFacial
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                          variant="secondary"
+                          size="sm"
                           type="button"
                           onClick={() =>
                               router.push("/services?category=Massage")
                           }
-                          className="px-2.5 py-1 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition-colors"
+                          className="h-7 rounded-full px-2.5 text-xs"
                       >
                           Hot Stone
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                          variant="secondary"
+                          size="sm"
                           type="button"
                           onClick={() =>
                               router.push("/services?category=Brows %26 Lashes")
                           }
-                          className="px-2.5 py-1 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition-colors"
+                          className="h-7 rounded-full px-2.5 text-xs"
                       >
                           Lash Lift
-                      </button>
+                      </Button>
                   </div>
               </div>
           </div>

@@ -12,11 +12,21 @@ import {
   ShieldAlert,
   ShieldCheck,
   Eye,
-  X,
   Mail,
   Phone,
   Calendar,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 export interface CustomerUser {
   id: string;
@@ -149,12 +159,12 @@ export default function AdminUsersPage() {
         <div className="bg-white p-4 rounded-2xl border border-neutral-200/80 shadow-xs">
           <div className="relative w-full sm:w-72">
             <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
+            <Input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by name or email..."
-              className="w-full pl-9 pr-4 py-2 rounded-xl text-xs sm:text-sm font-medium border border-neutral-200 bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"
+              className="h-10 w-full rounded-xl bg-neutral-50/50 pl-9 pr-4 text-xs font-medium focus-visible:bg-white sm:text-sm"
             />
           </div>
         </div>
@@ -206,39 +216,40 @@ export default function AdminUsersPage() {
                       </td>
                       <td className="py-4 px-6">
                         {customer.isBlocked ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-100 text-rose-700">
+                          <Badge variant="destructive" className="h-6 gap-1 rounded-full px-2.5 text-[11px] font-bold">
                             <ShieldAlert className="w-3 h-3" />
                             Blocked
-                          </span>
+                          </Badge>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">
+                          <Badge variant="secondary" className="h-6 gap-1 rounded-full bg-emerald-100 px-2.5 text-[11px] font-bold text-emerald-800">
                             <ShieldCheck className="w-3 h-3" />
                             Active
-                          </span>
+                          </Badge>
                         )}
                       </td>
                       <td className="py-4 px-6 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <button
+                          <Button
+                            variant="outline"
+                            size="icon"
                             type="button"
                             onClick={() => setSelectedUser(customer)}
-                            className="p-1.5 rounded-lg border border-neutral-200 text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
+                            aria-label={`View ${customer.name}`}
+                            className="size-8 rounded-lg text-neutral-600 hover:text-neutral-900"
                             title="View User Details"
                           >
                             <Eye className="w-3.5 h-3.5" />
-                          </button>
-                          <button
+                          </Button>
+                          <Button
+                            variant={customer.isBlocked ? "default" : "destructive"}
+                            size="sm"
                             type="button"
                             onClick={() => handleToggleBlock(customer)}
                             disabled={updatingId === customer.email}
-                            className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors ${
-                              customer.isBlocked
-                                ? "bg-emerald-600 hover:bg-emerald-700 text-white"
-                                : "border border-rose-300 text-rose-600 hover:bg-rose-50"
-                            }`}
+                            className={`h-8 rounded-lg px-3 text-xs font-bold ${customer.isBlocked ? "bg-emerald-600 text-white hover:bg-emerald-700" : ""}`}
                           >
                             {customer.isBlocked ? "Unblock User" : "Block User"}
-                          </button>
+                          </Button>
                         </div>
                       </td>
                     </tr>
@@ -260,22 +271,25 @@ export default function AdminUsersPage() {
         )}
 
         {/* User Details Modal */}
-        {selectedUser && (
-          <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl animate-in zoom-in-95">
-              <div className="flex items-center justify-between pb-3 border-b border-neutral-100">
+        <Dialog
+          open={selectedUser !== null}
+          onOpenChange={(open) => {
+            if (!open) setSelectedUser(null);
+          }}
+        >
+          {selectedUser && (
+            <DialogContent className="max-w-md rounded-3xl p-6 sm:max-w-md">
+              <DialogHeader className="border-b border-neutral-100 pb-3">
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5 text-neutral-900" />
-                  <h3 className="text-base font-bold text-neutral-900">Customer Details</h3>
+                  <DialogTitle className="text-base font-bold text-neutral-900">
+                    Customer Details
+                  </DialogTitle>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setSelectedUser(null)}
-                  className="p-1 rounded-full text-neutral-400 hover:text-neutral-700"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
+                <DialogDescription className="sr-only">
+                  Account details and platform access status for {selectedUser.name}.
+                </DialogDescription>
+              </DialogHeader>
 
               <div className="space-y-4 text-xs">
                 <div className="flex items-center gap-4 p-3 bg-neutral-50 rounded-2xl">
@@ -305,41 +319,39 @@ export default function AdminUsersPage() {
 
                 <div className="flex items-center justify-between p-3 rounded-xl bg-neutral-50">
                   <span className="font-semibold text-neutral-700">Platform Access Status:</span>
-                  <span
-                    className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase ${
-                      selectedUser.isBlocked
-                        ? "bg-rose-100 text-rose-700"
-                        : "bg-emerald-100 text-emerald-800"
-                    }`}
+                  <Badge
+                    variant={selectedUser.isBlocked ? "destructive" : "secondary"}
+                    className={`h-6 rounded-full px-2.5 text-xs font-bold uppercase ${selectedUser.isBlocked ? "" : "bg-emerald-100 text-emerald-800"}`}
                   >
                     {selectedUser.isBlocked ? "Blocked" : "Active"}
-                  </span>
+                  </Badge>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-neutral-100 flex items-center justify-between">
-                <button
+              <DialogFooter className="flex-row justify-between border-t border-neutral-100 bg-transparent pt-3">
+                <Button
+                  variant={selectedUser.isBlocked ? "default" : "destructive"}
+                  size="sm"
                   type="button"
                   onClick={() => handleToggleBlock(selectedUser)}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold ${
-                    selectedUser.isBlocked
-                      ? "bg-emerald-600 hover:bg-emerald-700 text-white"
-                      : "border border-rose-300 text-rose-600 hover:bg-rose-50"
-                  }`}
+                  disabled={updatingId === selectedUser.email}
+                  className={`h-9 rounded-xl px-4 text-xs font-bold ${selectedUser.isBlocked ? "bg-emerald-600 text-white hover:bg-emerald-700" : ""}`}
                 >
                   {selectedUser.isBlocked ? "Unblock Customer" : "Block Customer"}
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
                   type="button"
                   onClick={() => setSelectedUser(null)}
-                  className="px-4 py-2 rounded-xl bg-neutral-100 text-neutral-800 font-semibold text-xs hover:bg-neutral-200"
+                  className="h-9 rounded-xl px-4 text-xs font-semibold"
                 >
                   Close
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          )}
+        </Dialog>
       </div>
     </AdminLayout>
   );

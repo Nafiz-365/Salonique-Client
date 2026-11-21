@@ -19,6 +19,9 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import Image from "next/image";
 
 export default function SignUpPage() {
@@ -31,7 +34,7 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
-  const [agreeTerms, setAgreeTerms] = useState(true);
+  const [agreeTerms, setAgreeTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   // Validation rules
@@ -130,7 +133,7 @@ export default function SignUpPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0">
-        <div className="bg-white py-8 px-6 sm:px-10 rounded-3xl border border-neutral-200/80 shadow-xl space-y-6">
+        <Card className="space-y-6 rounded-3xl border border-neutral-200/80 bg-white px-6 py-8 shadow-xl sm:px-10">
 
           {/* Google Sign-up */}
           <Button
@@ -170,35 +173,37 @@ export default function SignUpPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider mb-1.5">
+              <label htmlFor="full-name" className="block text-xs font-bold text-neutral-800 uppercase tracking-wider mb-1.5">
                 Full Name *
               </label>
               <div className="relative">
                 <User className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
+                <Input
+                  id="full-name"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
                   placeholder="e.g. Clara Oswald"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-200 text-sm font-semibold text-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900"
+                  className="h-11 rounded-xl pl-10 pr-4 text-sm font-semibold"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider mb-1.5">
+              <label htmlFor="email" className="block text-xs font-bold text-neutral-800 uppercase tracking-wider mb-1.5">
                 Email Address *
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
+                <Input
+                  id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="name@example.com"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-200 text-sm font-semibold text-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900"
+                  className="h-11 rounded-xl pl-10 pr-4 text-sm font-semibold"
                 />
               </div>
             </div>
@@ -212,12 +217,12 @@ export default function SignUpPage() {
                 <div className="flex items-center gap-2">
                   <div className="relative flex-1">
                     <ImageIcon className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
+                    <Input
                       type="url"
                       value={imageUrl}
                       onChange={(e) => setImageUrl(e.target.value)}
                       placeholder="https://... (or choose a photo)"
-                      className="w-full pl-10 pr-4 py-2 rounded-xl border border-neutral-200 text-xs font-medium text-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900"
+                      className="h-10 rounded-xl pl-10 pr-4 text-xs font-medium"
                     />
                   </div>
                   <label className="px-3.5 py-2 rounded-xl border border-neutral-200 bg-neutral-50 hover:bg-neutral-100 text-xs font-bold text-neutral-700 cursor-pointer flex items-center gap-1.5 shrink-0 transition-colors">
@@ -251,18 +256,19 @@ export default function SignUpPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider mb-1.5">
+              <label htmlFor="password" className="block text-xs font-bold text-neutral-800 uppercase tracking-wider mb-1.5">
                 Password *
               </label>
               <div className="relative">
                 <Lock className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
+                <Input
+                  id="password"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="Password"
-                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-neutral-200 text-sm font-semibold text-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900"
+                  className="h-11 rounded-xl pl-10 pr-12 text-sm font-semibold"
                 />
                 <Button
                   variant="ghost"
@@ -294,12 +300,10 @@ export default function SignUpPage() {
             </div>
 
             <div className="flex items-center gap-2 pt-1">
-              <input
-                type="checkbox"
+              <Checkbox
                 id="terms"
                 checked={agreeTerms}
-                onChange={(e) => setAgreeTerms(e.target.checked)}
-                className="rounded border-neutral-300 text-neutral-900 focus:ring-neutral-900"
+                onCheckedChange={(checked) => setAgreeTerms(checked === true)}
               />
               <label htmlFor="terms" className="text-xs text-neutral-500">
                 I agree to the{" "}
@@ -322,7 +326,7 @@ export default function SignUpPage() {
               <ArrowRight className="w-4 h-4" />
             </Button>
           </form>
-        </div>
+        </Card>
       </div>
     </div>
   );
