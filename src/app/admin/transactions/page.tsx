@@ -13,7 +13,6 @@ export default function AdminTransactionsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setIsLoading(true);
     bffGet<{ transactions: ApiTransaction[] }>("/transactions")
       .then((data) => setTransactions(data.transactions ?? []))
       .catch((err) => setError(err.message))

@@ -38,7 +38,6 @@ export function FeaturedServices() {
   const categories = ["All", "Hair", "Nails", "Facial", "Massage", "Spa"];
 
   useEffect(() => {
-    setIsLoading(true);
     fetchFeaturedServices()
       .then((data) => setServices(data.map(toService)))
       .catch(() => {

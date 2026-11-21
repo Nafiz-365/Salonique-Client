@@ -79,7 +79,6 @@ export default function AdminServicesPage() {
   };
 
   const loadServices = () => {
-    setIsLoading(true);
     bffGet<{ services: ApiService[]; total: number }>("/services?limit=200")
       .then((data) => setServices(data.services ?? []))
       .catch((err) => setError(err.message))
@@ -176,6 +175,7 @@ export default function AdminServicesPage() {
         toast.success("Service created successfully");
       }
       setIsModalOpen(false);
+      setIsLoading(true);
       loadServices();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed to save service");

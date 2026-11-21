@@ -19,12 +19,16 @@ import {
 } from "lucide-react";
 
 export function Navbar() {
+  const pathname = usePathname();
+  return <NavbarContent key={pathname} pathname={pathname} />;
+}
+
+function NavbarContent({ pathname }: { pathname: string }) {
   const { user, isAuthenticated, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [categoriesDropdownOpen, setCategoriesDropdownOpen] = useState(false);
-  const pathname = usePathname();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const categoriesRef = useRef<HTMLDivElement>(null);
 
@@ -49,13 +53,6 @@ export function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  // Close mobile drawer on route change
-  useEffect(() => {
-    setMobileMenuOpen(false);
-    setUserDropdownOpen(false);
-    setCategoriesDropdownOpen(false);
-  }, [pathname]);
 
   const categories = [
     { name: "Hair", href: "/services?category=Hair" },

@@ -27,6 +27,7 @@ async function handler(
     "Content-Type": "application/json",
   };
   let body: string | undefined;
+  let requestBodyLoaded = method === "GET" || method === "HEAD";
 
   try {
     const { path } = await params;
@@ -76,13 +77,9 @@ async function handler(
     }
 
     // Forward the request to Express
-    let body: string | undefined;
-    if (method !== "GET" && method !== "HEAD") {
-      try {
-        body = await req.text();
-      } catch {
-        body = undefined;
-      }
+    if (!requestBodyLoaded) {
+      body = await req.text();
+      requestBodyLoaded = true;
     }
 
     const response = await fetch(targetUrl, {
@@ -100,7 +97,7 @@ async function handler(
     console.error("[BFF Proxy] Unhandled error:", error);
 
     // Windows IPv6 fallback: if localhost failed, retry on 127.0.0.1
-    if (targetUrl.includes("localhost")) {
+    if (targetUrl.includes("localhost") && requestBodyLoaded) {
       try {
         const fallbackUrl = targetUrl.replace("localhost", "127.0.0.1");
         const fallbackRes = await fetch(fallbackUrl, {

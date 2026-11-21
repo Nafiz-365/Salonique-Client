@@ -4,6 +4,15 @@ import { MongoClient } from "mongodb";
 import { jwt } from "better-auth/plugins";
 
 const uri = process.env.MONGODB_URI as string
+const authSecret =
+  process.env.BETTER_AUTH_SECRET ||
+  (process.env.NODE_ENV === "production"
+    ? ""
+    : "salonique-better-auth-secret-development-key-32chars");
+
+if (!authSecret) {
+  throw new Error("BETTER_AUTH_SECRET must be set in production.");
+}
 
 declare global {
   var _authMongoClient: MongoClient | undefined;
@@ -23,7 +32,7 @@ const database = mongoClient.db("salonique");
 
 export const auth = betterAuth({
   database: mongodbAdapter(database, { client: mongoClient }),
-  secret: process.env.BETTER_AUTH_SECRET || "salonique-better-auth-secret-development-key-32chars",
+  secret: authSecret,
   baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
   emailAndPassword: {
     enabled: true,

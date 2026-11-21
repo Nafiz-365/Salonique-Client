@@ -66,7 +66,6 @@ export default function AdminUsersPage() {
   }, []);
 
   const loadUsers = useCallback(() => {
-    setIsLoading(true);
     bffGet<{ users: CustomerUser[] }>("/users")
       .then((data) => {
         if (data.users && data.users.length > 0) {
@@ -105,17 +104,9 @@ export default function AdminUsersPage() {
           ? `User ${user.name} has been BLOCKED.`
           : `User ${user.name} has been UNBLOCKED.`
       );
-    } catch {
-      // Optimistic update for demo purposes
-      setCustomers((prev) =>
-        prev.map((c) =>
-          c.email === user.email ? { ...c, isBlocked: newBlockedState } : c
-        )
-      );
-      toast.success(
-        newBlockedState
-          ? `User ${user.name} has been BLOCKED.`
-          : `User ${user.name} has been UNBLOCKED.`
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update user access."
       );
     } finally {
       setUpdatingId(null);

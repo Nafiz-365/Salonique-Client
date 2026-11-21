@@ -55,7 +55,6 @@ export function HeroSearch() {
   useEffect(() => {
     let active = true;
     if (!query.trim()) {
-      setSuggestions([]);
       return;
     }
     fetchServices({ search: query.trim(), limit: 5 })
@@ -161,6 +160,7 @@ export function HeroSearch() {
                   value={query}
                   onChange={(e) => {
                     setQuery(e.target.value);
+                    if (!e.target.value.trim()) setSuggestions([]);
                     setQueryOpen(true);
                   }}
                   onFocus={() => {

@@ -18,6 +18,7 @@ import {
   Check,
 } from "lucide-react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -131,11 +132,12 @@ export default function SignUpPage() {
         <div className="bg-white py-8 px-6 sm:px-10 rounded-3xl border border-neutral-200/80 shadow-xl space-y-6">
 
           {/* Google Sign-up */}
-          <button
+          <Button
+            variant="outline"
             type="button"
             onClick={handleGoogleSignup}
             disabled={isLoading}
-            className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 text-xs font-bold text-neutral-700 shadow-xs transition-colors"
+            className="w-full h-auto rounded-xl py-2.5 text-xs font-bold text-neutral-700 shadow-xs"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
@@ -156,7 +158,7 @@ export default function SignUpPage() {
               />
             </svg>
             <span>Sign up with Google</span>
-          </button>
+          </Button>
 
           <div className="relative flex items-center justify-center">
             <div className="border-t border-neutral-200 w-full" />
@@ -258,13 +260,16 @@ export default function SignUpPage() {
                   placeholder="Password"
                   className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-neutral-200 text-sm font-semibold text-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900"
                 />
-                <button
+                <Button
+                  variant="ghost"
+                  size="icon"
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 p-1"
+                  className="absolute right-2 top-1/2 size-8 -translate-y-1/2 text-neutral-400 hover:text-neutral-700"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
+                </Button>
               </div>
 
               {/* Password Rules Checklist */}
@@ -304,14 +309,14 @@ export default function SignUpPage() {
               </label>
             </div>
 
-            <button
+            <Button
               type="submit"
               disabled={isLoading || isUploading}
-              className="w-full py-3.5 rounded-full bg-neutral-900 hover:bg-black text-white font-bold text-sm shadow-md transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full h-auto rounded-full py-3.5 text-sm font-bold shadow-md"
             >
               {isLoading ? "Creating account..." : "Create Account"}
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </Button>
           </form>
         </div>
       </div>

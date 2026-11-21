@@ -30,7 +30,6 @@ export default function AdminAppointmentsPage() {
   const [selectedAppointment, setSelectedAppointment] = useState<ApiAppointment | null>(null);
 
   useEffect(() => {
-    setIsLoading(true);
     bffGet<{ appointments: ApiAppointment[] }>("/all-appointments")
       .then((data) => setAppointments(data.appointments ?? []))
       .catch((err) => setError(err.message))

@@ -31,7 +31,6 @@ export default function MyAppointmentsPage() {
 
   useEffect(() => {
     if (!isAuthenticated || !user?.email) return;
-    setIsLoading(true);
     bffGet<{ appointments: ApiAppointment[] }>(`/my-appointments/${encodeURIComponent(user.email)}`)
       .then((data) => setAppointments(data.appointments ?? []))
       .catch((err) => setError(err.message))

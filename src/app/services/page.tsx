@@ -57,12 +57,35 @@ function toService(s: ApiService): Service {
 
 function ServicesContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const searchParamsString = searchParams.toString();
 
-  const initialQ = searchParams.get("q") || "";
-  const initialCategory = searchParams.get("category") || "All";
-  const initialLocation = searchParams.get("location") || "";
-  const initialSort = searchParams.get("sort") || "recommended";
+  return (
+    <ServicesBrowser
+      key={searchParamsString}
+      initialQ={searchParams.get("q") || ""}
+      initialCategory={searchParams.get("category") || "All"}
+      initialLocation={searchParams.get("location") || ""}
+      initialSort={searchParams.get("sort") || "recommended"}
+      searchParamsString={searchParamsString}
+    />
+  );
+}
+
+function ServicesBrowser({
+  initialQ,
+  initialCategory,
+  initialLocation,
+  initialSort,
+  searchParamsString,
+}: {
+  initialQ: string;
+  initialCategory: string;
+  initialLocation: string;
+  initialSort: string;
+  searchParamsString: string;
+}) {
+  const router = useRouter();
+  const searchParams = new URLSearchParams(searchParamsString);
 
   const [searchQuery, setSearchQuery] = useState(initialQ);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
@@ -77,14 +100,6 @@ function ServicesContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Sync category from URL
-  useEffect(() => {
-    const cat = searchParams.get("category");
-    if (cat) setSelectedCategory(cat);
-    const q = searchParams.get("q");
-    if (q !== null) setSearchQuery(q);
-  }, [searchParams]);
 
   const loadServices = useCallback(
     async (p: number, append = false) => {

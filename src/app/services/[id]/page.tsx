@@ -70,7 +70,8 @@ export default function ServiceDetailPage({
   const { user, isAuthenticated, isLoading } = useAuth();
 
   const [service, setService] = useState<Service | null>(null);
-  const [isLoadingService, setIsLoadingService] = useState(true);
+  const [loadedServiceId, setLoadedServiceId] = useState<string | null>(null);
+  const isLoadingService = loadedServiceId !== id;
   const [activeImage, setActiveImage] = useState("");
 
   // Booking form state
@@ -94,19 +95,28 @@ export default function ServiceDetailPage({
 
   // Load service from API
   useEffect(() => {
-    setIsLoadingService(true);
+    let active = true;
     fetchService(id)
       .then((data) => {
+        if (!active) return;
         if (data) {
           const s = toService(data);
           setService(s);
           setActiveImage(s.image);
+        } else {
+          setService(null);
         }
       })
       .catch(() => {
-        // Service not found or server unreachable
+        if (active) setService(null);
       })
-      .finally(() => setIsLoadingService(false));
+      .finally(() => {
+        if (active) setLoadedServiceId(id);
+      });
+
+    return () => {
+      active = false;
+    };
   }, [id]);
 
   const handleBooking = async (e: React.FormEvent) => {

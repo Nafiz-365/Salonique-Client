@@ -1,30 +1,30 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { CustomerLayout } from "@/components/dashboard/CustomerLayout";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, type AuthUser } from "@/context/AuthContext";
 import { uploadToImgBB } from "@/lib/upload-image";
 import { toast } from "sonner";
 import { User, Mail, Phone, Upload, Check } from "lucide-react";
 
 export default function ProfilePage() {
-  const { user, updateProfile } = useAuth();
+  const { user } = useAuth();
 
-  const [name, setName] = useState(user?.name || "");
-  const [email, setEmail] = useState(user?.email || "");
-  const [phone, setPhone] = useState(user?.phone || "");
-  const [avatar, setAvatar] = useState(user?.avatar || "");
+  return (
+    <CustomerLayout>
+      {user ? <ProfileEditor key={user.id} user={user} /> : null}
+    </CustomerLayout>
+  );
+}
+
+function ProfileEditor({ user }: { user: AuthUser }) {
+  const { updateProfile } = useAuth();
+
+  const [name, setName] = useState(user.name);
+  const [phone, setPhone] = useState(user.phone || "");
+  const [avatar, setAvatar] = useState(user.avatar || "");
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-
-  useEffect(() => {
-    if (user) {
-      setName(user.name);
-      setEmail(user.email);
-      setPhone(user.phone || "");
-      setAvatar(user.avatar || "");
-    }
-  }, [user]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -67,7 +67,6 @@ export default function ProfilePage() {
   };
 
   return (
-    <CustomerLayout>
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-neutral-200/80 shadow-xs max-w-2xl">
         <div className="pb-6 border-b border-neutral-100 mb-6">
           <h2 className="text-xl font-extrabold text-neutral-900">Profile & Settings</h2>
@@ -140,7 +139,7 @@ export default function ProfilePage() {
               <Mail className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
-                value={email}
+                value={user.email}
                 disabled
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-200 text-sm font-medium text-neutral-500 bg-neutral-50 cursor-not-allowed"
               />
@@ -190,6 +189,5 @@ export default function ProfilePage() {
           </div>
         </form>
       </div>
-    </CustomerLayout>
   );
 }

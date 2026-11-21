@@ -20,7 +20,6 @@ export default function AdminOverviewPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setIsLoading(true);
     Promise.all([
       bffGet<{ services: ApiService[]; total: number }>("/services?limit=100"),
       bffGet<{ appointments: ApiAppointment[] }>("/all-appointments"),
