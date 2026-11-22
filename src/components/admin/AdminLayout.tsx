@@ -14,7 +14,6 @@ import {
   CreditCard,
   User as UserIcon,
   LogOut,
-  Sparkles,
   ExternalLink,
   Menu,
   X,
@@ -23,6 +22,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { SaloniqueMark } from "@/components/common/SaloniqueMark";
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -100,9 +100,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
             {/* Brand Logo & Admin Pill */}
             <div className="flex items-center gap-3">
               <Link href="/admin" className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-neutral-900 font-bold">
-                  <Sparkles className="w-4 h-4 text-neutral-900" />
-                </div>
+                <SaloniqueMark tone="light" className="size-8" />
                 <span className="text-lg font-bold tracking-tight text-white">
                   Salonique
                 </span>

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import {
-  Sparkles,
   Eye,
   EyeOff,
   Lock,
@@ -16,6 +15,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { SaloniqueMark } from "@/components/common/SaloniqueMark";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -57,9 +57,7 @@ export default function SignInPage() {
     <div className="min-h-screen bg-neutral-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <Link href="/" className="inline-flex items-center gap-2.5 mb-6 group">
-          <div className="w-10 h-10 rounded-full bg-neutral-900 flex items-center justify-center text-white font-bold shadow-xs group-hover:scale-105 transition-transform">
-            <Sparkles className="w-5 h-5 text-rose-300" />
-          </div>
+          <SaloniqueMark className="size-10 shadow-xs transition-transform group-hover:scale-105" />
           <span className="text-2xl font-bold tracking-tight text-neutral-900">
             Salonique
           </span>

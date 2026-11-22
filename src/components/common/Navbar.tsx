@@ -7,7 +7,6 @@ import { useAuth } from "@/context/AuthContext";
 import {
   Menu,
   X,
-  Sparkles,
   ChevronDown,
   Calendar,
   User as UserIcon,
@@ -20,6 +19,7 @@ import {
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { SaloniqueMark } from "@/components/common/SaloniqueMark";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -83,9 +83,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
                       href="/"
                       className="flex items-center gap-2.5 group"
                   >
-                      <div className="w-9 h-9 rounded-full bg-neutral-900 flex items-center justify-center text-white font-semibold text-lg shadow-sm group-hover:scale-105 transition-transform">
-                          <Sparkles className="w-5 h-5 text-rose-300" />
-                      </div>
+                      <SaloniqueMark className="shadow-sm transition-transform group-hover:scale-105" />
                       <div className="flex flex-col">
                           <span className="text-xl font-bold tracking-tight text-neutral-900">
                               Salonique

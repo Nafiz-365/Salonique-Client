@@ -2,8 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
-import { Sparkles, ShieldCheck, MapPin, Clock, Phone, Mail } from "lucide-react";
+import { ShieldCheck, MapPin, Clock, Phone, Mail } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { SaloniqueMark } from "@/components/common/SaloniqueMark";
 
 export function Footer() {
   const { user } = useAuth();
@@ -16,9 +17,7 @@ export function Footer() {
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-neutral-900 font-bold">
-                <Sparkles className="w-4.5 h-4.5 text-neutral-900" />
-              </div>
+              <SaloniqueMark tone="light" />
               <div className="flex flex-col">
                 <span className="text-2xl font-bold tracking-tight text-white leading-none">
                   Salonique
