@@ -6,11 +6,9 @@ import {
   Search,
   MapPin,
   Calendar as CalendarIcon,
-  Sparkles,
   ChevronDown,
   X,
   Check,
-  ArrowRight,
 } from "lucide-react";
 import { fetchServices } from "@/lib/server-api";
 import Image from "next/image";
@@ -105,8 +103,7 @@ export function HeroSearch() {
   };
 
   return (
-      <section className="relative pt-12 pb-20 md:pt-16 md:pb-28 overflow-hidden bg-neutral-900 text-white">
-          {/* Salon-Themed Background Image with Soft Dark/Light Overlay */}
+      <section className="relative overflow-hidden bg-[#211b1b] py-14 text-white sm:py-18 lg:py-20">
           <div className="absolute inset-0 z-0">
               <Image
                   src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=2000&q=80"
@@ -115,48 +112,36 @@ export function HeroSearch() {
                   height={1000}
                   unoptimized
                   loading="eager"
-                  className="w-full h-full object-cover opacity-25 filter brightness-75 contrast-125"
+                  className="h-full w-full object-cover opacity-60 brightness-[.78] saturate-[.82]"
               />
-              <div className="absolute inset-0 bg-linear-to-b from-neutral-950/80 via-neutral-900/90 to-neutral-950" />
+              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(24,18,18,.92)_0%,rgba(24,18,18,.72)_48%,rgba(24,18,18,.28)_100%)]" />
+              <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(24,18,18,.55)_0%,transparent_60%)]" />
           </div>
 
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              {/* Hero Header */}
-              <div className="text-center max-w-3xl mx-auto space-y-5 mb-10 md:mb-12">
-                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-white text-xs font-semibold tracking-wide uppercase backdrop-blur-xs border border-white/10">
-                      <Sparkles className="w-3.5 h-3.5 text-rose-300" />
-                      <span>Discover Top-Rated Salons & Stylists</span>
+              <div className="mb-9 max-w-3xl space-y-5 sm:mb-11">
+                  <div className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-rose-200">
+                      <span className="h-px w-8 bg-rose-200/80" />
+                      <span>Salonique · New York</span>
                   </div>
 
-                  <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12]">
-                      Book your next beauty and wellness experience
+                  <h1 className="max-w-3xl text-[clamp(2.75rem,8vw,5.75rem)] font-semibold leading-[0.98] tracking-[-0.055em] text-white">
+                      A little time{" "}
+                      <span className="font-serif font-normal italic text-rose-200">
+                          just for you.
+                      </span>
                   </h1>
 
-                  <p className="text-base sm:text-xl text-neutral-300 font-normal max-w-2xl mx-auto leading-relaxed">
-                      Discover exceptional salon services and book your next
-                      appointment with ease.
+                  <p className="max-w-xl text-base leading-relaxed text-white/75 sm:text-lg">
+                      Find a salon or specialist in your neighborhood, compare
+                      services and prices, then book when it suits you.
                   </p>
-
-                  {/* CTA Button: Explore Salon Services */}
-                  <div className="pt-2">
-                      <Button
-                          variant="secondary"
-                          size="lg"
-                          type="button"
-                          onClick={() => router.push("/services")}
-                          className="h-12 rounded-full bg-white px-7 text-sm font-bold text-neutral-950 shadow-xl hover:scale-105 hover:bg-neutral-100"
-                      >
-                          <span>Explore Salon Services</span>
-                          <ArrowRight className="w-4 h-4 text-neutral-900" />
-                      </Button>
-                  </div>
               </div>
 
-              {/* Fresha-Style Search Container */}
-              <div className="max-w-4xl mx-auto" ref={containerRef}>
+              <div className="max-w-5xl" ref={containerRef}>
                   <form
                       onSubmit={handleSearch}
-                      className="bg-white rounded-2xl md:rounded-full p-2.5 md:p-2 border border-neutral-200/90 shadow-xl shadow-neutral-200/50 flex flex-col md:flex-row items-stretch md:items-center divide-y md:divide-y-0 md:divide-x divide-neutral-100 relative z-30"
+                      className="relative z-30 flex flex-col items-stretch divide-y divide-neutral-100 rounded-2xl border border-white/70 bg-white p-2.5 shadow-2xl shadow-black/15 md:flex-row md:items-center md:divide-x md:divide-y-0"
                   >
                       {/* 1. Service / Treatment Field */}
                       <div className="relative flex-1 px-4 py-2.5 md:py-1">
@@ -403,60 +388,60 @@ export function HeroSearch() {
                   </form>
 
                   {/* Quick Trending Searches */}
-                  <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs text-neutral-500">
-                      <span className="font-semibold text-neutral-700">
-                          Trending:
+                  <div className="mt-4 flex flex-wrap items-center gap-x-1 gap-y-1 text-xs text-white/70">
+                      <span className="mr-1 font-medium text-white/80">
+                          Try:
                       </span>
                       <Button
-                          variant="secondary"
+                          variant="ghost"
                           size="sm"
                           type="button"
                           onClick={() => router.push("/services?category=Hair")}
-                          className="h-7 rounded-full px-2.5 text-xs"
+                          className="h-7 rounded-full px-2.5 text-xs text-white/80 hover:bg-white/10 hover:text-white"
                       >
                           Balayage
                       </Button>
                       <Button
-                          variant="secondary"
+                          variant="ghost"
                           size="sm"
                           type="button"
                           onClick={() =>
                               router.push("/services?category=Nails")
                           }
-                          className="h-7 rounded-full px-2.5 text-xs"
+                          className="h-7 rounded-full px-2.5 text-xs text-white/80 hover:bg-white/10 hover:text-white"
                       >
                           Russian Manicure
                       </Button>
                       <Button
-                          variant="secondary"
+                          variant="ghost"
                           size="sm"
                           type="button"
                           onClick={() =>
                               router.push("/services?category=Facial")
                           }
-                          className="h-7 rounded-full px-2.5 text-xs"
+                          className="h-7 rounded-full px-2.5 text-xs text-white/80 hover:bg-white/10 hover:text-white"
                       >
                           HydraFacial
                       </Button>
                       <Button
-                          variant="secondary"
+                          variant="ghost"
                           size="sm"
                           type="button"
                           onClick={() =>
                               router.push("/services?category=Massage")
                           }
-                          className="h-7 rounded-full px-2.5 text-xs"
+                          className="h-7 rounded-full px-2.5 text-xs text-white/80 hover:bg-white/10 hover:text-white"
                       >
                           Hot Stone
                       </Button>
                       <Button
-                          variant="secondary"
+                          variant="ghost"
                           size="sm"
                           type="button"
                           onClick={() =>
                               router.push("/services?category=Brows %26 Lashes")
                           }
-                          className="h-7 rounded-full px-2.5 text-xs"
+                          className="h-7 rounded-full px-2.5 text-xs text-white/80 hover:bg-white/10 hover:text-white"
                       >
                           Lash Lift
                       </Button>

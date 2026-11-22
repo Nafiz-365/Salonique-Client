@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { Service } from "@/lib/types";
 import { fetchFeaturedServices, ApiService } from "@/lib/server-api";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 function toService(s: ApiService): Service {
   return {
@@ -51,27 +51,27 @@ export function FeaturedServices() {
     .slice(0, 6);
 
   return (
-    <section className="py-16 bg-neutral-50/60 border-y border-neutral-100">
+    <section className="bg-[#faf7f5] py-16 sm:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+        <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">
-              <Sparkles className="w-3.5 h-3.5 text-neutral-900" />
-              <span>Curated Selection</span>
+            <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-500">
+              A few places to start
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-neutral-900 tracking-tight">
-              Featured Beauty & Wellness Services
+            <h2 className="text-3xl font-semibold tracking-tight text-neutral-900 sm:text-4xl">
+              Make time for feeling good.
             </h2>
-            <p className="text-neutral-500 text-sm mt-1 max-w-xl">
-              Hand-picked treatments with verified 5-star ratings, transparent pricing, and instant booking availability.
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-neutral-600">
+              Explore services, compare prices and durations, and find an
+              appointment that fits your day.
             </p>
           </div>
           <Link
             href="/services"
             className="inline-flex items-center gap-1.5 text-sm font-bold text-neutral-900 hover:text-black group self-start md:self-auto"
           >
-            <span>Explore all services</span>
+            <span>View all services</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
@@ -115,16 +115,6 @@ export function FeaturedServices() {
           </div>
         )}
 
-        {/* Bottom CTA */}
-        <div className="mt-12 text-center">
-          <Link
-            href="/services"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-white hover:bg-neutral-50 text-neutral-900 font-bold text-sm border border-neutral-200 shadow-sm hover:shadow transition-all"
-          >
-            <span>Browse All Services</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
       </div>
     </section>
   );

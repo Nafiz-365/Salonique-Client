@@ -3,8 +3,6 @@ import { Navbar } from "@/components/common/Navbar";
 import { CategoryCarousel } from "@/components/home/CategoryCarousel";
 import { FeaturedServices } from "@/components/home/FeaturedServices";
 import { HeroSearch } from "@/components/home/HeroSearch";
-import { PromoBanner } from "@/components/home/PromoBanner";
-import { ReviewCarousel } from "@/components/home/ReviewCarousel";
 import { TrustSection } from "@/components/home/TrustSection";
 
 export default function Home() {
@@ -16,8 +14,6 @@ export default function Home() {
               <CategoryCarousel />
               <FeaturedServices />
               <TrustSection />
-              <ReviewCarousel />
-              <PromoBanner />
           </main>
           <Footer />
       </div>

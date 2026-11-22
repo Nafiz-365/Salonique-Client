@@ -1,65 +1,58 @@
 import React from "react";
-import { CalendarCheck2, ShieldCheck, Clock, CreditCard, Sparkles } from "lucide-react";
+import { Search, ClipboardList, CalendarCheck2 } from "lucide-react";
 
 export function TrustSection() {
   const pillars = [
     {
+      icon: Search,
+      title: "Find your fit",
+      description:
+        "Browse by service, neighborhood, and specialist to find the right option for you.",
+    },
+    {
+      icon: ClipboardList,
+      title: "Know what to expect",
+      description:
+        "See service details, duration, location, and price before you request a booking.",
+    },
+    {
       icon: CalendarCheck2,
-      title: "Easy Online Booking",
+      title: "Keep plans in one place",
       description:
-        "Book appointments 24/7 without endless phone tags. Select your date, preferred specialist, and ideal time slot in seconds.",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Trusted Beauty Professionals",
-      description:
-        "Every salon, stylist, and aesthetician on Salonique is verified for professional licensing, sanitation standards, and quality reviews.",
-    },
-    {
-      icon: Clock,
-      title: "Convenient Management",
-      description:
-        "Reschedule, review past appointments, or cancel pending bookings with a single tap in your dedicated customer dashboard.",
-    },
-    {
-      icon: CreditCard,
-      title: "Secure Online Payments",
-      description:
-        "Pay seamlessly with credit card, debit, or digital wallets via Stripe-secured checkout with automated receipts.",
+        "Review appointment status and manage your bookings from your customer dashboard.",
     },
   ];
 
   return (
-    <section className="py-20 bg-white">
+    <section className="bg-white py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-neutral-500 mb-2">
-            <Sparkles className="w-3.5 h-3.5 text-neutral-900" />
-            <span>The Salonique Advantage</span>
+        <div className="mb-10 max-w-2xl">
+          <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-500">
+            From search to appointment
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-neutral-900 tracking-tight">
-            Why Book with Salonique?
+          <h2 className="text-3xl font-semibold tracking-tight text-neutral-900 sm:text-4xl">
+            Booking, without the back and forth.
           </h2>
-          <p className="text-neutral-500 text-base mt-2">
-            Designed for beauty enthusiasts who value premium service, verified talent, and a friction-free booking journey.
+          <p className="mt-2 text-sm leading-relaxed text-neutral-600 sm:text-base">
+            The details you need, with a simpler way to plan your next visit.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 gap-8 border-t border-neutral-200 md:grid-cols-3 md:gap-10">
           {pillars.map((pillar) => {
             const Icon = pillar.icon;
             return (
               <div
                 key={pillar.title}
-                className="p-6 rounded-2xl border border-neutral-100 bg-neutral-50/50 hover:bg-white hover:border-neutral-200 hover:shadow-lg transition-all duration-300 group"
+                className="pt-6"
               >
-                <div className="w-12 h-12 rounded-xl bg-white border border-neutral-200/80 flex items-center justify-center text-neutral-900 mb-5 shadow-xs group-hover:scale-105 group-hover:bg-neutral-900 group-hover:text-white transition-all">
-                  <Icon className="w-5 h-5" />
+                <div className="mb-4 flex size-9 items-center justify-center rounded-full bg-[#f7eeeb] text-[#8f5655]">
+                  <Icon className="size-4" />
                 </div>
-                <h3 className="text-lg font-bold text-neutral-900 mb-2">
+                <h3 className="mb-2 text-base font-semibold text-neutral-900">
                   {pillar.title}
                 </h3>
-                <p className="text-sm text-neutral-500 leading-relaxed">
+                <p className="max-w-sm text-sm leading-relaxed text-neutral-600">
                   {pillar.description}
                 </p>
               </div>
