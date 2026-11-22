@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -166,35 +167,37 @@ function NavbarContent({ pathname }: { pathname: string }) {
                   <div className="hidden lg:flex items-center gap-3">
                       {isAuthenticated && user ? (
                           <div className="relative" ref={dropdownRef}>
-                              <button
+                              <Button
+                                  variant="ghost"
+                                  size="icon"
                                   type="button"
                                   onClick={() =>
                                       setUserDropdownOpen(!userDropdownOpen)
                                   }
-                                  className="flex items-center gap-2.5 p-1.5 pl-3 border border-neutral-200 rounded-full hover:shadow-xs transition-all bg-white"
+                                  className="size-11 rounded-full border border-neutral-200 bg-white p-1 hover:bg-neutral-50 hover:shadow-xs"
+                                  aria-label={`Open ${user.name}'s profile menu`}
+                                  aria-expanded={userDropdownOpen}
+                                  aria-controls="navbar-profile-menu"
                               >
-                                  <div className="text-left">
-                                      <p className="text-xs font-semibold text-neutral-900 leading-none">
-                                          {user.name.split(" ")[0]}
-                                      </p>
-                                      <span className="text-[10px] uppercase font-bold text-neutral-600 tracking-wider">
-                                          {user.role}
-                                      </span>
-                                  </div>
-                                  <Image
-                                      src={user.avatar}
-                                      alt={user.name}
-                                      width={32}
-                                      height={32}
-                                      unoptimized
-                                      className="w-8 h-8 rounded-full object-cover border border-neutral-200"
-                                  />
-                                  <ChevronDown className="w-3.5 h-3.5 text-neutral-500 mr-1" />
-                              </button>
+                                  <Avatar className="size-9 border border-neutral-200">
+                                      <AvatarImage src={user.avatar || undefined} alt={user.name} />
+                                      <AvatarFallback>
+                                          {user.name
+                                              .split(/\s+/)
+                                              .slice(0, 2)
+                                              .map((part) => part[0])
+                                              .join("")
+                                              .toUpperCase()}
+                                      </AvatarFallback>
+                                  </Avatar>
+                              </Button>
 
                               {/* Dropdown Menu */}
                               {userDropdownOpen && (
-                                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-neutral-100 p-2 z-50 animate-fade-in">
+                                  <div
+                                      id="navbar-profile-menu"
+                                      className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-neutral-100 p-2 z-50 animate-fade-in"
+                                  >
                                       <div className="px-3 py-2.5 border-b border-neutral-100 mb-1">
                                           <p className="text-sm font-semibold text-neutral-900">
                                               {user.name}
