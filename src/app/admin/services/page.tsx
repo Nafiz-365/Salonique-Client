@@ -283,7 +283,7 @@ export default function AdminServicesPage() {
         ) : (
           <div className="bg-white rounded-3xl border border-neutral-200/80 shadow-xs overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full min-w-[760px] text-left text-xs">
                 <thead className="bg-neutral-50/70 border-b border-neutral-100 text-neutral-500 font-bold uppercase tracking-wider">
                   <tr>
                     <th className="py-3.5 px-6">Service</th>
@@ -396,7 +396,7 @@ export default function AdminServicesPage() {
       {/* Service Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-xl w-full shadow-2xl my-4">
+          <div className="my-4 max-h-[calc(100dvh-2rem)] w-full max-w-xl overflow-y-auto rounded-3xl bg-white shadow-2xl">
             {/* Modal Header */}
             <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
               <h2 className="text-lg font-bold text-neutral-900">

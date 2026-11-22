@@ -42,7 +42,7 @@ export function Footer() {
                 <Clock className="w-4 h-4 text-neutral-400 shrink-0" />
                 <span>Mon – Sat: 9:00 AM – 8:00 PM • Sun: 10:00 AM – 6:00 PM</span>
               </div>
-              <div className="flex items-center gap-4 pt-1">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-1">
                 <a href="tel:+15557256647" className="flex items-center gap-1.5 hover:text-white transition-colors">
                   <Phone className="w-3.5 h-3.5" />
                   <span>+1 (555) 725-6647</span>
@@ -193,7 +193,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-4">
           <p>© {new Date().getFullYear()} Salonique Inc. All rights reserved. Your Beauty, Your Time.</p>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 sm:justify-end">
             <span>English (US)</span>
             <span>$ USD</span>
             <span>Secure 256-bit SSL</span>

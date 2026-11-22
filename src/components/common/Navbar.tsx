@@ -18,6 +18,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -95,7 +96,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
                   </NextLink>
 
                   {/* Desktop Navigation Links */}
-                  <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+                  <nav className="hidden lg:flex items-center gap-1 lg:gap-2">
                       <NextLink
                           href="/services"
                           className={`px-3.5 py-2 rounded-full text-sm font-medium transition-colors ${
@@ -162,7 +163,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
                   </nav>
 
                   {/* Right Action Controls */}
-                  <div className="hidden md:flex items-center gap-3">
+                  <div className="hidden lg:flex items-center gap-3">
                       {isAuthenticated && user ? (
                           <div className="relative" ref={dropdownRef}>
                               <button
@@ -280,26 +281,33 @@ function NavbarContent({ pathname }: { pathname: string }) {
                   </div>
 
                   {/* Mobile Menu Button */}
-                  <div className="flex md:hidden items-center gap-2">
-                      <button
+                  <div className="flex lg:hidden items-center gap-2">
+                      <Button
+                          variant="ghost"
+                          size="icon"
                           type="button"
                           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                          className="p-2 rounded-full text-neutral-700 hover:bg-neutral-100 transition-colors"
+                          className="size-10 rounded-full text-neutral-700 hover:bg-neutral-100"
                           aria-label="Toggle navigation menu"
+                          aria-expanded={mobileMenuOpen}
+                          aria-controls="site-mobile-navigation"
                       >
                           {mobileMenuOpen ? (
                               <X className="w-6 h-6" />
                           ) : (
                               <Menu className="w-6 h-6" />
                           )}
-                      </button>
+                      </Button>
                   </div>
               </div>
           </div>
 
           {/* Mobile Drawer */}
           {mobileMenuOpen && (
-              <div className="md:hidden border-t border-neutral-200 bg-white px-4 pt-3 pb-6 space-y-4 animate-in slide-in-from-top duration-200">
+              <div
+                  id="site-mobile-navigation"
+                  className="lg:hidden border-t border-neutral-200 bg-white px-4 pt-3 pb-6 space-y-4 animate-in slide-in-from-top duration-200"
+              >
                   {isAuthenticated && user && (
                       <div className="flex items-center gap-3 p-3 bg-neutral-50 rounded-2xl border border-neutral-100">
                           <Image

@@ -91,19 +91,19 @@ function ProfileEditor({ user }: { user: AuthUser }) {
               unoptimized
               className="w-20 h-20 rounded-full object-cover border-2 border-neutral-200 shadow-sm shrink-0"
             />
-            <div className="flex-1 space-y-2">
+            <div className="min-w-0 flex-1 space-y-2">
               <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider">
                 Profile Photo (Upload or URL)
               </label>
-              <div className="flex items-center gap-2">
+              <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center">
                 <input
                   type="url"
                   value={avatar}
                   onChange={(e) => setAvatar(e.target.value)}
                   placeholder="https://..."
-                  className="flex-1 px-3 py-2 text-xs rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-900"
+                  className="w-full min-w-0 flex-1 rounded-xl border border-neutral-200 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-neutral-900"
                 />
-                <label className="px-3.5 py-2 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-bold cursor-pointer flex items-center gap-1.5 shrink-0 transition-colors">
+                <label className="flex shrink-0 cursor-pointer items-center gap-1.5 self-start rounded-xl bg-neutral-900 px-3.5 py-2 text-xs font-bold text-white transition-colors hover:bg-black sm:self-auto">
                   <Upload className="w-3.5 h-3.5" />
                   <span>{isUploading ? "Uploading..." : "Upload Photo"}</span>
                   <input

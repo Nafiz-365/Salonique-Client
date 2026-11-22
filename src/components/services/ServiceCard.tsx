@@ -101,7 +101,7 @@ export function ServiceCard({ service, onQuickBook }: ServiceCardProps) {
               </div>
 
               {/* Footer: Price & CTA */}
-              <div className="pt-1 flex items-center justify-between gap-3">
+              <div className="pt-1 flex flex-wrap items-center justify-between gap-3">
                   <div>
                       <span className="text-xs text-neutral-500 block leading-tight">
                           from

@@ -85,7 +85,7 @@ export default function AdminTransactionsPage() {
         ) : (
           <div className="bg-white rounded-3xl border border-neutral-200/80 shadow-xs overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full min-w-[1040px] text-left text-xs">
                 <thead className="bg-neutral-50/70 border-b border-neutral-100 text-neutral-500 font-bold uppercase tracking-wider">
                   <tr>
                     <th className="py-3.5 px-6">Stripe Session</th>

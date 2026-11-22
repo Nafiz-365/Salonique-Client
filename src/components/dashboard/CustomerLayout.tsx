@@ -81,18 +81,18 @@ export function CustomerLayout({ children }: { children: React.ReactNode }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
         {/* Welcome Header */}
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-neutral-200/80 shadow-xs mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
+          <div className="flex min-w-0 items-start gap-3 sm:items-center sm:gap-4">
             <Image
               src={user?.avatar || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80"}
               alt={user?.name || "Customer"}
               width={64}
               height={64}
               unoptimized
-              className="w-16 h-16 rounded-full object-cover border-2 border-neutral-900/10 shadow-sm"
+              className="size-12 shrink-0 rounded-full border-2 border-neutral-900/10 object-cover shadow-sm sm:size-16"
             />
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-extrabold text-neutral-900">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <h1 className="text-xl font-extrabold text-neutral-900 sm:text-2xl">
                   Welcome back, {user?.name?.split(" ")[0] || "Valued Client"}
                 </h1>
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-neutral-100 text-neutral-800">

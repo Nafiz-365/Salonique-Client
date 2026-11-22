@@ -143,7 +143,7 @@ export default function AdminAppointmentsPage() {
         ) : (
           <div className="bg-white rounded-3xl border border-neutral-200/80 shadow-xs overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full min-w-[820px] text-left text-xs">
                 <thead className="bg-neutral-50/70 border-b border-neutral-100 text-neutral-500 font-bold uppercase tracking-wider">
                   <tr>
                     <th className="py-3.5 px-6">Customer</th>
@@ -261,7 +261,7 @@ export default function AdminAppointmentsPage() {
         {/* View Details Modal */}
         {selectedAppointment && (
           <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl max-w-lg w-full p-6 space-y-5 shadow-2xl animate-in zoom-in-95">
+            <div className="max-h-[calc(100dvh-2rem)] w-full max-w-lg space-y-5 overflow-y-auto rounded-3xl bg-white p-4 shadow-2xl animate-in zoom-in-95 sm:p-6">
               <div className="flex items-center justify-between pb-3 border-b border-neutral-100">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-5 h-5 text-neutral-900" />

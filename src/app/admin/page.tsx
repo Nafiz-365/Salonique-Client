@@ -174,7 +174,7 @@ export default function AdminOverviewPage() {
                 </Link>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
+                <table className="w-full min-w-[760px] text-left text-xs">
                   <thead className="bg-neutral-50/70 border-b border-neutral-100 text-neutral-500 font-bold uppercase tracking-wider">
                     <tr>
                       <th className="py-3.5 px-6">Customer</th>
@@ -254,7 +254,7 @@ export default function AdminOverviewPage() {
                 </Link>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
+                <table className="w-full min-w-[760px] text-left text-xs">
                   <thead className="bg-neutral-50/70 border-b border-neutral-100 text-neutral-500 font-bold uppercase tracking-wider">
                     <tr>
                       <th className="py-3.5 px-6">Customer</th>

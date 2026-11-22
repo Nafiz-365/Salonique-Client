@@ -320,7 +320,7 @@ function ServicesBrowser({
         </div>
 
         {/* Results counter */}
-        <div className="flex items-center justify-between mb-6 text-sm text-neutral-600">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6 text-sm text-neutral-600">
           <div>
             {isLoading ? (
               <span className="text-neutral-400">Loading...</span>

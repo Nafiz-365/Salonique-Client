@@ -128,11 +128,11 @@ export function HeroSearch() {
                       <span>Discover Top-Rated Salons & Stylists</span>
                   </div>
 
-                  <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12]">
+                  <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12]">
                       Book your next beauty and wellness experience
                   </h1>
 
-                  <p className="text-lg sm:text-xl text-neutral-300 font-normal max-w-2xl mx-auto leading-relaxed">
+                  <p className="text-base sm:text-xl text-neutral-300 font-normal max-w-2xl mx-auto leading-relaxed">
                       Discover exceptional salon services and book your next
                       appointment with ease.
                   </p>

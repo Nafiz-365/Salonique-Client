@@ -22,6 +22,7 @@ import {
   Loader2,
 } from "lucide-react";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -137,20 +138,25 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
               </div>
 
               {/* Mobile Menu Toggle */}
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-1.5 text-neutral-400 hover:text-white"
+                className="size-10 rounded-full text-neutral-300 hover:bg-neutral-800 hover:text-white lg:hidden"
+                aria-label={mobileMenuOpen ? "Close admin navigation" : "Open admin navigation"}
+                aria-expanded={mobileMenuOpen}
+                aria-controls="admin-mobile-navigation"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-neutral-800 bg-neutral-900 p-4 space-y-2">
+          <div id="admin-mobile-navigation" className="lg:hidden border-t border-neutral-800 bg-neutral-900 p-4 space-y-2">
             {menuItems.map((item) => {
               const Icon = item.icon;
               return (

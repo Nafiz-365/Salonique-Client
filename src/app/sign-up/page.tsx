@@ -214,7 +214,7 @@ export default function SignUpPage() {
                 Profile Image (Upload or URL)
               </label>
               <div className="space-y-2">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                   <div className="relative flex-1">
                     <ImageIcon className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <Input
@@ -225,7 +225,7 @@ export default function SignUpPage() {
                       className="h-10 rounded-xl pl-10 pr-4 text-xs font-medium"
                     />
                   </div>
-                  <label className="px-3.5 py-2 rounded-xl border border-neutral-200 bg-neutral-50 hover:bg-neutral-100 text-xs font-bold text-neutral-700 cursor-pointer flex items-center gap-1.5 shrink-0 transition-colors">
+                  <label className="flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2 text-xs font-bold text-neutral-700 transition-colors hover:bg-neutral-100">
                     <Upload className="w-3.5 h-3.5" />
                     <span>{isUploading ? "Uploading..." : "Upload Photo"}</span>
                     <input

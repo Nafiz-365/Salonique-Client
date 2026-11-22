@@ -250,9 +250,9 @@ export default function ServiceDetailPage({
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+          <div className="grid min-w-0 grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
             {/* Left: Gallery & Details */}
-            <div className="lg:col-span-7 space-y-8">
+            <div className="min-w-0 space-y-8 lg:col-span-7">
               {/* Image Gallery */}
               <div className="space-y-3">
                 <div className="aspect-16/10 rounded-3xl overflow-hidden border border-neutral-200/80 shadow-md bg-neutral-100">
@@ -294,7 +294,7 @@ export default function ServiceDetailPage({
 
               {/* Meta */}
               <div className="space-y-4">
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="px-3 py-1 rounded-full text-xs font-bold bg-neutral-100 text-neutral-800">
                     {service.category}
                   </span>
@@ -303,13 +303,12 @@ export default function ServiceDetailPage({
                     <span>{service.rating}</span>
                     <span className="text-neutral-400 font-normal">({service.reviewCount} reviews)</span>
                   </div>
-                  <span className="text-xs text-neutral-400">•</span>
-                  <div className="flex items-center gap-1 text-xs text-neutral-500 font-medium">
+                  <div className="flex min-w-0 items-center gap-1 text-xs font-medium text-neutral-500">
                     <MapPin className="w-3.5 h-3.5 text-neutral-400" />
-                    <span>{service.location}</span>
+                    <span className="break-words">{service.location}</span>
                   </div>
                 </div>
-                <h1 className="text-3xl sm:text-4xl font-extrabold text-neutral-900 tracking-tight">
+                <h1 className="break-words text-2xl font-extrabold tracking-tight text-neutral-900 sm:text-4xl">
                   {service.name}
                 </h1>
                 <p className="text-neutral-600 text-base leading-relaxed">{service.description}</p>
@@ -355,8 +354,8 @@ export default function ServiceDetailPage({
             </div>
 
             {/* Right: Booking Box */}
-            <div className="lg:col-span-5">
-              <div className="sticky top-24">
+            <div className="min-w-0 lg:col-span-5">
+              <div className="lg:sticky lg:top-24">
                 {bookingResult ? (
                   /* Success State */
                   <div className="bg-white rounded-3xl border border-neutral-200 p-6 sm:p-8 shadow-xl text-center space-y-6 animate-in fade-in zoom-in-95">
@@ -370,19 +369,19 @@ export default function ServiceDetailPage({
                       </p>
                     </div>
                     <div className="bg-neutral-50 rounded-2xl p-4 text-left space-y-2.5 text-xs">
-                      <div className="flex justify-between">
+                      <div className="flex items-start justify-between gap-3">
                         <span className="text-neutral-500">Service:</span>
-                        <span className="font-bold text-neutral-900">{bookingResult.serviceName}</span>
+                        <span className="min-w-0 break-words text-right font-bold text-neutral-900">{bookingResult.serviceName}</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex items-start justify-between gap-3">
                         <span className="text-neutral-500">Date & Time:</span>
-                        <span className="font-bold text-neutral-900">
+                        <span className="text-right font-bold text-neutral-900">
                           {formatDate(bookingResult.date)} at {bookingResult.time}
                         </span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex items-start justify-between gap-3">
                         <span className="text-neutral-500">Specialist:</span>
-                        <span className="font-bold text-neutral-900">{bookingResult.specialist}</span>
+                        <span className="text-right font-bold text-neutral-900">{bookingResult.specialist}</span>
                       </div>
                       <div className="flex justify-between pt-2 border-t border-neutral-200 text-sm">
                         <span className="font-bold text-neutral-900">Total:</span>

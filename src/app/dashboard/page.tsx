@@ -218,7 +218,7 @@ export default function DashboardOverviewPage() {
             <>
               {/* Desktop Table */}
               <div className="hidden md:block overflow-x-auto">
-                <table className="w-full text-left text-xs">
+                <table className="w-full min-w-[700px] text-left text-xs">
                   <thead className="bg-neutral-50/70 border-b border-neutral-100 text-neutral-500 font-bold uppercase tracking-wider">
                     <tr>
                       <th className="py-3.5 px-6">Service</th>

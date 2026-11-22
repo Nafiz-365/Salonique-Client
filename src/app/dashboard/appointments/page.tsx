@@ -238,7 +238,7 @@ export default function MyAppointmentsPage() {
       {/* Cancel Confirmation Modal */}
       {cancelModalItem && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl space-y-5 animate-in fade-in zoom-in-95">
+          <div className="max-h-[calc(100dvh-2rem)] w-full max-w-md space-y-5 overflow-y-auto rounded-3xl bg-white p-4 shadow-2xl animate-in fade-in zoom-in-95 sm:p-7">
             <div className="flex items-center justify-between">
               <div className="w-10 h-10 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center">
                 <AlertCircle className="w-5 h-5" />
