@@ -11,11 +11,11 @@ export function Footer() {
     const isAdmin = user?.role === "admin";
 
     return (
-        <footer className="bg-[#1C1816] text-[#FAF7F2] pt-16 pb-12 border-t border-[#2D2623]">
+        <footer className="bg-[#1C1816] text-[#FAF7F2] pt-10 pb-8 sm:pt-16 sm:pb-12 border-t border-[#2D2623]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-[#2D2623]">
+                <div className="grid grid-cols-2 gap-x-6 gap-y-8 pb-8 md:grid-cols-2 lg:grid-cols-5 sm:gap-10 sm:pb-12 border-b border-[#2D2623]">
                     {/* Brand Info */}
-                    <div className="lg:col-span-2 space-y-4">
+                    <div className="col-span-2 lg:col-span-2 space-y-3 sm:space-y-4">
                         <Link href="/" className="flex items-center gap-2.5">
                             <SaloniqueMark tone="light" />
                             <div className="flex flex-col">
@@ -27,11 +27,10 @@ export function Footer() {
                                 </span>
                             </div>
                         </Link>
-                        <p className="text-[#C5BFB8] text-sm max-w-sm leading-relaxed font-light">
-                            Your Beauty, Your Time. Discover top-rated salons,
-                            independent stylists, and wellness experts near you,
-                            with instant 24/7 online booking and secure
-                            checkout.
+                        <p className="text-[#C5BFB8] text-xs sm:text-sm max-w-sm leading-relaxed font-light">
+                            Discover trusted salons, independent stylists, and
+                            wellness experts near you. Compare services and book
+                            securely, anytime.
                         </p>
 
                         {/* Salon Address, Hours & Contact */}
@@ -67,12 +66,12 @@ export function Footer() {
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-3 pt-2">
+                        <div className="flex items-center gap-2.5 pt-1.5 sm:gap-3 sm:pt-2">
                             <a
                                 href="https://instagram.com"
                                 target="_blank"
                                 rel="noreferrer"
-                                className="w-9 h-9 rounded-full bg-[#2A2320] flex items-center justify-center text-[#C5BFB8] hover:text-white hover:bg-[#3D332F] transition-colors"
+                                className="flex size-8 items-center justify-center rounded-full bg-[#2A2320] text-[#C5BFB8] transition-colors hover:bg-[#3D332F] hover:text-white sm:size-9"
                                 aria-label="Instagram"
                             >
                                 <svg
@@ -86,7 +85,7 @@ export function Footer() {
                                 href="https://facebook.com"
                                 target="_blank"
                                 rel="noreferrer"
-                                className="w-9 h-9 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-neutral-700 transition-colors"
+                                className="flex size-8 items-center justify-center rounded-full bg-neutral-800 text-neutral-400 transition-colors hover:bg-neutral-700 hover:text-white sm:size-9"
                                 aria-label="Facebook"
                             >
                                 <svg
@@ -100,7 +99,7 @@ export function Footer() {
                                 href="https://twitter.com"
                                 target="_blank"
                                 rel="noreferrer"
-                                className="w-9 h-9 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-neutral-700 transition-colors"
+                                className="flex size-8 items-center justify-center rounded-full bg-neutral-800 text-neutral-400 transition-colors hover:bg-neutral-700 hover:text-white sm:size-9"
                                 aria-label="X (Twitter)"
                             >
                                 <svg
@@ -115,10 +114,10 @@ export function Footer() {
 
                     {/* Explore Services */}
                     <div>
-                        <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
+                        <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-white sm:mb-4 sm:text-sm">
                             Explore
                         </h4>
-                        <ul className="space-y-2.5 text-sm text-neutral-400">
+                        <ul className="space-y-1.5 text-xs text-neutral-400 sm:space-y-2.5 sm:text-sm">
                             <li>
                                 <Link
                                     href="/services?category=Hair"
@@ -164,10 +163,10 @@ export function Footer() {
 
                     {/* Popular Categories */}
                     <div>
-                        <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
+                        <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-white sm:mb-4 sm:text-sm">
                             Categories
                         </h4>
-                        <ul className="space-y-2.5 text-sm text-neutral-400">
+                        <ul className="space-y-1.5 text-xs text-neutral-400 sm:space-y-2.5 sm:text-sm">
                             <li>
                                 <Link
                                     href="/services?category=Brows %26 Lashes"
@@ -213,10 +212,10 @@ export function Footer() {
 
                     {/* Customer & Business */}
                     <div>
-                        <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
+                        <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-white sm:mb-4 sm:text-sm">
                             Salonique
                         </h4>
-                        <ul className="space-y-2.5 text-sm text-neutral-400">
+                        <ul className="space-y-1.5 text-xs text-neutral-400 sm:space-y-2.5 sm:text-sm">
                             <li>
                                 <Link
                                     href="/help"
@@ -261,7 +260,7 @@ export function Footer() {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-4">
+                <div className="flex flex-col items-center justify-between gap-3 pt-6 text-[11px] text-neutral-500 sm:flex-row sm:gap-4 sm:pt-8 sm:text-xs">
                     <p>
                         © {new Date().getFullYear()} Salonique Inc. All rights
                         reserved. Your Beauty, Your Time.

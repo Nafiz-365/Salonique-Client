@@ -126,7 +126,7 @@ export function HeroSearch() {
     };
 
     return (
-        <section className="relative isolate overflow-visible border-b border-[#2A201E] bg-[#181212] py-12 text-white sm:py-16 lg:py-20">
+        <section className="relative z-20 isolate overflow-visible border-b border-[#2A201E] bg-[#181212] py-12 text-white sm:py-16 lg:py-20">
             <div className="absolute inset-0 z-0">
                 <Image
                     src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=2000&q=80"
