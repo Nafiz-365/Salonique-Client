@@ -23,6 +23,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { SaloniqueMark } from "@/components/common/SaloniqueMark";
+import { getSafeCallbackPath } from "@/lib/safe-redirect";
 
 export default function SignUpPage() {
     return (
@@ -41,7 +42,7 @@ export default function SignUpPage() {
 function SignUpContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+    const callbackUrl = getSafeCallbackPath(searchParams.get("callbackUrl"));
 
     const { register, login, loginWithGoogle, isAuthenticated, user } = useAuth();
 
@@ -135,10 +136,12 @@ function SignUpContent() {
                 // Auto sign-in and redirect immediately
                 const signedIn = await login(email, password);
                 if (signedIn) {
-                    router.push(callbackUrl);
+                    router.push(callbackUrl ?? "/dashboard");
                 } else {
                     router.push(
-                        `/sign-in${callbackUrl !== "/dashboard" ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ""}`,
+                        callbackUrl
+                            ? `/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`
+                            : "/sign-in",
                     );
                 }
             }
@@ -236,7 +239,11 @@ function SignUpContent() {
                         <p className="mt-2 text-sm text-neutral-600 font-light">
                             Already have an atelier account?{" "}
                             <Link
-                                href={`/sign-in${callbackUrl !== "/dashboard" ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ""}`}
+                                href={
+                                    callbackUrl
+                                        ? `/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`
+                                        : "/sign-in"
+                                }
                                 className="font-medium text-[#7A5C3E] hover:underline"
                             >
                                 Sign in

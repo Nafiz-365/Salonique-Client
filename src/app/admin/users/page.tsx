@@ -317,7 +317,7 @@ export default function AdminUsersPage() {
                     }}
                 >
                     {selectedUser && (
-                        <DialogContent className="max-w-md rounded-3xl p-6 sm:max-w-md">
+                        <DialogContent className="w-[calc(100%-2rem)] max-w-md rounded-3xl p-6 sm:max-w-md">
                             <DialogHeader className="border-b border-neutral-100 pb-3">
                                 <div className="flex items-center gap-2">
                                     <Users className="w-5 h-5 text-neutral-900" />

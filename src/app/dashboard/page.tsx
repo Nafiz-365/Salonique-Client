@@ -96,6 +96,31 @@ export default function DashboardOverviewPage() {
     return (
         <CustomerLayout>
             <div className="space-y-8">
+                <section className="rounded-3xl border border-[#E8DDCD] bg-[#F4EFE7] p-5 sm:p-7">
+                    <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="min-w-0">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#9E8265]">
+                                Your beauty journey
+                            </p>
+                            <h1 className="mt-2 wrap-break-word font-serif text-2xl font-medium text-[#1A1715] sm:text-3xl">
+                                Welcome back,{" "}
+                                {user?.name?.split(" ")[0] || "Valued Client"}
+                            </h1>
+                            <p className="mt-1 text-sm text-neutral-600">
+                                Keep your appointments and self-care plans in
+                                one place.
+                            </p>
+                        </div>
+                        <Link
+                            href="/services"
+                            className="inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-2 rounded-full bg-[#1A1715] px-5 py-2.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-black sm:w-auto"
+                        >
+                            <Sparkles className="size-3.5 text-[#D8B485]" />
+                            Book a Service
+                        </Link>
+                    </div>
+                </section>
+
                 {/* Error banner */}
                 {error && (
                     <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium flex items-center gap-2">
@@ -108,7 +133,7 @@ export default function DashboardOverviewPage() {
                 )}
 
                 {/* Statistics Cards */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
                     <div className="bg-white p-5 rounded-2xl border border-neutral-200/80 shadow-xs">
                         <span className="text-xs font-semibold text-neutral-500 block">
                             Total Requests
@@ -189,11 +214,11 @@ export default function DashboardOverviewPage() {
                                     unoptimized
                                     className="w-20 h-20 rounded-2xl object-cover border border-[#E0D8CB] shrink-0"
                                 />
-                                <div className="space-y-1">
+                                <div className="min-w-0 space-y-1">
                                     <span className="text-[11px] font-semibold text-[#9E8265] uppercase">
                                         {nextUpcoming.serviceCategory}
                                     </span>
-                                    <h4 className="text-lg font-serif font-medium text-[#1A1715]">
+                                    <h4 className="wrap-break-word text-lg font-serif font-medium text-[#1A1715]">
                                         {nextUpcoming.serviceName}
                                     </h4>
                                     <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-600 font-light pt-1">
@@ -259,7 +284,7 @@ export default function DashboardOverviewPage() {
 
                 {/* Recent Appointments Table */}
                 <div className="bg-white rounded-3xl border border-neutral-200/80 shadow-xs overflow-hidden">
-                    <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
+                    <div className="flex flex-col items-start justify-between gap-3 border-b border-neutral-100 p-4 sm:flex-row sm:items-center sm:p-6">
                         <div>
                             <h3 className="text-lg font-bold text-neutral-900">
                                 Recent Appointments
@@ -327,7 +352,7 @@ export default function DashboardOverviewPage() {
                                                 className="hover:bg-neutral-50/50 transition-colors"
                                             >
                                                 <td className="py-4 px-6">
-                                                    <div className="flex items-center gap-3">
+                                                    <div className="flex min-w-0 items-center gap-3">
                                                         <Image
                                                             src={
                                                                 apt.serviceImage ||
@@ -458,8 +483,8 @@ export default function DashboardOverviewPage() {
                                                 unoptimized
                                                 className="w-12 h-12 rounded-xl object-cover border border-neutral-200"
                                             />
-                                            <div>
-                                                <h4 className="text-sm font-bold text-neutral-900">
+                                            <div className="min-w-0">
+                                                <h4 className="wrap-break-word text-sm font-bold text-neutral-900">
                                                     {apt.serviceName}
                                                 </h4>
                                                 <p className="text-xs text-neutral-500">

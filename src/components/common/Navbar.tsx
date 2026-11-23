@@ -271,7 +271,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
             {mobileMenuOpen && (
                 <div
                     id="site-mobile-navigation"
-                    className="lg:hidden border-t border-neutral-200 bg-white px-4 pt-3 pb-6 space-y-4 animate-in slide-in-from-top duration-200"
+                    className="max-h-[calc(100dvh-4.5rem)] space-y-4 overflow-y-auto overscroll-contain border-t border-neutral-200 bg-white px-4 pt-3 pb-6 animate-in slide-in-from-top duration-200 lg:hidden"
                 >
                     {isAuthenticated && user && (
                         <div className="flex items-center gap-3 p-3 bg-neutral-50 rounded-2xl border border-neutral-100">

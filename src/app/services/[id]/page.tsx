@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/common/Navbar";
 import { Footer } from "@/components/common/Footer";
 import { useAuth } from "@/context/AuthContext";
+import { useLocalDateInputValue } from "@/hooks/use-local-date-input";
 import { formatPrice, formatDuration, formatDate } from "@/lib/utils";
 import { Service } from "@/lib/types";
 import { toast } from "sonner";
@@ -21,45 +22,13 @@ import {
     Calendar,
 } from "lucide-react";
 import Link from "next/link";
-import { fetchService, bffPost, ApiService } from "@/lib/server-api";
+import { fetchService, bffPost } from "@/lib/server-api";
+import { mapApiServiceToService } from "@/lib/service";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
-
-const TIME_SLOTS = [
-    "09:00 AM",
-    "10:00 AM",
-    "11:30 AM",
-    "01:00 PM",
-    "02:30 PM",
-    "03:45 PM",
-    "05:00 PM",
-    "06:15 PM",
-];
-
-function toService(s: ApiService): Service {
-    return {
-        id: s._id,
-        name: s.name,
-        slug: s.slug,
-        category: s.category as Service["category"],
-        price: s.price,
-        duration: s.duration,
-        rating: s.rating,
-        reviewCount: s.reviewCount,
-        description: s.description,
-        shortDescription: s.shortDescription,
-        image: s.image,
-        gallery: s.gallery,
-        isActive: s.isActive,
-        featured: s.featured,
-        popular: s.popular,
-        specialist: s.specialist,
-        location: s.location,
-        included: s.included,
-    };
-}
+import { BOOKING_TIME_SLOTS } from "@/lib/booking";
 
 interface BookingResult {
     _id: string;
@@ -80,17 +49,19 @@ export default function ServiceDetailPage({
     const { user, isAuthenticated, isLoading } = useAuth();
 
     const [service, setService] = useState<Service | null>(null);
+    const [serviceError, setServiceError] = useState<string | null>(null);
     const [loadedServiceId, setLoadedServiceId] = useState<string | null>(null);
     const isLoadingService = loadedServiceId !== id;
     const [activeImage, setActiveImage] = useState("");
 
     // Booking form state
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const defaultDateStr = tomorrow.toISOString().split("T")[0];
-
-    const [selectedDate, setSelectedDate] = useState(defaultDateStr);
-    const [selectedTime, setSelectedTime] = useState(TIME_SLOTS[1]);
+    const minimumDate = useLocalDateInputValue();
+    const defaultDate = useLocalDateInputValue(1);
+    const [selectedDate, setSelectedDate] = useState<string | null>(null);
+    const appointmentDate = selectedDate ?? defaultDate;
+    const [selectedTime, setSelectedTime] = useState<string>(
+        BOOKING_TIME_SLOTS[1],
+    );
     const [notes, setNotes] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [bookingResult, setBookingResult] = useState<BookingResult | null>(
@@ -114,15 +85,22 @@ export default function ServiceDetailPage({
             .then((data) => {
                 if (!active) return;
                 if (data) {
-                    const s = toService(data);
+                    const s = mapApiServiceToService(data);
                     setService(s);
                     setActiveImage(s.image);
                 } else {
                     setService(null);
                 }
+                setServiceError(null);
             })
-            .catch(() => {
-                if (active) setService(null);
+            .catch((error: unknown) => {
+                if (!active) return;
+                setService(null);
+                setServiceError(
+                    error instanceof Error
+                        ? error.message
+                        : "Unable to load this service.",
+                );
             })
             .finally(() => {
                 if (active) setLoadedServiceId(id);
@@ -149,14 +127,19 @@ export default function ServiceDetailPage({
             return;
         }
 
-        if (service && !service.isActive) {
+        if (!service) {
+            toast.error("Service details are unavailable. Please try again.");
+            return;
+        }
+
+        if (!service.isActive) {
             toast.error(
                 "This service is currently inactive and cannot be booked.",
             );
             return;
         }
 
-        if (!selectedDate || !selectedTime) {
+        if (!appointmentDate || !selectedTime) {
             toast.error("Please choose a date and time for your appointment");
             return;
         }
@@ -170,18 +153,18 @@ export default function ServiceDetailPage({
                 userName: user.name,
                 userEmail: user.email,
                 userPhone: user.phone || "",
-                serviceId: service!.id,
-                serviceName: service!.name,
-                serviceCategory: service!.category,
-                servicePrice: service!.price,
-                serviceDuration: service!.duration,
-                serviceImage: service!.image,
-                date: selectedDate,
-                appointmentDate: selectedDate,
+                serviceId: service.id,
+                serviceName: service.name,
+                serviceCategory: service.category,
+                servicePrice: service.price,
+                serviceDuration: service.duration,
+                serviceImage: service.image,
+                date: appointmentDate,
+                appointmentDate,
                 time: selectedTime,
                 timeSlot: selectedTime,
-                specialist: service!.specialist.name,
-                location: service!.location,
+                specialist: service.specialist.name,
+                location: service.location,
                 notes,
                 message: notes,
             };
@@ -240,11 +223,13 @@ export default function ServiceDetailPage({
                             <AlertCircle className="w-7 h-7 text-[#9E8265]" />
                         </div>
                         <h2 className="text-xl font-serif font-medium text-[#1A1715]">
-                            Service not found
+                            {serviceError
+                                ? "Unable to load service"
+                                : "Service not found"}
                         </h2>
                         <p className="text-sm font-light text-neutral-500">
-                            This service may have been removed or the link is
-                            invalid.
+                            {serviceError ??
+                                "This service may have been removed or the link is invalid."}
                         </p>
                         <Link
                             href="/services"
@@ -276,7 +261,7 @@ export default function ServiceDetailPage({
                             Services
                         </Link>
                         <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-                        <span className="font-medium text-[#1A1715] truncate">
+                        <span className="min-w-0 flex-1 truncate font-medium text-[#1A1715]">
                             {service.name}
                         </span>
                     </div>
@@ -360,8 +345,8 @@ export default function ServiceDetailPage({
                             </div>
 
                             {/* Specialist */}
-                            <div className="p-5 rounded-2xl bg-[#FAF7F2] border border-[#EBE5DA] flex items-center justify-between">
-                                <div className="flex items-center gap-3.5">
+                            <div className="flex flex-col gap-4 rounded-2xl border border-[#EBE5DA] bg-[#FAF7F2] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+                                <div className="flex min-w-0 items-center gap-3.5">
                                     <Image
                                         src={
                                             service.specialist.avatar ||
@@ -373,11 +358,11 @@ export default function ServiceDetailPage({
                                         unoptimized
                                         className="w-14 h-14 rounded-full object-cover border border-[#E0D8CB]"
                                     />
-                                    <div>
+                                    <div className="min-w-0">
                                         <span className="text-xs font-semibold uppercase tracking-wider text-[#9E8265]">
                                             Your Specialist
                                         </span>
-                                        <h3 className="text-base font-serif font-medium text-[#1A1715]">
+                                        <h3 className="wrap-break-word text-base font-serif font-medium text-[#1A1715]">
                                             {service.specialist.name}
                                         </h3>
                                         <p className="text-xs text-neutral-500 font-light">
@@ -385,7 +370,7 @@ export default function ServiceDetailPage({
                                         </p>
                                     </div>
                                 </div>
-                                <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white border border-[#EBE5DA] text-xs font-medium text-[#1A1715]">
+                                <div className="inline-flex shrink-0 items-center gap-1 self-start rounded-full border border-[#EBE5DA] bg-white px-3 py-1 text-xs font-medium text-[#1A1715] sm:self-auto">
                                     <Star className="w-3.5 h-3.5 fill-[#D8B485] text-[#D8B485]" />
                                     <span>{service.specialist.rating}</span>
                                 </div>
@@ -539,17 +524,13 @@ export default function ServiceDetailPage({
                                                 <Input
                                                     id="appointment-date"
                                                     type="date"
-                                                    value={selectedDate}
+                                                    value={appointmentDate}
                                                     onChange={(e) =>
                                                         setSelectedDate(
                                                             e.target.value,
                                                         )
                                                     }
-                                                    min={
-                                                        new Date()
-                                                            .toISOString()
-                                                            .split("T")[0]
-                                                    }
+                                                    min={minimumDate || undefined}
                                                     required
                                                     className="h-11 w-full rounded-xl bg-neutral-50/50 px-4 text-sm font-semibold text-neutral-900"
                                                 />
@@ -561,7 +542,7 @@ export default function ServiceDetailPage({
                                                     2. Available Time Slots
                                                 </label>
                                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                                                    {TIME_SLOTS.map((time) => (
+                                                    {BOOKING_TIME_SLOTS.map((time) => (
                                                         <Button
                                                             variant={
                                                                 selectedTime ===
@@ -617,7 +598,7 @@ export default function ServiceDetailPage({
                                                     <span>Date:</span>
                                                     <span className="font-semibold text-neutral-900">
                                                         {formatDate(
-                                                            selectedDate,
+                                                            appointmentDate,
                                                         )}
                                                     </span>
                                                 </div>

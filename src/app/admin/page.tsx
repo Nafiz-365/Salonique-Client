@@ -82,8 +82,8 @@ export default function AdminOverviewPage() {
                 {error && (
                     <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium flex items-center gap-2">
                         <AlertCircle className="w-4 h-4 shrink-0" />
-                        Backend not connected — {error}. Start the Express
-                        server.
+                        Dashboard data couldn&apos;t be loaded: {error}. Please
+                        refresh to try again.
                     </div>
                 )}
 
@@ -380,7 +380,8 @@ export default function AdminOverviewPage() {
                                                     {formatPrice(txn.amount)}
                                                 </td>
                                                 <td className="py-4 px-6 text-neutral-600">
-                                                    {txn.paymentMethod}
+                                                    {txn.paymentMethod?.trim() ||
+                                                        "Not recorded"}
                                                 </td>
                                                 <td className="py-4 px-6">
                                                     <span

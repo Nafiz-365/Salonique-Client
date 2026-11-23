@@ -120,8 +120,8 @@ export default function AdminAppointmentsPage() {
                 )}
 
                 {/* Filters */}
-                <div className="bg-white p-4 rounded-2xl border border-neutral-200/80 shadow-xs flex flex-col sm:flex-row items-center gap-4">
-                    <div className="relative w-full sm:w-80">
+                <div className="flex flex-col gap-3 rounded-2xl border border-neutral-200/80 bg-white p-4 shadow-xs lg:flex-row lg:items-center lg:gap-4">
+                    <div className="relative w-full min-w-0 lg:w-80 lg:shrink-0">
                         <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                         <Input
                             type="text"
@@ -144,7 +144,7 @@ export default function AdminAppointmentsPage() {
                         )}
                     </div>
 
-                    <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto">
+                    <div className="flex w-full min-w-0 flex-wrap items-center gap-2 lg:flex-1">
                         {["All", "pending", "confirmed", "cancelled"].map(
                             (s) => (
                                 <Button
@@ -375,7 +375,7 @@ export default function AdminAppointmentsPage() {
                     }}
                 >
                     {selectedAppointment && (
-                        <DialogContent className="max-h-[calc(100dvh-2rem)] max-w-lg overflow-y-auto rounded-3xl p-4 sm:max-w-lg sm:p-6">
+                        <DialogContent className="max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-lg overflow-y-auto rounded-3xl p-4 sm:max-w-lg sm:p-6">
                             <DialogHeader className="border-b border-neutral-100 pb-3">
                                 <div className="flex items-center gap-2">
                                     <Calendar className="w-5 h-5 text-neutral-900" />

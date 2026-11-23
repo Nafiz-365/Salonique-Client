@@ -69,7 +69,7 @@ export interface ApiTransaction {
     amount: number;
     currency?: string;
     status: "paid" | "failed" | "succeeded" | "pending" | "refunded";
-    paymentMethod: string;
+    paymentMethod?: string | null;
     date: string;
 }
 
@@ -90,6 +90,8 @@ export async function fetchServices(params?: {
     page?: number;
     limit?: number;
     location?: string;
+    date?: string;
+    time?: string;
 }): Promise<ServicesResponse> {
     const qs = new URLSearchParams();
     if (params?.category) qs.set("category", params.category);
@@ -99,6 +101,8 @@ export async function fetchServices(params?: {
     if (params?.page) qs.set("page", String(params.page));
     if (params?.limit) qs.set("limit", String(params.limit));
     if (params?.location) qs.set("location", params.location);
+    if (params?.date) qs.set("date", params.date);
+    if (params?.time) qs.set("time", params.time);
 
     const url = `${API_BASE}/services${qs.toString() ? `?${qs}` : ""}`;
     const res = await fetch(url, { cache: "no-store" });
@@ -116,16 +120,14 @@ export async function fetchFeaturedServices(): Promise<ApiService[]> {
 }
 
 export async function fetchService(id: string): Promise<ApiService | null> {
-    try {
-        const res = await fetch(`${API_BASE}/service/${id}`, {
-            cache: "no-store",
-        });
-        if (!res.ok) return null;
-        const data = await res.json();
-        return data.service ?? data;
-    } catch {
-        return null;
-    }
+    const res = await fetch(
+        `${API_BASE}/service/${encodeURIComponent(id)}`,
+        { cache: "no-store" },
+    );
+    if (res.status === 404) return null;
+    if (!res.ok) throw new Error(`Failed to fetch service (${res.status})`);
+    const data = await res.json();
+    return data.service ?? data;
 }
 
 // ─── BFF proxy helpers (authenticated) ────────────────────────────────────

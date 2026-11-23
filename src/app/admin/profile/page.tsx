@@ -67,7 +67,7 @@ export default function AdminProfilePage() {
 
     return (
         <AdminLayout>
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-neutral-200/80 shadow-xs max-w-2xl space-y-6">
+            <div className="mx-auto w-full max-w-2xl space-y-6 rounded-3xl border border-neutral-200/80 bg-white p-5 shadow-xs sm:p-8">
                 <div className="pb-5 border-b border-neutral-100">
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-rose-50 text-rose-700 mb-2">
                         <ShieldCheck className="w-3.5 h-3.5" />
@@ -97,17 +97,17 @@ export default function AdminProfilePage() {
                             unoptimized
                             className="w-20 h-20 rounded-full object-cover border-2 border-neutral-900 shadow-xs shrink-0"
                         />
-                        <div className="flex-1 space-y-2">
+                        <div className="min-w-0 flex-1 space-y-2">
                             <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider">
                                 Admin Photo (Upload or URL)
                             </label>
-                            <div className="flex items-center gap-2">
+                            <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center">
                                 <Input
                                     type="url"
                                     value={avatar}
                                     onChange={(e) => setAvatar(e.target.value)}
                                     placeholder="https://..."
-                                    className="h-10 flex-1 px-3 text-xs"
+                                    className="h-10 w-full min-w-0 flex-1 px-3 text-xs"
                                 />
                                 <Input
                                     id="admin-profile-image"
@@ -115,7 +115,7 @@ export default function AdminProfilePage() {
                                     accept="image/*"
                                     onChange={handleImageUpload}
                                     disabled={isUploading}
-                                    className="sr-only"
+                                    className="sr-only m-0! h-px! w-px! border-0! p-0!"
                                 />
                                 <Button
                                     nativeButton={false}
@@ -125,7 +125,7 @@ export default function AdminProfilePage() {
                                     render={
                                         <label htmlFor="admin-profile-image" />
                                     }
-                                    className="h-10 shrink-0 gap-1.5"
+                                    className="h-10 shrink-0 gap-1.5 self-start sm:self-auto"
                                 >
                                     <Upload className="w-3.5 h-3.5" />
                                     <span>

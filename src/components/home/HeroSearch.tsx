@@ -12,9 +12,11 @@ import {
     ArrowRight,
 } from "lucide-react";
 import { fetchServices } from "@/lib/server-api";
+import { useLocalDateInputValue } from "@/hooks/use-local-date-input";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SEARCH_TIME_OPTIONS } from "@/lib/booking";
 const POPULAR_LOCATIONS = [
     "All Locations",
     "SoHo, New York",
@@ -25,17 +27,6 @@ const POPULAR_LOCATIONS = [
     "DUMBO, Brooklyn",
 ];
 
-const TIME_SLOTS = [
-    "Any time",
-    "Morning (9:00 AM - 12:00 PM)",
-    "Afternoon (12:00 PM - 5:00 PM)",
-    "Evening (5:00 PM - 9:00 PM)",
-    "10:00 AM",
-    "11:30 AM",
-    "02:00 PM",
-    "04:30 PM",
-];
-
 export function HeroSearch() {
     const router = useRouter();
 
@@ -43,6 +34,7 @@ export function HeroSearch() {
     const [location, setLocation] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedTime, setSelectedTime] = useState("Any time");
+    const minimumDate = useLocalDateInputValue();
 
     // Dropdown states
     const [queryOpen, setQueryOpen] = useState(false);
@@ -127,7 +119,7 @@ export function HeroSearch() {
         if (location && location !== "All Locations")
             params.set("location", location);
         if (selectedDate) params.set("date", selectedDate);
-        if (selectedTime && selectedTime !== "Any time")
+        if (selectedDate && selectedTime !== "Any time")
             params.set("time", selectedTime);
 
         router.push(`/services?${params.toString()}`);
@@ -154,10 +146,12 @@ export function HeroSearch() {
                 <div className="mb-8 max-w-3xl space-y-5 sm:mb-10 sm:space-y-6">
                     <div className="inline-flex max-w-full items-center gap-3 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-[#E8D1B5] backdrop-blur-md sm:tracking-[0.25em]">
                         <span className="size-1.5 rounded-full bg-[#E8D1B5] animate-pulse" />
-                        <span className="truncate">Salonique · New York Atelier</span>
+                        <span className="truncate">
+                            Salonique · New York Atelier
+                        </span>
                     </div>
 
-                    <h1 className="max-w-3xl text-[clamp(2.5rem,10vw,5.75rem)] font-light leading-[1] tracking-[-0.035em] text-white sm:text-[clamp(3.25rem,8vw,5.75rem)]">
+                    <h1 className="max-w-3xl text-[clamp(2.5rem,10vw,5.75rem)] font-light leading-none tracking-[-0.035em] text-white sm:text-[clamp(3.25rem,8vw,5.75rem)]">
                         A little time{" "}
                         <span className="sm:block font-serif font-normal italic text-[#F3E5D4] underline decoration-[#C5A880]/40 underline-offset-8">
                             just for you.
@@ -343,27 +337,42 @@ export function HeroSearch() {
                                 Date & Time
                             </label>
                             {/* Trigger */}
-                            <div
+                            <button
+                                type="button"
+                                aria-label="Choose appointment date and time"
+                                aria-haspopup="dialog"
+                                aria-expanded={dateTimeOpen}
+                                aria-controls="hero-date-time-dialog"
                                 onClick={() => {
                                     setDateTimeOpen(!dateTimeOpen);
                                     setQueryOpen(false);
                                     setLocationOpen(false);
                                 }}
-                                className="flex min-w-0 items-center gap-2 cursor-pointer"
+                                className="flex min-w-0 w-full items-center gap-2 text-left"
                             >
                                 <CalendarIcon className="w-4 h-4 text-neutral-400 shrink-0" />
                                 <span className="min-w-0 flex-1 truncate text-sm font-semibold text-neutral-900">
                                     {selectedDate
                                         ? `${selectedDate} • ${selectedTime}`
+                                        : selectedTime !== "Any time"
+                                          ? `Any date • ${selectedTime}`
                                         : "Any date • Any time"}
                                 </span>
                                 <ChevronDown className="w-3.5 h-3.5 text-neutral-400 shrink-0 ml-auto" />
-                            </div>
+                            </button>
 
                             {/* Date & Time Dropdown */}
                             {dateTimeOpen && (
                                 <div
                                     ref={dropRef}
+                                    id="hero-date-time-dialog"
+                                    role="dialog"
+                                    aria-label="Appointment date and time"
+                                    onKeyDown={(event) => {
+                                        if (event.key === "Escape") {
+                                            setDateTimeOpen(false);
+                                        }
+                                    }}
                                     className="absolute top-full right-0 mt-3 w-full sm:w-80 bg-white rounded-2xl shadow-2xl border border-neutral-100 p-4 z-50 animate-in fade-in zoom-in-95"
                                 >
                                     <div className="space-y-4">
@@ -379,15 +388,18 @@ export function HeroSearch() {
                                                 type="date"
                                                 value={selectedDate}
                                                 onChange={(e) =>
-                                                    setSelectedDate(
-                                                        e.target.value,
-                                                    )
+                                                    {
+                                                        setSelectedDate(
+                                                            e.target.value,
+                                                        );
+                                                        if (!e.target.value) {
+                                                            setSelectedTime(
+                                                                "Any time",
+                                                            );
+                                                        }
+                                                    }
                                                 }
-                                                min={
-                                                    new Date()
-                                                        .toISOString()
-                                                        .split("T")[0]
-                                                }
+                                                min={minimumDate || undefined}
                                                 className="h-10 text-sm font-medium text-neutral-900"
                                             />
                                         </div>
@@ -397,10 +409,14 @@ export function HeroSearch() {
                                                 Preferred Time Slot
                                             </span>
                                             <div className="grid grid-cols-2 gap-1.5">
-                                                {TIME_SLOTS.map((time) => (
+                                                {SEARCH_TIME_OPTIONS.map((time) => (
                                                     <button
                                                         key={time}
                                                         type="button"
+                                                        disabled={
+                                                            time !== "Any time" &&
+                                                            !selectedDate
+                                                        }
                                                         onClick={() =>
                                                             setSelectedTime(
                                                                 time,
@@ -410,13 +426,18 @@ export function HeroSearch() {
                                                             selectedTime ===
                                                             time
                                                                 ? "bg-neutral-900 text-white"
-                                                                : "bg-neutral-50 text-neutral-700 hover:bg-neutral-100"
+                                                                : "bg-neutral-50 text-neutral-700 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
                                                         }`}
                                                     >
                                                         {time}
                                                     </button>
                                                 ))}
                                             </div>
+                                            {!selectedDate && (
+                                                <p className="text-xs text-neutral-500">
+                                                    Select a date to choose a time.
+                                                </p>
+                                            )}
                                         </div>
 
                                         <div className="flex items-center justify-between border-t border-neutral-100 pt-3">

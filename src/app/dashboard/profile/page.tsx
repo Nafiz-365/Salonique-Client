@@ -80,7 +80,7 @@ function ProfileEditor({ user }: { user: AuthUser }) {
     };
 
     return (
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-neutral-200/80 shadow-xs max-w-2xl">
+        <div className="mx-auto w-full max-w-2xl rounded-3xl border border-neutral-200/80 bg-white p-5 shadow-xs sm:p-8">
             <div className="pb-6 border-b border-neutral-100 mb-6">
                 <h2 className="text-xl font-extrabold text-neutral-900">
                     Profile & Settings
@@ -103,6 +103,7 @@ function ProfileEditor({ user }: { user: AuthUser }) {
                         width={80}
                         height={80}
                         unoptimized
+                        loading="eager"
                         className="w-20 h-20 rounded-full object-cover border-2 border-neutral-200 shadow-sm shrink-0"
                     />
                     <div className="min-w-0 flex-1 space-y-2">
@@ -123,7 +124,7 @@ function ProfileEditor({ user }: { user: AuthUser }) {
                                 accept="image/*"
                                 onChange={handleImageUpload}
                                 disabled={isUploading}
-                                className="sr-only"
+                                className="sr-only m-0! h-px! w-px! border-0! p-0!"
                             />
                             <Button
                                 nativeButton={false}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -15,21 +15,31 @@ import {
     User as UserIcon,
     LogOut,
     ExternalLink,
-    Menu,
-    X,
-    ChevronRight,
     Loader2,
 } from "lucide-react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { SaloniqueMark } from "@/components/common/SaloniqueMark";
+import { PortalSidebarLink } from "@/components/common/PortalSidebarLink";
+import {
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarGroup,
+    SidebarGroupContent,
+    SidebarGroupLabel,
+    SidebarHeader,
+    SidebarInset,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    SidebarProvider,
+    SidebarTrigger,
+} from "@/components/ui/sidebar";
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const router = useRouter();
     const { user, isAuthenticated, isLoading, logout } = useAuth();
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
     // Server & Client Route Protection: Only Admin can access
     useEffect(() => {
         if (!isLoading) {
@@ -94,178 +104,134 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
             active: pathname === "/admin/profile",
         },
     ];
+    const activeLabel =
+        menuItems.find((item) => item.active)?.label ?? "Admin Console";
 
     return (
-        <div className="min-h-screen bg-[#FDFBF7] flex flex-col font-sans">
-            {/* Top Admin Header Bar */}
-            <header className="sticky top-0 z-40 bg-[#1C1816] text-[#FAF7F2] border-b border-[#2D2623]">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-16">
-                        {/* Brand Logo & Admin Pill */}
-                        <div className="flex items-center gap-3">
-                            <Link
-                                href="/admin"
-                                className="flex items-center gap-2.5"
-                            >
-                                <SaloniqueMark
-                                    tone="light"
-                                    className="size-8"
-                                />
-                                <span className="text-lg font-serif font-medium tracking-tight text-white">
-                                    Salonique
-                                </span>
-                            </Link>
-                            <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#2A2320] text-[#D8B485] border border-[#3D332F] uppercase tracking-wider">
-                                <ShieldCheck className="w-3 h-3 text-[#D8B485]" />
+        <SidebarProvider className="min-h-svh bg-[#FDFBF7]">
+            <Sidebar
+                side="left"
+                mobileSide="right"
+                variant="sidebar"
+                collapsible="icon"
+                className="border-r border-[#E8E2D8] bg-white"
+            >
+                <SidebarHeader className="border-b border-[#F0ECE4] p-4">
+                    <Link
+                        href="/admin"
+                        className="flex min-w-0 items-center gap-3 group-data-[collapsible=icon]:justify-center"
+                    >
+                        <SaloniqueMark className="size-9 shrink-0" />
+                        <span className="min-w-0 group-data-[collapsible=icon]:hidden">
+                            <span className="block font-serif text-base font-semibold leading-tight text-[#1A1715]">
+                                Salonique
+                            </span>
+                            <span className="mt-1 flex items-center gap-1 text-[10px] font-medium uppercase tracking-wide text-[#9E8265]">
+                                <ShieldCheck className="size-3" />
                                 Admin Console
                             </span>
-                        </div>
+                        </span>
+                    </Link>
+                </SidebarHeader>
 
-                        {/* Right Quick Controls */}
-                        <div className="flex items-center gap-3">
-                            <Link
-                                href="/"
-                                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#2A2320] hover:bg-[#3D332F] text-xs font-medium text-[#C5BFB8] hover:text-white transition-colors"
-                            >
-                                <span>Live Marketplace</span>
-                                <ExternalLink className="w-3 h-3" />
-                            </Link>
+                <SidebarContent>
+                    <SidebarGroup>
+                        <SidebarGroupLabel className="px-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-500">
+                            Workspace
+                        </SidebarGroupLabel>
+                        <SidebarGroupContent>
+                            <SidebarMenu className="gap-1">
+                                {menuItems.map((item) => (
+                                    <PortalSidebarLink
+                                        key={item.href}
+                                        href={item.href}
+                                        label={item.label}
+                                        icon={item.icon}
+                                        active={item.active}
+                                    />
+                                ))}
+                            </SidebarMenu>
+                        </SidebarGroupContent>
+                    </SidebarGroup>
+                </SidebarContent>
 
-                            <div className="flex items-center gap-2 pl-2 border-l border-[#2D2623]">
-                                <Image
-                                    src={
-                                        user?.avatar ||
-                                        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80"
-                                    }
-                                    alt={user?.name || "Admin"}
-                                    width={32}
-                                    height={32}
-                                    unoptimized
-                                    className="w-8 h-8 rounded-full object-cover border border-[#3D332F]"
-                                />
-                                <span className="hidden lg:block text-xs font-medium text-[#EBE5DA]">
-                                    {user?.name || "Admin"}
-                                </span>
-                            </div>
-
-                            {/* Mobile Menu Toggle */}
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                type="button"
-                                onClick={() =>
-                                    setMobileMenuOpen(!mobileMenuOpen)
-                                }
-                                className="size-10 rounded-full text-neutral-300 hover:bg-neutral-800 hover:text-white lg:hidden"
-                                aria-label={
-                                    mobileMenuOpen
-                                        ? "Close admin navigation"
-                                        : "Open admin navigation"
-                                }
-                                aria-expanded={mobileMenuOpen}
-                                aria-controls="admin-mobile-navigation"
-                            >
-                                {mobileMenuOpen ? (
-                                    <X className="w-6 h-6" />
-                                ) : (
-                                    <Menu className="w-6 h-6" />
-                                )}
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Mobile Navigation Drawer */}
-                {mobileMenuOpen && (
-                    <div
-                        id="admin-mobile-navigation"
-                        className="lg:hidden border-t border-neutral-800 bg-neutral-900 p-4 space-y-2"
+                <SidebarFooter className="border-t border-[#F0ECE4] p-3 group-data-[collapsible=icon]:p-2">
+                    <Link
+                        href="/admin/profile"
+                        aria-label="Admin profile"
+                        title="Admin profile"
+                        className="flex min-w-0 items-center gap-2.5 rounded-lg px-1 py-1 transition-colors hover:bg-[#F4F1EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9E8265] group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
                     >
-                        {menuItems.map((item) => {
-                            const Icon = item.icon;
-                            return (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-                                        item.active
-                                            ? "bg-white text-neutral-900"
-                                            : "text-neutral-300 hover:bg-neutral-800"
-                                    }`}
-                                >
-                                    <Icon className="w-4 h-4" />
-                                    <span>{item.label}</span>
-                                </Link>
-                            );
-                        })}
-                        <div className="pt-3 border-t border-neutral-800 flex justify-between items-center text-xs">
-                            <Link
-                                href="/"
-                                className="text-neutral-400 hover:text-white"
-                            >
-                                Back to Site
-                            </Link>
-                            <Button
-                                variant="ghost"
-                                type="button"
+                        <Image
+                            src={
+                                user?.avatar ||
+                                "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80"
+                            }
+                            alt={user?.name || "Admin"}
+                            width={32}
+                            height={32}
+                            unoptimized
+                            className="size-8 max-w-none shrink-0 rounded-full object-cover"
+                        />
+                        <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
+                            <p className="truncate text-xs font-medium text-[#1A1715]">
+                                {user?.name || "Admin"}
+                            </p>
+                            <p className="truncate text-[10px] text-neutral-500">
+                                Administrator
+                            </p>
+                        </div>
+                    </Link>
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton
                                 onClick={logout}
-                                className="h-auto px-2 py-1 text-rose-400 hover:bg-transparent hover:text-rose-300"
+                                tooltip="Sign out"
+                                className="h-9 rounded-lg px-3 text-rose-700 hover:bg-rose-50 hover:text-rose-800"
                             >
-                                Sign Out
-                            </Button>
+                                <LogOut />
+                                <span>Sign out</span>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                </SidebarFooter>
+            </Sidebar>
+
+            <SidebarInset className="min-w-0 flex-1 bg-transparent">
+                <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-[#E8E2D8] bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8">
+                    <div className="flex min-w-0 items-center gap-3">
+                        <SidebarTrigger
+                            aria-label="Toggle admin navigation"
+                            className="hidden size-9 rounded-lg text-neutral-600 hover:bg-[#F4F1EC] md:flex"
+                        />
+                        <div className="min-w-0">
+                            <p className="truncate text-sm font-semibold text-[#1A1715]">
+                                {activeLabel}
+                            </p>
+                            <p className="hidden text-[11px] text-neutral-500 sm:block">
+                                Salonique · Admin workspace
+                            </p>
                         </div>
                     </div>
-                )}
-            </header>
 
-            {/* Main Admin Body */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                    {/* Desktop Left Sidebar */}
-                    <aside className="hidden lg:block lg:col-span-3 bg-white rounded-3xl p-4 border border-neutral-200/80 shadow-xs space-y-1">
-                        <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-neutral-400">
-                            Navigation
-                        </div>
-
-                        {menuItems.map((item) => {
-                            const Icon = item.icon;
-                            return (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold transition-all ${
-                                        item.active
-                                            ? "bg-neutral-900 text-white shadow-xs"
-                                            : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
-                                    }`}
-                                >
-                                    <Icon className="w-4 h-4" />
-                                    <span>{item.label}</span>
-                                    {item.active && (
-                                        <ChevronRight className="w-4 h-4 ml-auto" />
-                                    )}
-                                </Link>
-                            );
-                        })}
-
-                        <div className="pt-3 mt-3 border-t border-neutral-100">
-                            <Button
-                                variant="ghost"
-                                type="button"
-                                onClick={logout}
-                                className="h-auto w-full justify-start gap-3 rounded-xl px-3.5 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50"
-                            >
-                                <LogOut className="w-3.5 h-3.5" />
-                                <span>Log Out</span>
-                            </Button>
-                        </div>
-                    </aside>
-
-                    {/* Admin Content Area */}
-                    <main className="lg:col-span-9 w-full">{children}</main>
+                    <div className="flex shrink-0 items-center gap-2 sm:gap-4">
+                        <Link
+                            href="/"
+                            className="hidden items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium text-neutral-600 transition-colors hover:bg-[#F4F1EC] hover:text-[#1A1715] sm:inline-flex"
+                        >
+                            Marketplace
+                            <ExternalLink className="size-3.5" />
+                        </Link>
+                        <SidebarTrigger
+                            aria-label="Toggle admin navigation"
+                            className="size-9 rounded-lg text-neutral-600 hover:bg-[#F4F1EC] md:hidden"
+                        />
+                    </div>
+                </header>
+                <div className="mx-auto min-w-0 w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+                    {children}
                 </div>
-            </div>
-        </div>
+            </SidebarInset>
+        </SidebarProvider>
     );
 }

@@ -88,7 +88,7 @@ export default function MyAppointmentsPage() {
         <CustomerLayout>
             <div className="space-y-6">
                 {/* Header & Filter Tabs */}
-                <div className="bg-white rounded-3xl p-6 border border-neutral-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex flex-col gap-4 rounded-3xl border border-neutral-200/80 bg-white p-4 shadow-xs md:flex-row md:items-center md:justify-between sm:p-6">
                     <div>
                         <h2 className="text-xl font-extrabold text-neutral-900">
                             My Appointments
@@ -98,7 +98,7 @@ export default function MyAppointmentsPage() {
                             secure payments
                         </p>
                     </div>
-                    <div className="flex items-center gap-1.5 overflow-x-auto pb-1 hide-scrollbar">
+                    <div className="flex flex-wrap items-center gap-1.5 md:flex-nowrap md:justify-end">
                         {filterTabs.map((tab) => (
                             <button
                                 key={tab}
@@ -134,10 +134,10 @@ export default function MyAppointmentsPage() {
                     </div>
                 ) : filtered.length > 0 ? (
                     <div className="space-y-4">
-                        {filtered.map((apt) => (
+                        {filtered.map((apt, index) => (
                             <div
                                 key={apt._id}
-                                className="bg-white rounded-3xl p-6 border border-neutral-200/80 shadow-xs hover:border-neutral-300 transition-all space-y-4"
+                                className="space-y-4 rounded-3xl border border-neutral-200/80 bg-white p-4 shadow-xs transition-all hover:border-neutral-300 sm:p-6"
                             >
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-neutral-100 gap-3">
                                     <div className="flex items-center gap-2.5">
@@ -176,7 +176,7 @@ export default function MyAppointmentsPage() {
                                 </div>
 
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                                    <div className="flex items-start gap-4">
+                                    <div className="flex min-w-0 items-start gap-4">
                                         <Image
                                             src={
                                                 apt.serviceImage ||
@@ -186,13 +186,16 @@ export default function MyAppointmentsPage() {
                                             width={80}
                                             height={80}
                                             unoptimized
+                                            loading={
+                                                index === 0 ? "eager" : "lazy"
+                                            }
                                             className="w-20 h-20 rounded-2xl object-cover border border-neutral-200 shrink-0"
                                         />
-                                        <div className="space-y-1">
+                                        <div className="min-w-0 flex-1 space-y-1">
                                             <span className="text-[11px] font-bold text-neutral-500 uppercase">
                                                 {apt.serviceCategory}
                                             </span>
-                                            <h4 className="text-base font-bold text-neutral-900">
+                                            <h4 className="wrap-break-word text-base font-bold text-neutral-900">
                                                 {apt.serviceName}
                                             </h4>
                                             <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-600 pt-1">

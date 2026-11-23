@@ -5,8 +5,10 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Navbar } from "@/components/common/Navbar";
 import { Footer } from "@/components/common/Footer";
 import { ServiceCard } from "@/components/services/ServiceCard";
-import { Service } from "@/lib/types";
-import { fetchServices, ApiService } from "@/lib/server-api";
+import { Service, SERVICE_CATEGORIES } from "@/lib/types";
+import { fetchServices } from "@/lib/server-api";
+import { mapApiServiceToService } from "@/lib/service";
+import { SEARCH_TIME_OPTIONS, toDateInputValue } from "@/lib/booking";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -29,17 +31,7 @@ import {
     Loader2,
 } from "lucide-react";
 
-const CATEGORIES = [
-    "All",
-    "Hair",
-    "Nails",
-    "Facial",
-    "Massage",
-    "Makeup",
-    "Brows & Lashes",
-    "Waxing",
-    "Spa",
-];
+const CATEGORIES = ["All", ...SERVICE_CATEGORIES];
 
 const SORT_OPTIONS = [
     { label: "Recommended", value: "recommended" },
@@ -49,33 +41,23 @@ const SORT_OPTIONS = [
     { label: "Duration: Shortest", value: "duration" },
 ];
 
-// Map ApiService → local Service type
-function toService(s: ApiService): Service {
-    return {
-        id: s._id,
-        name: s.name,
-        slug: s.slug,
-        category: s.category as Service["category"],
-        price: s.price,
-        duration: s.duration,
-        rating: s.rating,
-        reviewCount: s.reviewCount,
-        description: s.description,
-        shortDescription: s.shortDescription,
-        image: s.image,
-        gallery: s.gallery,
-        isActive: s.isActive,
-        featured: s.featured,
-        popular: s.popular,
-        specialist: s.specialist,
-        location: s.location,
-        included: s.included,
-    };
-}
-
 function ServicesContent() {
     const searchParams = useSearchParams();
     const searchParamsString = searchParams.toString();
+    const requestedDate = searchParams.get("date") || "";
+    const date = new Date(`${requestedDate}T00:00:00.000Z`);
+    const initialDate =
+        /^\d{4}-\d{2}-\d{2}$/.test(requestedDate) &&
+        !Number.isNaN(date.getTime()) &&
+        date.toISOString().slice(0, 10) === requestedDate
+            ? requestedDate
+            : "";
+    const requestedTime = searchParams.get("time") || "Any time";
+    const initialTime = initialDate && SEARCH_TIME_OPTIONS.some(
+        (option) => option === requestedTime,
+    )
+        ? requestedTime
+        : "Any time";
 
     return (
         <ServicesBrowser
@@ -85,7 +67,8 @@ function ServicesContent() {
             initialLocation={searchParams.get("location") || ""}
             initialSort={searchParams.get("sort") || "recommended"}
             initialFeatured={searchParams.get("featured") === "true"}
-            searchParamsString={searchParamsString}
+            initialDate={initialDate}
+            initialTime={initialTime}
         />
     );
 }
@@ -96,23 +79,26 @@ function ServicesBrowser({
     initialLocation,
     initialSort,
     initialFeatured,
-    searchParamsString,
+    initialDate,
+    initialTime,
 }: {
     initialQ: string;
     initialCategory: string;
     initialLocation: string;
     initialSort: string;
     initialFeatured: boolean;
-    searchParamsString: string;
+    initialDate: string;
+    initialTime: string;
 }) {
     const router = useRouter();
-    const searchParams = new URLSearchParams(searchParamsString);
 
     const [searchQuery, setSearchQuery] = useState(initialQ);
     const [selectedCategory, setSelectedCategory] = useState(initialCategory);
     const [selectedLocation, setSelectedLocation] = useState(initialLocation);
     const [sortBy, setSortBy] = useState(initialSort);
     const [onlyFeatured, setOnlyFeatured] = useState(initialFeatured);
+    const [selectedDate, setSelectedDate] = useState(initialDate);
+    const [selectedTime, setSelectedTime] = useState(initialTime);
 
     const [services, setServices] = useState<Service[]>([]);
     const [total, setTotal] = useState(0);
@@ -149,11 +135,16 @@ function ServicesBrowser({
                     location: selectedLocation.trim() || undefined,
                     sort,
                     featured: onlyFeatured || undefined,
+                    date: selectedDate || undefined,
+                    time:
+                        selectedDate && selectedTime !== "Any time"
+                            ? selectedTime
+                            : undefined,
                     page: p,
                     limit: 9,
                 });
 
-                const mapped = data.services.map(toService);
+                const mapped = data.services.map(mapApiServiceToService);
 
                 setServices(append ? (prev) => [...prev, ...mapped] : mapped);
                 setTotal(data.total);
@@ -172,7 +163,15 @@ function ServicesBrowser({
                 setIsLoadingMore(false);
             }
         },
-        [searchQuery, selectedCategory, selectedLocation, sortBy, onlyFeatured],
+        [
+            searchQuery,
+            selectedCategory,
+            selectedLocation,
+            sortBy,
+            onlyFeatured,
+            selectedDate,
+            selectedTime,
+        ],
     );
 
     // Debounce search/filter changes
@@ -189,14 +188,23 @@ function ServicesBrowser({
         setSelectedLocation("");
         setSortBy("recommended");
         setOnlyFeatured(false);
+        setSelectedDate("");
+        setSelectedTime("Any time");
         router.push("/services");
     };
 
     const handleCategoryClick = (cat: string) => {
         setSelectedCategory(cat);
-        const params = new URLSearchParams(searchParams.toString());
-        if (cat === "All") params.delete("category");
-        else params.set("category", cat);
+        const params = new URLSearchParams();
+        if (searchQuery.trim()) params.set("q", searchQuery.trim());
+        if (cat !== "All") params.set("category", cat);
+        if (selectedLocation.trim())
+            params.set("location", selectedLocation.trim());
+        if (sortBy !== "recommended") params.set("sort", sortBy);
+        if (onlyFeatured) params.set("featured", "true");
+        if (selectedDate) params.set("date", selectedDate);
+        if (selectedDate && selectedTime !== "Any time")
+            params.set("time", selectedTime);
         router.push(`/services?${params.toString()}`);
     };
 
@@ -205,7 +213,9 @@ function ServicesBrowser({
         selectedCategory !== "All" ||
         selectedLocation ||
         sortBy !== "recommended" ||
-        onlyFeatured;
+        onlyFeatured ||
+        selectedDate ||
+        selectedTime !== "Any time";
 
     return (
         <div className="bg-[#FDFBF7] min-h-screen">
@@ -258,9 +268,9 @@ function ServicesBrowser({
             {/* Main Content Area */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Controls Toolbar */}
-                <div className="bg-white p-4 rounded-2xl border border-[#EBE5DA] shadow-xs mb-8 flex flex-col md:flex-row items-center gap-4 justify-between">
+                <div className="bg-white p-4 rounded-2xl border border-[#EBE5DA] shadow-xs mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
                     {/* Search */}
-                    <div className="relative w-full md:w-80">
+                    <div className="relative w-full">
                         <Search className="w-4 h-4 text-[#9E8265] absolute left-3.5 top-1/2 -translate-y-1/2" />
                         <Input
                             type="text"
@@ -284,7 +294,7 @@ function ServicesBrowser({
                     </div>
 
                     {/* Location */}
-                    <div className="relative w-full md:w-64">
+                    <div className="relative w-full">
                         <MapPin className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                         <Input
                             type="text"
@@ -309,9 +319,55 @@ function ServicesBrowser({
                         )}
                     </div>
 
+                    <div className="w-full">
+                        <label
+                            htmlFor="services-date-filter"
+                            className="sr-only"
+                        >
+                            Appointment date
+                        </label>
+                        <Input
+                            id="services-date-filter"
+                            type="date"
+                            value={selectedDate}
+                            min={toDateInputValue(new Date())}
+                            onChange={(event) => {
+                                setSelectedDate(event.target.value);
+                                if (!event.target.value) {
+                                    setSelectedTime("Any time");
+                                }
+                            }}
+                            className="h-10 w-full rounded-xl bg-neutral-50/50 text-xs font-medium sm:text-sm"
+                        />
+                    </div>
+
+                    <div className="w-full">
+                        <Select
+                            value={selectedTime}
+                            onValueChange={(value) => {
+                                if (value) setSelectedTime(value);
+                            }}
+                            disabled={!selectedDate}
+                        >
+                            <SelectTrigger
+                                aria-label="Filter by appointment time"
+                                className="h-10 w-full rounded-xl px-3 text-xs font-semibold sm:text-sm"
+                            >
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {SEARCH_TIME_OPTIONS.map((time) => (
+                                    <SelectItem key={time} value={time}>
+                                        {time}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
                     {/* Sort + Reset */}
-                    <div className="flex items-center gap-3 w-full md:w-auto justify-end">
-                        <div className="relative w-full md:w-48">
+                    <div className="flex items-center gap-3 w-full justify-end">
+                        <div className="relative w-full">
                             <Select
                                 value={sortBy}
                                 onValueChange={(value) => {

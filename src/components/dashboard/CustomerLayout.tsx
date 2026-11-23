@@ -1,30 +1,49 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
-import { toast } from "sonner";
-import { Navbar } from "@/components/common/Navbar";
-import { Footer } from "@/components/common/Footer";
 import {
-    LayoutDashboard,
     Calendar,
-    User as UserIcon,
-    LogOut,
-    Sparkles,
-    ChevronRight,
+    LayoutDashboard,
     Loader2,
+    LogOut,
+    Menu,
+    Sparkles,
+    User as UserIcon,
 } from "lucide-react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { SaloniqueMark } from "@/components/common/SaloniqueMark";
+import { useAuth } from "@/context/AuthContext";
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/ui/avatar";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet";
 
 export function CustomerLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const router = useRouter();
     const { user, isAuthenticated, isLoading, logout } = useAuth();
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    // Route Protection: Unauthenticated or Blocked users cannot access
     useEffect(() => {
         if (!isLoading) {
             if (!isAuthenticated) {
@@ -88,122 +107,237 @@ export function CustomerLayout({ children }: { children: React.ReactNode }) {
     ];
 
     return (
-        <div className="flex flex-col min-h-screen bg-[#FDFBF7]">
-            <Navbar />
-
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
-                {/* Welcome Header */}
-                <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#EBE5DA] shadow-xs mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div className="flex min-w-0 items-start gap-3 sm:items-center sm:gap-4">
-                        <Image
-                            src={
-                                user?.avatar ||
-                                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80"
-                            }
-                            alt={user?.name || "Customer"}
-                            width={64}
-                            height={64}
-                            unoptimized
-                            className="size-12 shrink-0 rounded-full border-2 border-[#E0D8CB] object-cover shadow-xs sm:size-16"
-                        />
-                        <div className="min-w-0 flex-1">
-                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                                <h1 className="text-xl font-serif font-medium text-[#1A1715] sm:text-2xl">
-                                    Welcome back,{" "}
-                                    {user?.name?.split(" ")[0] ||
-                                        "Valued Client"}
-                                </h1>
-                                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase bg-[#F3EDE4] text-[#1A1715]">
-                                    Customer
+        <div className="min-h-svh bg-[#FDFBF7]">
+            <header className="sticky top-0 z-40 border-b border-[#E8E2D8] bg-[#FDFBF7]/95 backdrop-blur">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div className="flex h-16 items-center justify-between gap-4">
+                        <Link
+                            href="/"
+                            className="flex shrink-0 items-center gap-2.5"
+                        >
+                            <SaloniqueMark />
+                            <span>
+                                <span className="block font-serif text-lg font-semibold leading-tight text-[#1A1715]">
+                                    Salonique
                                 </span>
-                            </div>
-                            <p className="text-xs sm:text-sm text-neutral-600 font-light mt-0.5">
-                                Manage your beauty bookings, receipts, and
-                                personal profile details in one place.
-                            </p>
-                        </div>
-                    </div>
+                                <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#9E8265]">
+                                    Your Beauty Account
+                                </span>
+                            </span>
+                        </Link>
 
-                    <Link
-                        href="/services"
-                        className="px-5 py-2.5 rounded-full bg-[#1A1715] text-[#FAF7F2] font-medium text-xs hover:bg-[#2D2623] flex items-center gap-1.5 shadow-xs transition-colors shrink-0"
-                    >
-                        <Sparkles className="w-3.5 h-3.5 text-[#D8B485]" />
-                        <span>Book New Service</span>
-                    </Link>
-                </div>
-
-                {/* Dashboard Grid: Sidebar + Main Area */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                    {/* Desktop Sidebar Navigation */}
-                    <aside className="hidden lg:block lg:col-span-3 bg-white rounded-3xl p-4 border border-[#EBE5DA] shadow-xs space-y-1">
-                        <div className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-[#9E8265]">
-                            Customer Portal
-                        </div>
-
-                        {navItems.map((item) => {
-                            const Icon = item.icon;
-                            return (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-medium transition-all ${
-                                        item.active
-                                            ? "bg-[#1A1715] text-[#FAF7F2] shadow-xs"
-                                            : "text-neutral-600 hover:text-[#1A1715] hover:bg-[#F7F3EC]"
-                                    }`}
-                                >
-                                    <Icon className="w-4 h-4" />
-                                    <span>{item.label}</span>
-                                    {item.active && (
-                                        <ChevronRight className="w-4 h-4 ml-auto" />
-                                    )}
-                                </Link>
-                            );
-                        })}
-
-                        <div className="pt-3 mt-3 border-t border-[#F0ECE4]">
-                            <Button
-                                variant="ghost"
-                                type="button"
-                                onClick={logout}
-                                className="w-full justify-start gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-medium text-rose-600 hover:bg-rose-50/70"
+                        <div className="flex items-center gap-2">
+                            <div className="hidden lg:block">
+                                <DropdownMenu>
+                            <DropdownMenuTrigger
+                                render={
+                                    <button
+                                        type="button"
+                                        aria-label={`Open ${user.name}'s account menu`}
+                                        className="rounded-full outline-none ring-offset-2 focus-visible:ring-2 focus-visible:ring-[#9E8265]"
+                                    />
+                                }
                             >
-                                <LogOut className="w-4 h-4" />
-                                <span>Sign Out</span>
-                            </Button>
-                        </div>
-                    </aside>
-
-                    {/* Mobile Horizontal Subnavigation */}
-                    <div className="lg:hidden flex items-center gap-2 overflow-x-auto pb-2 mb-2 w-full hide-scrollbar">
-                        {navItems.map((item) => {
-                            const Icon = item.icon;
-                            return (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all ${
-                                        item.active
-                                            ? "bg-neutral-900 text-white shadow-xs"
-                                            : "bg-white text-neutral-700 border border-neutral-200"
-                                    }`}
+                                <Avatar className="size-10 border border-[#E8E2D8]">
+                                    <AvatarImage
+                                        src={user.avatar || undefined}
+                                        alt={user.name}
+                                    />
+                                    <AvatarFallback className="bg-[#F2EDE4] text-xs font-semibold text-[#1A1715]">
+                                        {user.name
+                                            .trim()
+                                            .split(/\s+/)
+                                            .slice(0, 2)
+                                            .map((part) => part[0])
+                                            .join("")
+                                            .toUpperCase()}
+                                    </AvatarFallback>
+                                </Avatar>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                                align="end"
+                                className="w-64 rounded-2xl border-[#E8E2D8] bg-white p-2"
+                            >
+                                <DropdownMenuGroup>
+                                    <DropdownMenuLabel className="px-3 py-2">
+                                        <span className="block truncate text-sm font-semibold text-[#1A1715]">
+                                            {user.name}
+                                        </span>
+                                        <span className="block truncate text-xs font-normal text-neutral-500">
+                                            {user.email}
+                                        </span>
+                                    </DropdownMenuLabel>
+                                </DropdownMenuGroup>
+                                <DropdownMenuSeparator />
+                                {navItems.map((item) => {
+                                    const Icon = item.icon;
+                                    return (
+                                        <DropdownMenuItem
+                                            key={item.href}
+                                            render={<Link href={item.href} />}
+                                            className="min-h-10 rounded-xl px-3"
+                                        >
+                                            <Icon className="size-4 text-neutral-500" />
+                                            {item.label}
+                                        </DropdownMenuItem>
+                                    );
+                                })}
+                                <DropdownMenuItem
+                                    render={<Link href="/services" />}
+                                    className="min-h-10 rounded-xl px-3"
                                 >
-                                    <Icon className="w-3.5 h-3.5" />
-                                    <span>{item.label}</span>
-                                </Link>
-                            );
-                        })}
+                                    <Sparkles className="size-4 text-[#9E8265]" />
+                                    Book a Service
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                    onClick={logout}
+                                    variant="destructive"
+                                    className="min-h-10 rounded-xl px-3"
+                                >
+                                    <LogOut className="size-4" />
+                                    Sign out
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                            </DropdownMenu>
+                            </div>
+
+                        <div className="flex items-center gap-2 lg:hidden">
+                            <Link
+                                href="/dashboard/profile"
+                                aria-label="Open Profile & Settings"
+                                className="rounded-full outline-none ring-offset-2 focus-visible:ring-2 focus-visible:ring-[#9E8265]"
+                            >
+                                <Avatar className="size-10 border border-[#E8E2D8]">
+                                    <AvatarImage
+                                        src={user.avatar || undefined}
+                                        alt={user.name}
+                                    />
+                                    <AvatarFallback className="bg-[#F2EDE4] text-xs font-semibold text-[#1A1715]">
+                                        {user.name
+                                            .trim()
+                                            .split(/\s+/)
+                                            .slice(0, 2)
+                                            .map((part) => part[0])
+                                            .join("")
+                                            .toUpperCase()}
+                                    </AvatarFallback>
+                                </Avatar>
+                            </Link>
+                            <Sheet
+                                open={mobileMenuOpen}
+                                onOpenChange={setMobileMenuOpen}
+                            >
+                                <SheetTrigger
+                                    render={
+                                        <button
+                                            type="button"
+                                            aria-label={
+                                                mobileMenuOpen
+                                                    ? "Close customer navigation"
+                                                    : "Open customer navigation"
+                                            }
+                                            aria-expanded={mobileMenuOpen}
+                                            className="inline-flex size-10 items-center justify-center rounded-full border border-[#E8E2D8] text-[#1A1715] transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9E8265]"
+                                        />
+                                    }
+                                >
+                                    <Menu className="size-5" />
+                                </SheetTrigger>
+                                <SheetContent
+                                    side="right"
+                                    className="w-[min(85vw,22rem)] border-l border-[#E8E2D8] bg-[#FDFBF7] p-0"
+                                >
+                                    <SheetHeader className="border-b border-[#E8E2D8] px-5 py-6 pr-14">
+                                        <div className="flex items-center gap-3">
+                                            <Avatar className="size-11 border border-[#E8E2D8]">
+                                                <AvatarImage
+                                                    src={user.avatar || undefined}
+                                                    alt={user.name}
+                                                />
+                                                <AvatarFallback className="bg-[#F2EDE4] text-xs font-semibold text-[#1A1715]">
+                                                    {user.name
+                                                        .trim()
+                                                        .split(/\s+/)
+                                                        .slice(0, 2)
+                                                        .map((part) => part[0])
+                                                        .join("")
+                                                        .toUpperCase()}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div className="min-w-0">
+                                                <SheetTitle className="truncate text-left text-sm font-semibold text-[#1A1715]">
+                                                    {user.name}
+                                                </SheetTitle>
+                                                <SheetDescription className="truncate text-left text-xs">
+                                                    {user.email}
+                                                </SheetDescription>
+                                            </div>
+                                        </div>
+                                    </SheetHeader>
+
+                                    <nav
+                                        aria-label="Customer navigation"
+                                        className="grid gap-1 px-4 py-4"
+                                    >
+                                        {navItems.map((item) => {
+                                            const Icon = item.icon;
+                                            return (
+                                                <Link
+                                                    key={item.href}
+                                                    href={item.href}
+                                                    aria-current={
+                                                        item.active
+                                                            ? "page"
+                                                            : undefined
+                                                    }
+                                                    onClick={() =>
+                                                        setMobileMenuOpen(false)
+                                                    }
+                                                    className={`flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium ${
+                                                        item.active
+                                                            ? "bg-[#1A1715] text-white"
+                                                            : "text-neutral-700 hover:bg-[#F2EDE4]"
+                                                    }`}
+                                                >
+                                                    <Icon className="size-4" />
+                                                    {item.label}
+                                                </Link>
+                                            );
+                                        })}
+                                        <Link
+                                            href="/services"
+                                            onClick={() =>
+                                                setMobileMenuOpen(false)
+                                            }
+                                            className="flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium text-neutral-700 hover:bg-[#F2EDE4]"
+                                        >
+                                            <Sparkles className="size-4" />
+                                            Book a Service
+                                        </Link>
+                                    </nav>
+
+                                    <div className="mt-auto border-t border-[#E8E2D8] px-4 py-4">
+                                        <button
+                                            type="button"
+                                            onClick={logout}
+                                            className="inline-flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium text-rose-700 hover:bg-rose-50"
+                                        >
+                                            <LogOut className="size-4" />
+                                            Sign out
+                                        </button>
+                                    </div>
+                                </SheetContent>
+                            </Sheet>
+                        </div>
+                        </div>
                     </div>
-
-                    {/* Main Dashboard Content */}
-                    <section className="lg:col-span-9 w-full">
-                        {children}
-                    </section>
                 </div>
-            </div>
+            </header>
 
-            <Footer />
+            <main className="mx-auto min-w-0 w-full max-w-6xl px-4 py-5 sm:px-6 sm:py-7 lg:px-8 lg:py-8">
+                {children}
+            </main>
         </div>
     );
 }

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -28,6 +29,7 @@ export default function RootLayout({
     return (
         <html
             lang="en"
+            data-scroll-behavior="smooth"
             suppressHydrationWarning
             className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
         >
@@ -35,10 +37,16 @@ export default function RootLayout({
                 suppressHydrationWarning
                 className="min-h-full flex flex-col bg-white text-neutral-900 selection:bg-neutral-900 selection:text-white"
             >
-                <AuthProvider>
-                    {children}
-                    <Toaster position="top-right" richColors closeButton />
-                </AuthProvider>
+                <TooltipProvider>
+                    <AuthProvider>
+                        {children}
+                        <Toaster
+                            position="top-right"
+                            richColors
+                            closeButton
+                        />
+                    </AuthProvider>
+                </TooltipProvider>
             </body>
         </html>
     );

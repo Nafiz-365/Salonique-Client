@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SaloniqueMark } from "@/components/common/SaloniqueMark";
 import Image from "next/image";
+import { getSafeCallbackPath } from "@/lib/safe-redirect";
 
 export default function SignInPage() {
     return (
@@ -29,7 +30,7 @@ export default function SignInPage() {
 function SignInContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get("callbackUrl");
+    const callbackUrl = getSafeCallbackPath(searchParams.get("callbackUrl"));
 
     const { login, loginWithGoogle, isAuthenticated, user } = useAuth();
 

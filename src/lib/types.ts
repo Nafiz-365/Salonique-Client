@@ -1,12 +1,15 @@
-export type CategoryType =
-    | "Hair"
-    | "Nails"
-    | "Facial"
-    | "Massage"
-    | "Makeup"
-    | "Brows & Lashes"
-    | "Waxing"
-    | "Spa";
+export const SERVICE_CATEGORIES = [
+    "Hair",
+    "Nails",
+    "Facial",
+    "Massage",
+    "Makeup",
+    "Brows & Lashes",
+    "Waxing",
+    "Spa",
+] as const;
+
+export type CategoryType = (typeof SERVICE_CATEGORIES)[number];
 
 export interface Specialist {
     name: string;
@@ -97,6 +100,6 @@ export interface Transaction {
     serviceName: string;
     amount: number;
     status: "paid" | "failed" | "succeeded" | "pending" | "refunded";
-    paymentMethod: string;
+    paymentMethod?: string | null;
     date: string;
 }

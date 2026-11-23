@@ -22,16 +22,23 @@ export function formatDuration(minutes: number): string {
 }
 
 export function formatDate(dateString: string): string {
-    try {
-        const [year, month, day] = dateString.split("-").map(Number);
-        const date = new Date(year, month - 1, day);
-        return date.toLocaleDateString("en-US", {
-            weekday: "short",
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-        });
-    } catch {
-        return dateString;
+    const dateOnlyMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateString);
+    const date = dateOnlyMatch
+        ? new Date(
+              Number(dateOnlyMatch[1]),
+              Number(dateOnlyMatch[2]) - 1,
+              Number(dateOnlyMatch[3]),
+          )
+        : new Date(dateString);
+
+    if (Number.isNaN(date.getTime())) {
+        throw new RangeError(`Invalid date string: ${dateString}`);
     }
+
+    return date.toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+    });
 }

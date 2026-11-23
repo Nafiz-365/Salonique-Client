@@ -5,69 +5,86 @@ import Link from "next/link";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { Service } from "@/lib/types";
 import { fetchFeaturedServices, fetchServices, ApiService } from "@/lib/server-api";
+import { mapApiServiceToService } from "@/lib/service";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-function toService(s: ApiService): Service {
-    return {
-        id: s._id,
-        name: s.name,
-        slug: s.slug,
-        category: s.category as Service["category"],
-        price: s.price,
-        duration: s.duration,
-        rating: s.rating,
-        reviewCount: s.reviewCount,
-        description: s.description,
-        shortDescription: s.shortDescription,
-        image: s.image,
-        gallery: s.gallery,
-        isActive: s.isActive,
-        featured: s.featured,
-        popular: s.popular,
-        specialist: s.specialist,
-        location: s.location,
-        included: s.included,
-    };
-}
 
 export function FeaturedServices() {
     const [selectedFilter, setSelectedFilter] = useState("All");
     const [services, setServices] = useState<Service[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [hasLoadError, setHasLoadError] = useState(false);
 
     const categories = ["All", "Hair", "Nails", "Facial", "Massage", "Spa"];
 
     useEffect(() => {
-        // Requirement: show at least 6 active services on the home page.
-        // Start with featured ones, then top up with other active services
-        // if the database has fewer than 6 marked as featured.
-        Promise.all([
-            fetchFeaturedServices().catch(() => [] as ApiService[]),
-            fetchServices({ limit: 12 }).catch(() => ({
-                services: [] as ApiService[],
-                total: 0,
-                page: 1,
-                totalPages: 0,
-            })),
-        ])
-            .then(([featured, all]) => {
-                const merged: ApiService[] = [...featured];
-                for (const service of all.services) {
-                    if (
-                        service.isActive !== false &&
-                        !merged.some((s) => s._id === service._id)
-                    ) {
-                        merged.push(service);
-                    }
-                    if (merged.length >= 6) break;
-                }
-                setServices(merged.map(toService));
-            })
-            .catch(() => {
+        let active = true;
+        const loadServices = async () => {
+            const [featuredResult, allResult] = await Promise.allSettled([
+                fetchFeaturedServices(),
+                fetchServices({ limit: 12 }),
+            ]);
+            if (!active) return;
+
+            if (
+                featuredResult.status === "rejected" &&
+                allResult.status === "rejected"
+            ) {
+                console.error(
+                    "Failed to load featured and active services.",
+                    featuredResult.reason,
+                    allResult.reason,
+                );
                 setServices([]);
+                setHasLoadError(true);
+                return;
+            }
+
+            if (featuredResult.status === "rejected") {
+                console.error("Failed to load featured services.", featuredResult.reason);
+            }
+            if (allResult.status === "rejected") {
+                console.error("Failed to load active services.", allResult.reason);
+            }
+
+            const featured =
+                featuredResult.status === "fulfilled"
+                    ? featuredResult.value
+                    : [];
+            const allServices =
+                allResult.status === "fulfilled"
+                    ? allResult.value.services
+                    : [];
+            const merged: ApiService[] = featured.filter(
+                (service) => service.isActive !== false,
+            );
+
+            for (const service of allServices) {
+                if (
+                    service.isActive !== false &&
+                    !merged.some((featuredService) => featuredService._id === service._id)
+                ) {
+                    merged.push(service);
+                }
+                if (merged.length >= 6) break;
+            }
+            setServices(merged.map(mapApiServiceToService));
+        };
+
+        void loadServices()
+            .catch((error: unknown) => {
+                console.error("Failed to prepare featured services.", error);
+                if (!active) return;
+                setServices([]);
+                setHasLoadError(true);
             })
-            .finally(() => setIsLoading(false));
+            .finally(() => {
+                if (active) setIsLoading(false);
+            });
+
+        return () => {
+            active = false;
+        };
     }, []);
 
     const filtered = services
@@ -139,12 +156,26 @@ export function FeaturedServices() {
                             </div>
                         ))}
                     </div>
-                ) : (
+                ) : hasLoadError ? (
+                    <p
+                        role="alert"
+                        className="rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-800"
+                    >
+                        Services are temporarily unavailable. Please try again
+                        later.
+                    </p>
+                ) : filtered.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                         {filtered.map((service) => (
                             <ServiceCard key={service.id} service={service} />
                         ))}
                     </div>
+                ) : (
+                    <p className="rounded-2xl border border-neutral-200 bg-white px-5 py-4 text-sm text-neutral-600">
+                        {services.length > 0
+                            ? "No services match this category right now."
+                            : "No active services are available right now."}
+                    </p>
                 )}
             </div>
         </section>
