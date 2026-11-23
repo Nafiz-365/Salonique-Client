@@ -1,4 +1,4 @@
-export { cn } from "cn"
+export { cn } from "cn";
 
 // export function cn(...classes: (string | undefined | false | null)[]): string {
 //     return classes.filter(Boolean).join(" ");
@@ -35,4 +35,3 @@ export function formatDate(dateString: string): string {
         return dateString;
     }
 }
-

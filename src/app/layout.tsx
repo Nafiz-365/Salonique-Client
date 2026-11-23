@@ -16,16 +16,25 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
     title: "Salonique | Salon & Beauty Services",
-    description: "Discover salon services and book your next beauty and wellness appointment.",
+    description:
+        "Discover salon services and book your next beauty and wellness appointment.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
     return (
         <html
             lang="en"
+            suppressHydrationWarning
             className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
         >
-            <body className="min-h-full flex flex-col bg-white text-neutral-900 selection:bg-neutral-900 selection:text-white">
+            <body
+                suppressHydrationWarning
+                className="min-h-full flex flex-col bg-white text-neutral-900 selection:bg-neutral-900 selection:text-white"
+            >
                 <AuthProvider>
                     {children}
                     <Toaster position="top-right" richColors closeButton />
