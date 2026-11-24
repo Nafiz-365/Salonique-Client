@@ -86,9 +86,9 @@ export default function MyAppointmentsPage() {
 
     return (
         <CustomerLayout>
-            <div className="space-y-6">
+            <div className="space-y-5 sm:space-y-6">
                 {/* Header & Filter Tabs */}
-                <div className="flex flex-col gap-4 rounded-3xl border border-neutral-200/80 bg-white p-4 shadow-xs md:flex-row md:items-center md:justify-between sm:p-6">
+                <div className="flex flex-col gap-3 rounded-xl border border-[#E8E2D8] bg-white p-4 shadow-xs md:flex-row md:items-center md:justify-between sm:gap-4 sm:p-6">
                     <div>
                         <h2 className="text-xl font-extrabold text-neutral-900">
                             My Appointments
@@ -98,13 +98,14 @@ export default function MyAppointmentsPage() {
                             secure payments
                         </p>
                     </div>
-                    <div className="flex flex-wrap items-center gap-1.5 md:flex-nowrap md:justify-end">
+                    <div className="-mx-1 flex max-w-full items-center gap-1 overflow-x-auto px-1 pb-1 hide-scrollbar md:mx-0 md:flex-nowrap md:justify-end md:overflow-visible">
                         {filterTabs.map((tab) => (
                             <button
                                 key={tab}
                                 type="button"
                                 onClick={() => setSelectedFilter(tab)}
-                                className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ${
+                                aria-pressed={selectedFilter === tab}
+                                className={`min-h-11 shrink-0 rounded-full px-2 text-xs font-semibold whitespace-nowrap transition-colors ${
                                     selectedFilter === tab
                                         ? "bg-neutral-900 text-white shadow-xs"
                                         : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
@@ -137,9 +138,9 @@ export default function MyAppointmentsPage() {
                         {filtered.map((apt, index) => (
                             <div
                                 key={apt._id}
-                                className="space-y-4 rounded-3xl border border-neutral-200/80 bg-white p-4 shadow-xs transition-all hover:border-neutral-300 sm:p-6"
+                                className="space-y-4 rounded-xl border border-[#E8E2D8] bg-white p-4 shadow-xs transition-[border-color,box-shadow] duration-200 hover:border-[#CFC4B4] hover:shadow-md sm:p-5"
                             >
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-neutral-100 gap-3">
+                                <div className="flex min-w-0 flex-col justify-between gap-3 border-b border-neutral-100 pb-4 sm:flex-row sm:items-center">
                                     <div className="flex items-center gap-2.5">
                                         <span
                                             className={`px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider ${
@@ -167,7 +168,7 @@ export default function MyAppointmentsPage() {
                                                 : "Payment Pending"}
                                         </span>
                                     </div>
-                                    <span className="text-xs text-neutral-400">
+                                    <span className="min-w-0 break-all text-xs text-neutral-400 sm:break-normal">
                                         Booking ID:{" "}
                                         <strong className="text-neutral-700">
                                             {apt._id}
@@ -220,7 +221,7 @@ export default function MyAppointmentsPage() {
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-3 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-neutral-100">
+                                    <div className="flex w-full shrink-0 flex-col gap-3 border-t border-neutral-100 pt-3 sm:w-auto sm:flex-row sm:items-center sm:justify-between sm:border-t-0 sm:pt-0 md:flex-col md:items-end md:justify-center">
                                         <div className="text-left md:text-right">
                                             <span className="text-xs text-neutral-400 block">
                                                 Total
@@ -229,13 +230,13 @@ export default function MyAppointmentsPage() {
                                                 {formatPrice(apt.servicePrice)}
                                             </span>
                                         </div>
-                                        <div className="flex items-center gap-2">
+                                        <div className="flex flex-wrap items-center gap-2">
                                             <button
                                                 type="button"
                                                 onClick={() =>
                                                     setDetailsItem(apt)
                                                 }
-                                                className="px-3 py-2 rounded-full border border-neutral-200 text-neutral-600 hover:bg-neutral-50 text-xs font-semibold transition-colors"
+                                                className="inline-flex min-h-10 items-center rounded-full border border-neutral-200 px-4 text-xs font-semibold text-neutral-600 transition-colors hover:bg-neutral-50"
                                             >
                                                 Details
                                             </button>
@@ -243,7 +244,7 @@ export default function MyAppointmentsPage() {
                                                 apt.status === "confirmed" && (
                                                     <CheckoutButton
                                                         appointmentId={apt._id}
-                                                        className="px-4 py-2 rounded-full bg-neutral-900 hover:bg-black text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition-colors"
+                                                        className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-neutral-900 px-4 text-xs font-bold text-white shadow-xs transition-colors hover:bg-black"
                                                     >
                                                         <CreditCard className="w-3.5 h-3.5" />
                                                         <span>Pay Now</span>
@@ -261,7 +262,7 @@ export default function MyAppointmentsPage() {
                                                     onClick={() =>
                                                         setCancelModalItem(apt)
                                                     }
-                                                    className="px-3 py-2 rounded-full border border-rose-200 text-rose-600 hover:bg-rose-50 text-xs font-semibold transition-colors"
+                                                    className="inline-flex min-h-10 items-center rounded-full border border-rose-200 px-4 text-xs font-semibold text-rose-600 transition-colors hover:bg-rose-50"
                                                 >
                                                     Cancel
                                                 </button>
@@ -273,7 +274,7 @@ export default function MyAppointmentsPage() {
                         ))}
                     </div>
                 ) : (
-                    <div className="bg-white rounded-3xl p-12 text-center border border-neutral-200/80 shadow-xs space-y-4">
+                    <div className="space-y-4 rounded-xl border border-[#E8E2D8] bg-white p-8 text-center shadow-xs sm:p-12">
                         <div className="w-14 h-14 rounded-full bg-neutral-100 flex items-center justify-center mx-auto text-neutral-400">
                             <Calendar className="w-7 h-7" />
                         </div>
@@ -337,7 +338,7 @@ export default function MyAppointmentsPage() {
                             </div>
 
                             <div className="grid grid-cols-2 gap-3">
-                                <div className="rounded-xl bg-neutral-50 p-3">
+                                <div className="rounded-lg border border-[#E8E2D8] bg-[#FAF7F2] p-3">
                                     <span className="text-[11px] font-semibold text-neutral-500 uppercase block">
                                         Status
                                     </span>
@@ -345,7 +346,7 @@ export default function MyAppointmentsPage() {
                                         {detailsItem.status}
                                     </span>
                                 </div>
-                                <div className="rounded-xl bg-neutral-50 p-3">
+                                <div className="rounded-lg border border-[#E8E2D8] bg-[#FAF7F2] p-3">
                                     <span className="text-[11px] font-semibold text-neutral-500 uppercase block">
                                         Payment
                                     </span>
@@ -353,7 +354,7 @@ export default function MyAppointmentsPage() {
                                         {detailsItem.paymentStatus}
                                     </span>
                                 </div>
-                                <div className="rounded-xl bg-neutral-50 p-3">
+                                <div className="rounded-lg border border-[#E8E2D8] bg-[#FAF7F2] p-3">
                                     <span className="text-[11px] font-semibold text-neutral-500 uppercase block">
                                         Appointment Date
                                     </span>
@@ -362,7 +363,7 @@ export default function MyAppointmentsPage() {
                                         {detailsItem.time}
                                     </span>
                                 </div>
-                                <div className="rounded-xl bg-neutral-50 p-3">
+                                <div className="rounded-lg border border-[#E8E2D8] bg-[#FAF7F2] p-3">
                                     <span className="text-[11px] font-semibold text-neutral-500 uppercase block">
                                         Service Price
                                     </span>
@@ -370,7 +371,7 @@ export default function MyAppointmentsPage() {
                                         {formatPrice(detailsItem.servicePrice)}
                                     </span>
                                 </div>
-                                <div className="rounded-xl bg-neutral-50 p-3">
+                                <div className="rounded-lg border border-[#E8E2D8] bg-[#FAF7F2] p-3">
                                     <span className="text-[11px] font-semibold text-neutral-500 uppercase block">
                                         Duration
                                     </span>
@@ -380,7 +381,7 @@ export default function MyAppointmentsPage() {
                                         )}
                                     </span>
                                 </div>
-                                <div className="rounded-xl bg-neutral-50 p-3">
+                                <div className="rounded-lg border border-[#E8E2D8] bg-[#FAF7F2] p-3">
                                     <span className="text-[11px] font-semibold text-neutral-500 uppercase block">
                                         Requested On
                                     </span>
@@ -445,11 +446,11 @@ export default function MyAppointmentsPage() {
                                 action cannot be undone.
                             </p>
                         </div>
-                        <div className="flex items-center gap-3 pt-2">
+                        <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:gap-3">
                             <button
                                 type="button"
                                 onClick={() => setCancelModalItem(null)}
-                                className="w-1/2 py-2.5 rounded-full border border-neutral-300 font-semibold text-xs text-neutral-700 hover:bg-neutral-50"
+                                className="min-h-11 w-full rounded-full border border-neutral-300 py-2.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 sm:w-auto sm:flex-1"
                             >
                                 Keep Booking
                             </button>
@@ -457,7 +458,7 @@ export default function MyAppointmentsPage() {
                                 type="button"
                                 onClick={confirmCancel}
                                 disabled={isCancelling}
-                                className="w-1/2 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-xs disabled:opacity-60 flex items-center justify-center gap-2"
+                                className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-rose-600 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-rose-700 disabled:opacity-60 sm:w-auto sm:flex-1"
                             >
                                 {isCancelling ? (
                                     <>

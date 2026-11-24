@@ -24,13 +24,13 @@ export function TrustSection() {
     ];
 
     return (
-        <section className="bg-[#FAF7F2] py-20 border-t border-[#EFECE6]">
+        <section className="border-t border-[#EFECE6] bg-[#FAF7F2] py-12 sm:py-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="mb-12 max-w-2xl">
+                <div className="mb-8 max-w-2xl sm:mb-12">
                     <div className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#9E8265]">
                         From search to appointment
                     </div>
-                    <h2 className="text-3xl font-serif font-normal tracking-tight text-[#1A1715] sm:text-4xl">
+                    <h2 className="text-2xl font-serif font-normal tracking-tight text-[#1A1715] sm:text-4xl">
                         Booking, without the back and forth.
                     </h2>
                     <p className="mt-2 text-sm leading-relaxed text-neutral-600 sm:text-base font-light">
@@ -39,20 +39,25 @@ export function TrustSection() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 gap-8 border-t border-[#E5DFD5] md:grid-cols-3 md:gap-10">
+                <div className="grid grid-cols-1 border-t border-[#E5DFD5] md:grid-cols-3 md:gap-10">
                     {pillars.map((pillar) => {
                         const Icon = pillar.icon;
                         return (
-                            <div key={pillar.title} className="pt-6 group">
-                                <div className="mb-4 flex size-10 items-center justify-center rounded-full bg-[#F3EFE9] text-[#7A5C3E] border border-[#E8DFD3] transition-transform duration-300 group-hover:scale-105">
+                            <div
+                                key={pillar.title}
+                                className="group flex items-start gap-4 border-b border-[#E5DFD5] py-4 last:border-b-0 md:block md:border-0 md:pt-6"
+                            >
+                                <div className="flex size-9 shrink-0 items-center justify-center rounded-full border border-[#E8DFD3] bg-[#F3EFE9] text-[#7A5C3E] transition-transform duration-300 group-hover:scale-105 md:mb-4 md:size-10">
                                     <Icon className="size-4" />
                                 </div>
-                                <h3 className="mb-2 text-base font-medium text-[#1A1715]">
-                                    {pillar.title}
-                                </h3>
-                                <p className="max-w-sm text-sm leading-relaxed text-neutral-600 font-light">
-                                    {pillar.description}
-                                </p>
+                                <div>
+                                    <h3 className="mb-1 text-sm font-medium text-[#1A1715] md:mb-2 md:text-base">
+                                        {pillar.title}
+                                    </h3>
+                                    <p className="max-w-sm text-xs leading-relaxed text-neutral-600 font-light sm:text-sm">
+                                        {pillar.description}
+                                    </p>
+                                </div>
                             </div>
                         );
                     })}

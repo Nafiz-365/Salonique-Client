@@ -8,7 +8,8 @@ import { ServiceCard } from "@/components/services/ServiceCard";
 import { Service, SERVICE_CATEGORIES } from "@/lib/types";
 import { fetchServices } from "@/lib/server-api";
 import { mapApiServiceToService } from "@/lib/service";
-import { SEARCH_TIME_OPTIONS, toDateInputValue } from "@/lib/booking";
+import { SEARCH_TIME_OPTIONS } from "@/lib/booking";
+import { useLocalDateInputValue } from "@/hooks/use-local-date-input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -44,6 +45,12 @@ const SORT_OPTIONS = [
 function ServicesContent() {
     const searchParams = useSearchParams();
     const searchParamsString = searchParams.toString();
+    const requestedCategory = (searchParams.get("category") || "").trim();
+    const initialCategory =
+        CATEGORIES.find(
+            (category) =>
+                category.toLowerCase() === requestedCategory.toLowerCase(),
+        ) || "All";
     const requestedDate = searchParams.get("date") || "";
     const date = new Date(`${requestedDate}T00:00:00.000Z`);
     const initialDate =
@@ -63,7 +70,7 @@ function ServicesContent() {
         <ServicesBrowser
             key={searchParamsString}
             initialQ={searchParams.get("q") || ""}
-            initialCategory={searchParams.get("category") || "All"}
+            initialCategory={initialCategory}
             initialLocation={searchParams.get("location") || ""}
             initialSort={searchParams.get("sort") || "recommended"}
             initialFeatured={searchParams.get("featured") === "true"}
@@ -91,6 +98,7 @@ function ServicesBrowser({
     initialTime: string;
 }) {
     const router = useRouter();
+    const minimumDate = useLocalDateInputValue();
 
     const [searchQuery, setSearchQuery] = useState(initialQ);
     const [selectedCategory, setSelectedCategory] = useState(initialCategory);
@@ -220,13 +228,13 @@ function ServicesBrowser({
     return (
         <div className="bg-[#FDFBF7] min-h-screen">
             {/* Page Header Banner */}
-            <div className="bg-[#FAF7F2] border-b border-[#EFECE6] py-12">
+            <div className="bg-[#FAF7F2] border-b border-[#EFECE6] py-8 sm:py-12">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="max-w-3xl">
                         <div className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#9E8265]">
                             Curated Offerings
                         </div>
-                        <h1 className="text-3xl sm:text-4xl font-serif font-normal text-[#1A1715] tracking-tight">
+                        <h1 className="text-2xl sm:text-4xl font-serif font-normal text-[#1A1715] tracking-tight">
                             {selectedCategory === "All"
                                 ? "Discover Salon & Spa Services"
                                 : `${selectedCategory} Treatments`}
@@ -251,7 +259,7 @@ function ServicesBrowser({
                                 key={cat}
                                 type="button"
                                 onClick={() => handleCategoryClick(cat)}
-                                className={`h-8 rounded-full px-4 text-xs font-medium transition-all ${
+                                className={`h-11 rounded-full px-4 text-xs font-medium transition-all sm:h-8 ${
                                     selectedCategory.toLowerCase() ===
                                     cat.toLowerCase()
                                         ? "bg-[#1A1715] text-[#FAF7F2] hover:bg-[#2D2623]"
@@ -266,11 +274,11 @@ function ServicesBrowser({
             </div>
 
             {/* Main Content Area */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="max-w-7xl mx-auto px-3 py-5 sm:px-6 sm:py-8 lg:px-8">
                 {/* Controls Toolbar */}
-                <div className="bg-white p-4 rounded-2xl border border-[#EBE5DA] shadow-xs mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+                <div className="grid min-w-0 grid-cols-2 gap-3 rounded-2xl border border-[#E8E2D8] bg-white p-3 shadow-xs sm:grid-cols-2 sm:gap-4 sm:p-4 xl:grid-cols-5">
                     {/* Search */}
-                    <div className="relative w-full">
+                    <div className="relative col-span-2 w-full min-w-0 sm:col-span-1">
                         <Search className="w-4 h-4 text-[#9E8265] absolute left-3.5 top-1/2 -translate-y-1/2" />
                         <Input
                             type="text"
@@ -294,7 +302,7 @@ function ServicesBrowser({
                     </div>
 
                     {/* Location */}
-                    <div className="relative w-full">
+                    <div className="relative col-span-2 w-full min-w-0 sm:col-span-1">
                         <MapPin className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                         <Input
                             type="text"
@@ -319,7 +327,7 @@ function ServicesBrowser({
                         )}
                     </div>
 
-                    <div className="w-full">
+                    <div className="w-full min-w-0">
                         <label
                             htmlFor="services-date-filter"
                             className="sr-only"
@@ -330,7 +338,7 @@ function ServicesBrowser({
                             id="services-date-filter"
                             type="date"
                             value={selectedDate}
-                            min={toDateInputValue(new Date())}
+                            min={minimumDate}
                             onChange={(event) => {
                                 setSelectedDate(event.target.value);
                                 if (!event.target.value) {
@@ -341,7 +349,7 @@ function ServicesBrowser({
                         />
                     </div>
 
-                    <div className="w-full">
+                    <div className="w-full min-w-0">
                         <Select
                             value={selectedTime}
                             onValueChange={(value) => {
@@ -366,8 +374,8 @@ function ServicesBrowser({
                     </div>
 
                     {/* Sort + Reset */}
-                    <div className="flex items-center gap-3 w-full justify-end">
-                        <div className="relative w-full">
+                    <div className="col-span-2 flex w-full min-w-0 items-center justify-end gap-3 sm:col-span-1">
+                        <div className="relative w-full min-w-0">
                             <Select
                                 value={sortBy}
                                 onValueChange={(value) => {
@@ -410,7 +418,7 @@ function ServicesBrowser({
                 </div>
 
                 {/* Results counter */}
-                <div className="flex flex-wrap items-center justify-between gap-3 mb-6 text-sm text-neutral-600">
+                <div className="mb-5 flex flex-wrap items-center justify-between gap-3 text-sm text-neutral-600 sm:mb-6">
                     <div>
                         {isLoading ? (
                             <span className="text-neutral-400">Loading...</span>
@@ -453,7 +461,7 @@ function ServicesBrowser({
 
                 {/* Loading skeleton */}
                 {isLoading ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
                         {Array.from({ length: 6 }).map((_, i) => (
                             <Skeleton
                                 key={i}
@@ -463,7 +471,7 @@ function ServicesBrowser({
                     </div>
                 ) : services.length > 0 ? (
                     <>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
                             {services.map((service) => (
                                 <ServiceCard
                                     key={service.id}
@@ -500,7 +508,7 @@ function ServicesBrowser({
                     </>
                 ) : (
                     /* Empty State */
-                    <div className="py-20 text-center max-w-md mx-auto space-y-4">
+                    <div className="mx-auto max-w-md space-y-4 rounded-xl border border-[#E8E2D8] bg-white px-5 py-12 text-center shadow-xs">
                         <div className="w-14 h-14 rounded-full bg-neutral-100 flex items-center justify-center mx-auto text-neutral-400">
                             <AlertCircle className="w-7 h-7" />
                         </div>

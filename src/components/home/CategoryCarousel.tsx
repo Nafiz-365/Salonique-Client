@@ -56,13 +56,13 @@ const CATEGORIES: CategoryItem[] = [
 
 export function CategoryCarousel() {
     return (
-        <section className="py-14 bg-[#FDFBF7]">
+        <section className="bg-[#FDFBF7] py-10 sm:py-14">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <Carousel
                     opts={{ align: "start" }}
                     aria-label="Popular service categories"
                 >
-                    <div className="mb-8 flex items-end justify-between">
+                    <div className="mb-6 flex items-end justify-between sm:mb-8">
                         <div>
                             <div className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#9E8265]">
                                 Curated Collections
@@ -70,7 +70,7 @@ export function CategoryCarousel() {
                             <h2 className="text-2xl font-serif font-normal tracking-tight text-[#1A1715] sm:text-3xl">
                                 Explore by treatment
                             </h2>
-                            <p className="mt-1 text-sm text-neutral-600 font-light">
+                            <p className="mt-1 text-xs text-neutral-600 font-light sm:text-sm">
                                 Browse services by the kind of care you are
                                 looking for.
                             </p>
@@ -91,7 +91,7 @@ export function CategoryCarousel() {
                         {CATEGORIES.map((cat) => (
                             <CarouselItem
                                 key={cat.name}
-                                className="basis-36 sm:basis-44"
+                                className="basis-32 sm:basis-44"
                             >
                                 <Link
                                     href={`/services?category=${cat.slug}`}

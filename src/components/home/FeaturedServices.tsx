@@ -16,6 +16,10 @@ export function FeaturedServices() {
     const [hasLoadError, setHasLoadError] = useState(false);
 
     const categories = ["All", "Hair", "Nails", "Facial", "Massage", "Spa"];
+    const servicesRailClass =
+        "hide-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3";
+    const serviceCardItemClass =
+        "w-[min(86vw,340px)] shrink-0 snap-start sm:w-auto";
 
     useEffect(() => {
         let active = true;
@@ -94,21 +98,20 @@ export function FeaturedServices() {
         .slice(0, 6);
 
     return (
-        <section className="bg-[#FAF7F2] py-16 sm:py-20 border-t border-[#EFECE6]">
+        <section className="border-t border-[#EFECE6] bg-[#FAF7F2] py-12 sm:py-16 lg:py-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
-                <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+                <div className="mb-6 flex flex-col justify-between gap-3 sm:mb-10 sm:gap-4 md:flex-row md:items-end">
                     <div>
                         <div className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#9E8265]">
                             Handcrafted Offerings
                         </div>
-                        <h2 className="text-3xl font-serif font-normal tracking-tight text-[#1A1715] sm:text-4xl">
+                        <h2 className="text-2xl font-serif font-normal tracking-tight text-[#1A1715] sm:text-3xl lg:text-4xl">
                             Make time for feeling good.
                         </h2>
                         <p className="mt-2 max-w-xl text-sm leading-relaxed text-neutral-600 font-light">
-                            Explore bespoke services, compare prices and
-                            durations, and find an appointment that elevates
-                            your day.
+                            Compare services, prices, and durations to find the
+                            right appointment for you.
                         </p>
                     </div>
                     <Link
@@ -121,7 +124,7 @@ export function FeaturedServices() {
                 </div>
 
                 {/* Category Filter Pills */}
-                <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 hide-scrollbar">
+                <div className="hide-scrollbar mb-4 flex items-center gap-2 overflow-x-auto pb-3 sm:mb-6 sm:pb-4">
                     {categories.map((cat) => (
                         <Button
                             variant={selectedFilter === cat ? "default" : "outline"}
@@ -142,11 +145,15 @@ export function FeaturedServices() {
 
                 {/* Grid */}
                 {isLoading ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                    <div
+                        role="region"
+                        aria-label="Featured services loading"
+                        className={servicesRailClass}
+                    >
                         {Array.from({ length: 6 }).map((_, i) => (
                             <div
                                 key={i}
-                                className="rounded-3xl border border-neutral-200 overflow-hidden animate-pulse"
+                                className={`${serviceCardItemClass} overflow-hidden rounded-3xl border border-neutral-200 animate-pulse`}
                             >
                                 <div className="bg-neutral-100 aspect-4/3" />
                                 <div className="p-5 space-y-3">
@@ -165,9 +172,22 @@ export function FeaturedServices() {
                         later.
                     </p>
                 ) : filtered.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                    <div
+                        role="region"
+                        aria-label="Featured services"
+                        tabIndex={0}
+                        className={servicesRailClass}
+                    >
+                        <span className="sr-only">
+                            Swipe horizontally to explore more services.
+                        </span>
                         {filtered.map((service) => (
-                            <ServiceCard key={service.id} service={service} />
+                            <div
+                                key={service.id}
+                                className={serviceCardItemClass}
+                            >
+                                <ServiceCard service={service} />
+                            </div>
                         ))}
                     </div>
                 ) : (

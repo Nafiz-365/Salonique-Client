@@ -42,15 +42,15 @@ export default function HelpPage() {
         <div className="flex flex-col min-h-screen bg-[#FDFBF7]">
             <Navbar />
 
-            <main className="flex-1 pb-20">
+            <main className="flex-1 pb-12 sm:pb-20">
                 {/* Hero Banner */}
-                <div className="bg-[#FAF7F2] border-b border-[#EFECE6] py-16 text-center">
+                <div className="bg-[#FAF7F2] border-b border-[#EFECE6] py-10 text-center sm:py-16">
                     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
                         <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold uppercase tracking-[0.2em] bg-white border border-[#EBE5DA] text-[#9E8265] shadow-xs">
                             <Sparkles className="w-3.5 h-3.5 text-[#D8B485]" />
                             <span>Salonique Client Concierge</span>
                         </div>
-                        <h1 className="text-3xl sm:text-4xl font-serif font-normal text-[#1A1715] tracking-tight">
+                        <h1 className="text-2xl sm:text-4xl font-serif font-normal text-[#1A1715] tracking-tight">
                             How can we assist you today?
                         </h1>
                         <p className="text-neutral-600 font-light text-sm sm:text-base max-w-xl mx-auto">
@@ -65,6 +65,7 @@ export default function HelpPage() {
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
+                                aria-label="Search help topics"
                                 placeholder="Search help topics..."
                                 className="w-full pl-11 pr-4 py-3 rounded-full border border-[#EBE5DA] shadow-xs text-sm font-medium text-[#1A1715] focus:outline-none focus:ring-2 focus:ring-[#1A1715] bg-white"
                             />
@@ -73,8 +74,8 @@ export default function HelpPage() {
                 </div>
 
                 {/* FAQs */}
-                <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 space-y-4">
-                    <h2 className="text-2xl font-serif font-normal text-[#1A1715] mb-6">
+                <div className="max-w-3xl mx-auto space-y-4 px-4 pt-8 sm:px-6 sm:pt-12 lg:px-8">
+                    <h2 className="mb-5 text-xl font-serif font-normal text-[#1A1715] sm:mb-6 sm:text-2xl">
                         Frequently Asked Questions
                     </h2>
 
@@ -82,7 +83,7 @@ export default function HelpPage() {
                         {filteredFaqs.map((faq, idx) => (
                             <div
                                 key={idx}
-                                className="rounded-2xl border border-[#EBE5DA] overflow-hidden bg-white shadow-xs"
+                                className="group overflow-hidden rounded-xl border border-[#E8E2D8] bg-white shadow-xs transition-[border-color,box-shadow] duration-200 hover:border-[#CFC4B4] hover:shadow-md"
                             >
                                 <button
                                     type="button"
@@ -91,11 +92,11 @@ export default function HelpPage() {
                                             openIndex === idx ? null : idx,
                                         )
                                     }
-                                    className="w-full p-5 text-left flex items-center justify-between gap-4 font-medium text-sm text-[#1A1715] hover:bg-[#FAF7F2] transition-colors"
+                                    className="flex min-h-12 w-full items-center justify-between gap-3 p-4 text-left text-sm font-medium text-[#1A1715] transition-colors hover:bg-[#FAF7F2] sm:p-5"
                                 >
                                     <span>{faq.q}</span>
                                     <ChevronDown
-                                        className={`w-4 h-4 text-[#9E8265] transition-transform ${
+                                        className={`size-4 shrink-0 text-[#9E8265] transition-transform ${
                                             openIndex === idx
                                                 ? "rotate-180"
                                                 : ""
@@ -103,7 +104,7 @@ export default function HelpPage() {
                                     />
                                 </button>
                                 {openIndex === idx && (
-                                    <div className="px-5 pb-5 text-xs sm:text-sm text-neutral-600 font-light leading-relaxed border-t border-[#F0ECE4] pt-3">
+                                    <div className="border-t border-[#F0ECE4] px-4 pb-4 pt-3 text-xs font-light leading-relaxed text-neutral-600 sm:px-5 sm:pb-5 sm:text-sm">
                                         {faq.a}
                                     </div>
                                 )}
@@ -112,8 +113,8 @@ export default function HelpPage() {
                     </div>
 
                     {/* Contact Support Cards */}
-                    <div className="pt-12 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="p-6 rounded-3xl bg-white border border-[#EBE5DA] space-y-2 shadow-xs">
+                    <div className="grid grid-cols-1 gap-4 pt-8 sm:grid-cols-2 sm:pt-12">
+                        <div className="space-y-2 rounded-xl border border-[#E8E2D8] bg-white p-5 shadow-xs transition-[border-color,box-shadow] duration-200 hover:border-[#CFC4B4] hover:shadow-md sm:p-6">
                             <div className="size-10 rounded-full bg-[#FAF7F2] border border-[#EBE5DA] flex items-center justify-center text-[#7A5C3E]">
                                 <Mail className="size-4" />
                             </div>
@@ -126,13 +127,13 @@ export default function HelpPage() {
                             </p>
                             <a
                                 href="mailto:support@salonique.com"
-                                className="text-xs font-medium text-[#7A5C3E] hover:underline block pt-1"
+                                className="inline-flex min-h-10 items-center pt-1 text-sm font-medium text-[#7A5C3E] hover:underline sm:text-xs"
                             >
                                 support@salonique.com
                             </a>
                         </div>
 
-                        <div className="p-6 rounded-3xl bg-white border border-[#EBE5DA] space-y-2 shadow-xs">
+                        <div className="space-y-2 rounded-xl border border-[#E8E2D8] bg-white p-5 shadow-xs transition-[border-color,box-shadow] duration-200 hover:border-[#CFC4B4] hover:shadow-md sm:p-6">
                             <div className="size-10 rounded-full bg-[#FAF7F2] border border-[#EBE5DA] flex items-center justify-center text-[#7A5C3E]">
                                 <Phone className="size-4" />
                             </div>
@@ -145,7 +146,7 @@ export default function HelpPage() {
                             </p>
                             <a
                                 href="tel:15550192831"
-                                className="text-xs font-medium text-[#7A5C3E] hover:underline block pt-1"
+                                className="inline-flex min-h-10 items-center pt-1 text-sm font-medium text-[#7A5C3E] hover:underline sm:text-xs"
                             >
                                 +1 (555) 019-2831
                             </a>

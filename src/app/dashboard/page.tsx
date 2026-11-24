@@ -95,7 +95,7 @@ export default function DashboardOverviewPage() {
 
     return (
         <CustomerLayout>
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
                 <section className="rounded-3xl border border-[#E8DDCD] bg-[#F4EFE7] p-5 sm:p-7">
                     <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
                         <div className="min-w-0">
@@ -134,7 +134,7 @@ export default function DashboardOverviewPage() {
 
                 {/* Statistics Cards */}
                 <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-                    <div className="bg-white p-5 rounded-2xl border border-neutral-200/80 shadow-xs">
+                    <div className="rounded-xl border border-[#E8E2D8] bg-white p-4 shadow-xs sm:p-5">
                         <span className="text-xs font-semibold text-neutral-500 block">
                             Total Requests
                         </span>
@@ -145,7 +145,7 @@ export default function DashboardOverviewPage() {
                             All-time appointments
                         </span>
                     </div>
-                    <div className="bg-white p-5 rounded-2xl border border-neutral-200/80 shadow-xs">
+                    <div className="rounded-xl border border-[#E8E2D8] bg-white p-4 shadow-xs sm:p-5">
                         <span className="text-xs font-semibold text-neutral-500 block">
                             Pending
                         </span>
@@ -156,7 +156,7 @@ export default function DashboardOverviewPage() {
                             Awaiting confirmation
                         </span>
                     </div>
-                    <div className="bg-white p-5 rounded-2xl border border-neutral-200/80 shadow-xs">
+                    <div className="rounded-xl border border-[#E8E2D8] bg-white p-4 shadow-xs sm:p-5">
                         <span className="text-xs font-semibold text-neutral-500 block">
                             Confirmed
                         </span>
@@ -167,7 +167,7 @@ export default function DashboardOverviewPage() {
                             Ready for treatment
                         </span>
                     </div>
-                    <div className="bg-white p-5 rounded-2xl border border-neutral-200/80 shadow-xs">
+                    <div className="rounded-xl border border-[#E8E2D8] bg-white p-4 shadow-xs sm:p-5">
                         <span className="text-xs font-semibold text-neutral-500 block">
                             Cancelled
                         </span>
@@ -182,11 +182,11 @@ export default function DashboardOverviewPage() {
 
                 {/* Next Upcoming Appointment */}
                 {nextUpcoming && (
-                    <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#EBE5DA] shadow-xs relative overflow-hidden">
-                        <div className="flex items-center justify-between pb-4 border-b border-[#F0ECE4] mb-5">
+                    <div className="relative overflow-hidden rounded-xl border border-[#E8E2D8] bg-white p-4 shadow-xs sm:p-7">
+                        <div className="mb-4 flex flex-col items-start justify-between gap-2 border-b border-[#F0ECE4] pb-4 sm:mb-5 sm:flex-row sm:items-center">
                             <div className="flex items-center gap-2">
                                 <Sparkles className="w-4 h-4 text-[#D8B485]" />
-                                <h3 className="text-base font-serif font-medium text-[#1A1715]">
+                                <h3 className="text-sm font-serif font-medium text-[#1A1715] sm:text-base">
                                     Next Scheduled Appointment
                                 </h3>
                             </div>
@@ -243,7 +243,7 @@ export default function DashboardOverviewPage() {
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3 self-end md:self-auto shrink-0">
+                            <div className="flex shrink-0 flex-wrap items-center justify-end gap-3 self-end md:self-auto">
                                 {nextUpcoming.paymentStatus === "unpaid" &&
                                     nextUpcoming.status === "confirmed" && (
                                         <CheckoutButton
@@ -283,7 +283,7 @@ export default function DashboardOverviewPage() {
                 )}
 
                 {/* Recent Appointments Table */}
-                <div className="bg-white rounded-3xl border border-neutral-200/80 shadow-xs overflow-hidden">
+                <div className="overflow-hidden rounded-xl border border-[#E8E2D8] bg-white shadow-xs">
                     <div className="flex flex-col items-start justify-between gap-3 border-b border-neutral-100 p-4 sm:flex-row sm:items-center sm:p-6">
                         <div>
                             <h3 className="text-lg font-bold text-neutral-900">

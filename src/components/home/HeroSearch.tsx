@@ -126,7 +126,7 @@ export function HeroSearch() {
     };
 
     return (
-        <section className="relative z-20 isolate overflow-visible border-b border-[#2A201E] bg-[#181212] py-12 text-white sm:py-16 lg:py-20">
+        <section className="relative z-20 isolate overflow-visible border-b border-[#2A201E] bg-[#181212] py-8 text-white sm:py-16 lg:py-20">
             <div className="absolute inset-0 z-0">
                 <Image
                     src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=2000&q=80"
@@ -143,7 +143,7 @@ export function HeroSearch() {
             </div>
 
             <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="mb-8 max-w-3xl space-y-5 sm:mb-10 sm:space-y-6">
+                <div className="mb-6 max-w-3xl space-y-4 sm:mb-10 sm:space-y-6">
                     <div className="inline-flex max-w-full items-center gap-3 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-[#E8D1B5] backdrop-blur-md sm:tracking-[0.25em]">
                         <span className="size-1.5 rounded-full bg-[#E8D1B5] animate-pulse" />
                         <span className="truncate">

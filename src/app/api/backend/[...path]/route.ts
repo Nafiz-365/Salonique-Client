@@ -26,6 +26,19 @@ async function handler(
     const forwardHeaders: Record<string, string> = {
         "Content-Type": "application/json",
     };
+    const origin = req.headers.get("origin");
+    if (
+        method !== "GET" &&
+        method !== "HEAD" &&
+        origin &&
+        origin !== req.nextUrl.origin
+    ) {
+        return NextResponse.json(
+            { error: "Invalid request origin." },
+            { status: 403 },
+        );
+    }
+
     let body: string | undefined;
     let requestBodyLoaded = method === "GET" || method === "HEAD";
 

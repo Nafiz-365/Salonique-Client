@@ -80,7 +80,7 @@ function ProfileEditor({ user }: { user: AuthUser }) {
     };
 
     return (
-        <div className="mx-auto w-full max-w-2xl rounded-3xl border border-neutral-200/80 bg-white p-5 shadow-xs sm:p-8">
+        <div className="mx-auto w-full max-w-2xl rounded-xl border border-[#E8E2D8] bg-white p-4 shadow-xs sm:p-6">
             <div className="pb-6 border-b border-neutral-100 mb-6">
                 <h2 className="text-xl font-extrabold text-neutral-900">
                     Profile & Settings
@@ -134,7 +134,7 @@ function ProfileEditor({ user }: { user: AuthUser }) {
                                 render={
                                     <label htmlFor="customer-profile-image" />
                                 }
-                                className="h-10 shrink-0 gap-1.5 self-start sm:self-auto"
+                                className="h-10 w-full shrink-0 gap-1.5 self-stretch sm:w-auto sm:self-auto"
                             >
                                 <Upload className="w-3.5 h-3.5" />
                                 <span>
@@ -207,7 +207,7 @@ function ProfileEditor({ user }: { user: AuthUser }) {
                 </div>
 
                 {/* Account Role Badge (Non-Editable) */}
-                <div className="p-3.5 rounded-2xl bg-neutral-50 border border-neutral-200/80 flex items-center justify-between">
+                <div className="flex items-center justify-between rounded-xl border border-[#E8E2D8] bg-[#FAF7F2] p-3.5">
                     <div>
                         <span className="text-xs font-bold text-neutral-800 block">
                             Account Permission Level
@@ -221,11 +221,11 @@ function ProfileEditor({ user }: { user: AuthUser }) {
                     </span>
                 </div>
 
-                <div className="pt-2 flex justify-end">
+                <div className="pt-2">
                     <Button
                         type="submit"
                         disabled={isSaving || isUploading}
-                        className="h-11 rounded-full px-6 text-xs font-bold shadow-xs"
+                        className="h-11 w-full rounded-full px-6 text-xs font-bold shadow-xs sm:w-auto sm:ml-auto"
                     >
                         <Check className="w-4 h-4" />
                         <span>{isSaving ? "Saving..." : "Save Changes"}</span>
