@@ -1,6 +1,13 @@
 import React from "react";
 import { Navbar } from "@/components/common/Navbar";
 import { Footer } from "@/components/common/Footer";
+import { createPageMetadata } from "@/lib/site-config";
+
+export const metadata = createPageMetadata(
+    "Terms of Service",
+    "Review the terms for using Salonique to discover salon services and request appointments.",
+    "/terms",
+);
 
 export default function TermsPage() {
     return (

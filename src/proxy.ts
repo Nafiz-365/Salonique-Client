@@ -32,17 +32,12 @@ function matches(pathname: string, routes: string[]): boolean {
     );
 }
 
-// /services itself is public; only /services/[id] (details) is protected
-function isServiceDetails(pathname: string): boolean {
-    return /^\/services\/[^/]+$/.test(pathname);
-}
-
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     const needsAdmin = matches(pathname, ADMIN_ROUTES);
     const needsCustomer = matches(pathname, CUSTOMER_ROUTES);
-    const needsAuth = needsAdmin || needsCustomer || isServiceDetails(pathname);
+    const needsAuth = needsAdmin || needsCustomer;
 
     if (!needsAuth) {
         return NextResponse.next();
@@ -85,5 +80,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/dashboard/:path*", "/admin/:path*", "/services/:path*"],
+    matcher: ["/dashboard/:path*", "/admin/:path*"],
 };

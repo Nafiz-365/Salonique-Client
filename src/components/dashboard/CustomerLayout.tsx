@@ -12,10 +12,10 @@ import {
     Menu,
     Sparkles,
     User as UserIcon,
-    type LucideIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 import { SaloniqueMark } from "@/components/common/SaloniqueMark";
+import { PortalSidebarLink } from "@/components/common/PortalSidebarLink";
 import { useAuth, type AuthUser } from "@/context/AuthContext";
 import {
     Avatar,
@@ -38,6 +38,9 @@ import {
     SidebarTrigger,
     useSidebar,
 } from "@/components/ui/sidebar";
+
+const customerSidebarLinkClassName =
+    "h-10 rounded-lg px-3 text-neutral-600 hover:bg-[#F2EDE4] hover:text-[#765A3D] data-active:bg-[#F2EDE4] data-active:font-semibold data-active:text-[#765A3D]";
 
 export function CustomerLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -143,19 +146,21 @@ export function CustomerLayout({ children }: { children: React.ReactNode }) {
                         <SidebarGroupContent>
                             <SidebarMenu className="gap-1">
                                 {navItems.map((item) => (
-                                    <CustomerSidebarLink
+                                    <PortalSidebarLink
                                         key={item.href}
                                         href={item.href}
                                         label={item.label}
                                         icon={item.icon}
                                         active={item.active}
+                                        className={customerSidebarLinkClassName}
                                     />
                                 ))}
-                                <CustomerSidebarLink
+                                <PortalSidebarLink
                                     href="/services"
                                     label="Book a Service"
                                     icon={Sparkles}
                                     active={false}
+                                    className={customerSidebarLinkClassName}
                                 />
                             </SidebarMenu>
                         </SidebarGroupContent>
@@ -243,42 +248,6 @@ export function CustomerLayout({ children }: { children: React.ReactNode }) {
                 </div>
             </SidebarInset>
         </SidebarProvider>
-    );
-}
-
-function CustomerSidebarLink({
-    href,
-    label,
-    icon: Icon,
-    active,
-}: {
-    href: string;
-    label: string;
-    icon: LucideIcon;
-    active: boolean;
-}) {
-    const { isMobile, setOpenMobile } = useSidebar();
-
-    return (
-        <SidebarMenuItem>
-            <SidebarMenuButton
-                render={
-                    <Link
-                        href={href}
-                        aria-current={active ? "page" : undefined}
-                    />
-                }
-                isActive={active}
-                tooltip={label}
-                onClick={() => {
-                    if (isMobile) setOpenMobile(false);
-                }}
-                className="h-10 rounded-lg px-3 text-neutral-600 hover:bg-[#F2EDE4] hover:text-[#765A3D] data-active:bg-[#F2EDE4] data-active:font-semibold data-active:text-[#765A3D]"
-            >
-                <Icon />
-                <span>{label}</span>
-            </SidebarMenuButton>
-        </SidebarMenuItem>
     );
 }
 

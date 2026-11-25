@@ -1,0 +1,625 @@
+"use client";
+
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Navbar } from "@/components/common/Navbar";
+import { Footer } from "@/components/common/Footer";
+import { useAuth } from "@/context/AuthContext";
+import { useLocalDateInputValue } from "@/hooks/use-local-date-input";
+import { formatPrice, formatDuration, formatDate } from "@/lib/utils";
+import { Service } from "@/lib/types";
+import { toast } from "sonner";
+import {
+    Star,
+    Clock,
+    MapPin,
+    CheckCircle2,
+    Sparkles,
+    ArrowRight,
+    ChevronRight,
+    Loader2,
+    AlertCircle,
+    Calendar,
+} from "lucide-react";
+import Link from "next/link";
+import { bffPost } from "@/lib/server-api";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import Image from "next/image";
+import { BOOKING_TIME_SLOTS } from "@/lib/booking";
+
+interface BookingResult {
+    _id: string;
+    serviceName: string;
+    date: string;
+    time: string;
+    specialist: string;
+    servicePrice: number;
+}
+
+export default function ServiceDetailClient({
+    id,
+    initialService,
+    serviceError,
+}: {
+    id: string;
+    initialService: Service | null;
+    serviceError: string | null;
+}) {
+    const router = useRouter();
+    const { user, isAuthenticated } = useAuth();
+    const service = initialService;
+    const [activeImage, setActiveImage] = useState(initialService?.image ?? "");
+
+    // Booking form state
+    const minimumDate = useLocalDateInputValue();
+    const defaultDate = useLocalDateInputValue(1);
+    const [selectedDate, setSelectedDate] = useState<string | null>(null);
+    const appointmentDate = selectedDate ?? defaultDate;
+    const [selectedTime, setSelectedTime] = useState<string>(
+        BOOKING_TIME_SLOTS[1],
+    );
+    const [notes, setNotes] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [bookingResult, setBookingResult] = useState<BookingResult | null>(
+        null,
+    );
+
+    const handleBooking = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!isAuthenticated || !user) {
+            toast.error("Please sign in to book an appointment");
+            router.push(
+                `/sign-in?callbackUrl=${encodeURIComponent(`/services/${id}`)}`,
+            );
+            return;
+        }
+
+        if (user.role === "admin") {
+            toast.error(
+                "Admin accounts cannot book appointments. Please use a customer account.",
+            );
+            return;
+        }
+
+        if (!service) {
+            toast.error("Service details are unavailable. Please try again.");
+            return;
+        }
+
+        if (!service.isActive) {
+            toast.error(
+                "This service is currently inactive and cannot be booked.",
+            );
+            return;
+        }
+
+        if (!appointmentDate || !selectedTime) {
+            toast.error("Please choose a date and time for your appointment");
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            const payload = {
+                userId: user.id,
+                customerId: user.id,
+                userName: user.name,
+                userEmail: user.email,
+                userPhone: user.phone || "",
+                serviceId: service.id,
+                serviceName: service.name,
+                serviceCategory: service.category,
+                servicePrice: service.price,
+                serviceDuration: service.duration,
+                serviceImage: service.image,
+                date: appointmentDate,
+                appointmentDate,
+                time: selectedTime,
+                timeSlot: selectedTime,
+                specialist: service.specialist.name,
+                location: service.location,
+                notes,
+                message: notes,
+            };
+
+            const result = await bffPost<{ appointment: BookingResult }>(
+                "/booking",
+                payload,
+            );
+            toast.success("Appointment requested successfully!");
+            setBookingResult(result.appointment);
+        } catch (err) {
+            const msg =
+                err instanceof Error
+                    ? err.message
+                    : "Failed to book appointment";
+            // Handle double-booking error from server
+            if (msg.includes("already booked") || msg.includes("slot")) {
+                toast.error(
+                    "That time slot is already taken — please choose another time.",
+                );
+            } else if (msg.includes("Unauthorized")) {
+                toast.error("Please sign in to book an appointment");
+                router.push(
+                    `/sign-in?callbackUrl=${encodeURIComponent(`/services/${id}`)}`,
+                );
+            } else {
+                toast.error(msg);
+            }
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    if (!service) {
+        return (
+            <div className="flex flex-col min-h-screen bg-[#FDFBF7]">
+                <Navbar />
+                <main className="flex-1 flex items-center justify-center">
+                    <div className="text-center space-y-4 max-w-sm mx-auto px-4">
+                        <div className="w-14 h-14 rounded-full bg-[#FAF7F2] border border-[#EBE5DA] flex items-center justify-center mx-auto">
+                            <AlertCircle className="w-7 h-7 text-[#9E8265]" />
+                        </div>
+                        <h2 className="text-xl font-serif font-medium text-[#1A1715]">
+                            {serviceError
+                                ? "Unable to load service"
+                                : "Service not found"}
+                        </h2>
+                        <p className="text-sm font-light text-neutral-500">
+                            {serviceError ??
+                                "This service may have been removed or the link is invalid."}
+                        </p>
+                        <Link
+                            href="/services"
+                            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#1A1715] text-[#FAF7F2] text-xs font-medium hover:bg-[#2D2623] transition-colors"
+                        >
+                            <Sparkles className="w-3.5 h-3.5 text-[#D8B485]" />
+                            Browse All Services
+                        </Link>
+                    </div>
+                </main>
+                <Footer />
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex flex-col min-h-screen bg-[#FDFBF7]">
+            <Navbar />
+
+            <main className="flex-1 pb-20">
+                {/* Breadcrumb */}
+                <div className="border-b border-[#EFECE6] bg-[#FAF7F2] py-3">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-xs text-neutral-500 flex items-center gap-2 font-light">
+                        <Link href="/" className="hover:text-[#1A1715]">
+                            Home
+                        </Link>
+                        <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
+                        <Link href="/services" className="hover:text-[#1A1715]">
+                            Services
+                        </Link>
+                        <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
+                        <span className="min-w-0 flex-1 truncate font-medium text-[#1A1715]">
+                            {service.name}
+                        </span>
+                    </div>
+                </div>
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+                    <div className="grid min-w-0 grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
+                        {/* Left: Gallery & Details */}
+                        <div className="min-w-0 space-y-8 lg:col-span-7">
+                            {/* Image Gallery */}
+                            <div className="space-y-3">
+                                <div className="aspect-16/10 rounded-3xl overflow-hidden border border-neutral-200/80 shadow-md bg-neutral-100">
+                                    <Image
+                                        src={activeImage}
+                                        alt={service.name}
+                                        width={1200}
+                                        height={750}
+                                        unoptimized
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                                {service.gallery &&
+                                    service.gallery.length > 1 && (
+                                        <div className="flex items-center gap-3 overflow-x-auto pb-1">
+                                            {service.gallery.map((img, idx) => (
+                                                <Button
+                                                    variant="outline"
+                                                    size="icon"
+                                                    key={idx}
+                                                    type="button"
+                                                    onClick={() =>
+                                                        setActiveImage(img)
+                                                    }
+                                                    aria-label={`View ${service.name} image ${idx + 1}`}
+                                                    className={`relative size-20 shrink-0 rounded-xl overflow-hidden border-2 p-0 transition-all ${
+                                                        activeImage === img
+                                                            ? "border-neutral-900 ring-2 ring-neutral-900/20"
+                                                            : "border-transparent opacity-70 hover:opacity-100"
+                                                    }`}
+                                                >
+                                                    <Image
+                                                        src={img}
+                                                        alt={`${service.name} ${idx}`}
+                                                        width={80}
+                                                        height={64}
+                                                        unoptimized
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </Button>
+                                            ))}
+                                        </div>
+                                    )}
+                            </div>
+
+                            {/* Meta */}
+                            <div className="space-y-4">
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#F3EDE4] text-[#1A1715]">
+                                        {service.category}
+                                    </span>
+                                    <div className="flex items-center gap-1 text-xs font-semibold text-neutral-800">
+                                        <Star className="w-4 h-4 fill-[#D8B485] text-[#D8B485]" />
+                                        <span>{service.rating}</span>
+                                        <span className="text-neutral-500 font-normal">
+                                            ({service.reviewCount} reviews)
+                                        </span>
+                                    </div>
+                                    <div className="flex min-w-0 items-center gap-1 text-xs font-medium text-neutral-500">
+                                        <MapPin className="w-3.5 h-3.5 text-[#9E8265]" />
+                                        <span className="wrap-break-word">
+                                            {service.location}
+                                        </span>
+                                    </div>
+                                </div>
+                                <h1 className="wrap-break-word text-2xl font-serif font-normal tracking-tight text-[#1A1715] sm:text-4xl">
+                                    {service.name}
+                                </h1>
+                                <p className="text-neutral-600 font-light text-base leading-relaxed">
+                                    {service.description}
+                                </p>
+                            </div>
+
+                            {/* Specialist */}
+                            <div className="flex flex-col gap-4 rounded-2xl border border-[#EBE5DA] bg-[#FAF7F2] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+                                <div className="flex min-w-0 items-center gap-3.5">
+                                    <Image
+                                        src={
+                                            service.specialist.avatar ||
+                                            "https://api.dicebear.com/7.x/avataaars/svg?seed=specialist"
+                                        }
+                                        alt={service.specialist.name}
+                                        width={56}
+                                        height={56}
+                                        unoptimized
+                                        className="w-14 h-14 rounded-full object-cover border border-[#E0D8CB]"
+                                    />
+                                    <div className="min-w-0">
+                                        <span className="text-xs font-semibold uppercase tracking-wider text-[#9E8265]">
+                                            Your Specialist
+                                        </span>
+                                        <h3 className="wrap-break-word text-base font-serif font-medium text-[#1A1715]">
+                                            {service.specialist.name}
+                                        </h3>
+                                        <p className="text-xs text-neutral-500 font-light">
+                                            {service.specialist.role}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="inline-flex shrink-0 items-center gap-1 self-start rounded-full border border-[#EBE5DA] bg-white px-3 py-1 text-xs font-medium text-[#1A1715] sm:self-auto">
+                                    <Star className="w-3.5 h-3.5 fill-[#D8B485] text-[#D8B485]" />
+                                    <span>{service.specialist.rating}</span>
+                                </div>
+                            </div>
+
+                            {/* Included */}
+                            {service.included &&
+                                service.included.length > 0 && (
+                                    <div className="space-y-4 pt-2">
+                                        <h3 className="text-lg font-bold text-neutral-900">
+                                            What&apos;s included
+                                        </h3>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            {service.included.map(
+                                                (item, idx) => (
+                                                    <div
+                                                        key={idx}
+                                                        className="flex items-center gap-2.5 text-sm text-neutral-700 bg-white p-3 rounded-xl border border-neutral-100"
+                                                    >
+                                                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                                                        <span>{item}</span>
+                                                    </div>
+                                                ),
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                        </div>
+
+                        {/* Right: Booking Box */}
+                        <div className="min-w-0 lg:col-span-5">
+                            <div className="lg:sticky lg:top-24">
+                                {bookingResult ? (
+                                    /* Success State */
+                                    <div className="bg-white rounded-3xl border border-neutral-200 p-6 sm:p-8 shadow-xl text-center space-y-6 animate-in fade-in zoom-in-95">
+                                        <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+                                            <CheckCircle2 className="w-8 h-8" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <h2 className="text-2xl font-extrabold text-neutral-900">
+                                                Appointment Requested!
+                                            </h2>
+                                            <p className="text-xs sm:text-sm text-neutral-500">
+                                                Your booking request has been
+                                                submitted with{" "}
+                                                <span className="font-bold text-amber-600">
+                                                    Pending
+                                                </span>{" "}
+                                                status. Once confirmed by salon
+                                                staff, you can pay online
+                                                securely.
+                                            </p>
+                                        </div>
+                                        <div className="bg-neutral-50 rounded-2xl p-4 text-left space-y-2.5 text-xs">
+                                            <div className="flex items-start justify-between gap-3">
+                                                <span className="text-neutral-500">
+                                                    Service:
+                                                </span>
+                                                <span className="min-w-0 wrap-break-word text-right font-bold text-neutral-900">
+                                                    {bookingResult.serviceName}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-start justify-between gap-3">
+                                                <span className="text-neutral-500">
+                                                    Date & Time:
+                                                </span>
+                                                <span className="text-right font-bold text-neutral-900">
+                                                    {formatDate(
+                                                        bookingResult.date,
+                                                    )}{" "}
+                                                    at {bookingResult.time}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-start justify-between gap-3">
+                                                <span className="text-neutral-500">
+                                                    Specialist:
+                                                </span>
+                                                <span className="text-right font-bold text-neutral-900">
+                                                    {bookingResult.specialist}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between pt-2 border-t border-neutral-200 text-sm">
+                                                <span className="font-bold text-neutral-900">
+                                                    Total:
+                                                </span>
+                                                <span className="font-extrabold text-neutral-900">
+                                                    {formatPrice(
+                                                        bookingResult.servicePrice,
+                                                    )}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-3">
+                                            <Link
+                                                href="/dashboard/appointments"
+                                                className="w-full py-3.5 px-4 rounded-full bg-neutral-900 hover:bg-black text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md transition-colors"
+                                            >
+                                                <Calendar className="w-4 h-4" />
+                                                <span>
+                                                    View My Appointments
+                                                </span>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    /* Booking Form */
+                                    <div className="bg-white rounded-3xl border border-neutral-200/90 p-6 sm:p-7 shadow-xl shadow-neutral-200/40 space-y-6">
+                                        <div className="flex items-center justify-between pb-5 border-b border-neutral-100">
+                                            <div>
+                                                <span className="text-xs text-neutral-500 block">
+                                                    Total Investment
+                                                </span>
+                                                <span className="text-3xl font-extrabold text-neutral-900 tracking-tight">
+                                                    {formatPrice(service.price)}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-100 text-xs font-semibold text-neutral-700">
+                                                <Clock className="w-3.5 h-3.5 text-neutral-500" />
+                                                <span>
+                                                    {formatDuration(
+                                                        service.duration,
+                                                    )}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {!isAuthenticated && (
+                                            <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium flex items-center gap-2">
+                                                <AlertCircle className="w-4 h-4 shrink-0" />
+                                                <span>
+                                                    <Link
+                                                        href="/sign-in"
+                                                        className="font-bold underline"
+                                                    >
+                                                        Sign in
+                                                    </Link>{" "}
+                                                    to request an appointment.
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        <form
+                                            onSubmit={handleBooking}
+                                            className="space-y-5"
+                                        >
+                                            {/* Date */}
+                                            <div>
+                                                <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider mb-2">
+                                                    1. Select Appointment Date
+                                                </label>
+                                                <Input
+                                                    id="appointment-date"
+                                                    type="date"
+                                                    value={appointmentDate}
+                                                    onChange={(e) =>
+                                                        setSelectedDate(
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                    min={minimumDate || undefined}
+                                                    required
+                                                    className="h-11 w-full rounded-xl bg-neutral-50/50 px-4 text-sm font-semibold text-neutral-900"
+                                                />
+                                            </div>
+
+                                            {/* Time Slots */}
+                                            <div>
+                                                <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider mb-2">
+                                                    2. Available Time Slots
+                                                </label>
+                                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                                    {BOOKING_TIME_SLOTS.map((time) => (
+                                                        <Button
+                                                            variant={
+                                                                selectedTime ===
+                                                                time
+                                                                    ? "default"
+                                                                    : "outline"
+                                                            }
+                                                            size="sm"
+                                                            key={time}
+                                                            type="button"
+                                                            onClick={() =>
+                                                                setSelectedTime(
+                                                                    time,
+                                                                )
+                                                            }
+                                                            className="h-9 w-full rounded-xl px-1 text-center text-xs font-semibold"
+                                                        >
+                                                            {time}
+                                                        </Button>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            {/* Notes */}
+                                            <div>
+                                                <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider mb-2">
+                                                    3. Special Requests
+                                                    (Optional)
+                                                </label>
+                                                <Textarea
+                                                    value={notes}
+                                                    onChange={(e) =>
+                                                        setNotes(e.target.value)
+                                                    }
+                                                    placeholder="Allergies, color preference, specific concerns..."
+                                                    rows={2}
+                                                    className="min-h-20 rounded-xl p-3 text-xs font-medium placeholder:text-neutral-400 sm:text-sm"
+                                                />
+                                            </div>
+
+                                            {/* Summary */}
+                                            <div className="p-4 rounded-2xl bg-neutral-50 space-y-2 text-xs">
+                                                <div className="flex justify-between text-neutral-600">
+                                                    <span>Specialist:</span>
+                                                    <span className="font-semibold text-neutral-900">
+                                                        {
+                                                            service.specialist
+                                                                .name
+                                                        }
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between text-neutral-600">
+                                                    <span>Date:</span>
+                                                    <span className="font-semibold text-neutral-900">
+                                                        {appointmentDate
+                                                            ? formatDate(
+                                                                  appointmentDate,
+                                                              )
+                                                            : "Loading date..."}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between text-neutral-600">
+                                                    <span>Time:</span>
+                                                    <span className="font-semibold text-neutral-900">
+                                                        {selectedTime}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between pt-2 border-t border-neutral-200 font-bold text-neutral-900 text-sm">
+                                                    <span>Total:</span>
+                                                    <span>
+                                                        {formatPrice(
+                                                            service.price,
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            {user?.role === "admin" && (
+                                                <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium">
+                                                    Admin accounts are for
+                                                    management only. Sign in
+                                                    with a customer account to
+                                                    book.
+                                                </div>
+                                            )}
+
+                                            {!service.isActive && (
+                                                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium">
+                                                    This service is currently
+                                                    inactive and cannot be
+                                                    booked.
+                                                </div>
+                                            )}
+
+                                            <Button
+                                                type="submit"
+                                                disabled={
+                                                    isSubmitting ||
+                                                    user?.role === "admin" ||
+                                                    !service.isActive
+                                                }
+                                                className="h-12 w-full rounded-full text-sm font-bold shadow-lg shadow-neutral-900/10 hover:shadow-xl"
+                                            >
+                                                {isSubmitting ? (
+                                                    <>
+                                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                                        <span>
+                                                            Booking
+                                                            appointment...
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <span>
+                                                            Request Appointment
+                                                        </span>
+                                                        <ArrowRight className="w-4 h-4" />
+                                                    </>
+                                                )}
+                                            </Button>
+
+                                            <p className="text-[11px] text-center text-neutral-400">
+                                                Free cancellation up to 24 hours
+                                                prior. Zero upfront booking fee.
+                                            </p>
+                                        </form>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <Footer />
+        </div>
+    );
+}

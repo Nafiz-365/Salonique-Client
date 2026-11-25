@@ -13,11 +13,13 @@ export function PortalSidebarLink({
     label,
     icon: Icon,
     active,
+    className,
 }: {
     href: string;
     label: string;
     icon: LucideIcon;
     active: boolean;
+    className?: string;
 }) {
     const { isMobile, setOpenMobile } = useSidebar();
 
@@ -35,7 +37,10 @@ export function PortalSidebarLink({
                 onClick={() => {
                     if (isMobile) setOpenMobile(false);
                 }}
-                className="h-10 rounded-lg px-3 text-neutral-600 hover:bg-[#F4F1EC] hover:text-[#1A1715] data-active:bg-[#1A1715] data-active:text-white"
+                className={
+                    className ??
+                    "h-10 rounded-lg px-3 text-neutral-600 hover:bg-[#F4F1EC] hover:text-[#1A1715] data-active:bg-[#1A1715] data-active:text-white"
+                }
             >
                 <Icon />
                 <span>{label}</span>

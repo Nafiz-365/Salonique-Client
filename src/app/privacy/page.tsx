@@ -1,6 +1,13 @@
 import React from "react";
 import { Navbar } from "@/components/common/Navbar";
 import { Footer } from "@/components/common/Footer";
+import { createPageMetadata } from "@/lib/site-config";
+
+export const metadata = createPageMetadata(
+    "Privacy Policy",
+    "Read how Salonique handles account, contact, and appointment information when you use the salon booking platform.",
+    "/privacy",
+);
 
 export default function PrivacyPage() {
     return (

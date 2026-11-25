@@ -26,7 +26,7 @@ Gotchas:
 
 ## Architecture
 
-- **Route protection**: `src/proxy.ts` (Next 16 renamed middleware → proxy; `middleware.ts` is deprecated). Server-side session check + role gate: `/admin` (admin only), `/dashboard` (customer only), `/services/[id]` (auth required). Blocked users → `/?blocked=1`; sign-in redirects carry `callbackUrl`.
+- **Route protection**: `src/proxy.ts` (Next 16 renamed middleware → proxy; `middleware.ts` is deprecated). Server-side session check + role gate: `/admin` (admin only), `/dashboard` (customer only). Service details are public; booking requires customer authentication. Blocked users → `/?blocked=1`; sign-in redirects carry `callbackUrl`.
 - **Two API paths** (`src/lib/server-api.ts`):
   - Public data (`fetchServices`, `fetchFeaturedServices`, `fetchService`) fetches `NEXT_PUBLIC_API_BASE_URL` (default `http://localhost:8000`) directly, server-side, `cache: "no-store"`.
   - Authenticated calls (`bffGet/bffPost/bffPatch/bffDelete`) go through the BFF proxy `src/app/api/backend/[...path]/route.ts`, which injects the Better Auth JWT session and forwards to Express. The BFF allowlists public routes; everything else needs a session.

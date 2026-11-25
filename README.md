@@ -7,7 +7,7 @@ The Express API is maintained separately in [Nafiz-365/Salonique-Server](https:/
 ## Features
 
 - Responsive service discovery with category, search, price, location, and availability filters.
-- Service detail pages with appointment date and time selection.
+- Public service detail pages with appointment date and time selection; signing in is required only to request an appointment.
 - Customer dashboard for appointments and profile settings.
 - Admin dashboard for services, appointments, users, and the transaction ledger.
 - Email/password authentication, with optional Google sign-in.
@@ -51,7 +51,7 @@ Stripe webhook ─────────────────────�
 | --- | --- |
 | `/` | Home and featured services |
 | `/services` | Public service catalog |
-| `/services/[id]` | Service details and booking |
+| `/services/[id]` | Public service details and authenticated booking |
 | `/sign-in`, `/sign-up` | Authentication |
 | `/dashboard` | Customer overview |
 | `/dashboard/appointments` | Customer appointment history and details |
@@ -64,7 +64,7 @@ Stripe webhook ─────────────────────�
 | `/admin/profile` | Admin profile |
 | `/help`, `/privacy`, `/terms` | Support and policy pages |
 
-Protected pages are checked in `src/proxy.ts`. The Express API independently verifies authorization for protected data and actions; frontend route checks are not a replacement for backend authorization.
+Admin and customer dashboard pages are checked in `src/proxy.ts`. Service details are public; booking requires a customer session and is independently authorized by the Express API. Frontend route checks are not a replacement for backend authorization.
 
 ## Getting Started
 
@@ -103,7 +103,7 @@ The client is available at [http://localhost:3000](http://localhost:3000).
 | `MONGODB_URI` | Yes | MongoDB connection used by Better Auth. Both applications should use the same `salonique` database. |
 | `BETTER_AUTH_SECRET` | Production | Better Auth signing secret. Set a strong, private value in production; development has a local fallback. |
 | `BETTER_AUTH_URL` | No | Canonical server-side Better Auth URL; defaults to `http://localhost:3000`. |
-| `NEXT_PUBLIC_APP_URL` | No | Client auth base URL; defaults to `http://localhost:3000`. |
+| `NEXT_PUBLIC_APP_URL` | No | Public app origin used by client auth and canonical SEO URLs, `robots.txt`, and the sitemap; defaults to `http://localhost:3000`. Set this to the deployed website origin in production. |
 | `API_BASE_URL` | No | Server-only Express API URL for BFF and checkout requests; defaults to `http://localhost:8000`. |
 | `NEXT_PUBLIC_API_BASE_URL` | No | Express API URL for public catalog fetches; defaults to `http://localhost:8000`. This is a public URL, not a secret. |
 | `GOOGLE_CLIENT_ID` | Optional | Enables Google sign-in when configured together with `GOOGLE_CLIENT_SECRET`. |
