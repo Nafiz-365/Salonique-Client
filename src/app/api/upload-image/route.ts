@@ -101,7 +101,8 @@ export async function POST(request: Request) {
     }
 
     const header = new Uint8Array(await image.slice(0, 12).arrayBuffer());
-    const isJpeg = header[0] === 0xff && header[1] === 0xd8 && header[2] === 0xff;
+    const isJpeg =
+        header[0] === 0xff && header[1] === 0xd8 && header[2] === 0xff;
     const isPng =
         header[0] === 0x89 &&
         header[1] === 0x50 &&

@@ -167,64 +167,70 @@ function NavbarContent({ pathname }: { pathname: string }) {
                                     align="end"
                                     className="w-64 rounded-2xl border-neutral-100 bg-white p-2"
                                 >
-                                        <div className="px-3 py-2.5">
-                                            <p className="text-sm font-semibold text-neutral-900">
-                                                {user.name}
-                                            </p>
-                                            <p className="text-xs text-neutral-500 truncate">
-                                                {user.email}
-                                            </p>
-                                            <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-neutral-100 text-neutral-800">
-                                                {user.role === "admin"
-                                                    ? "Master Admin"
-                                                    : "Verified Customer"}
-                                            </span>
-                                        </div>
+                                    <div className="px-3 py-2.5">
+                                        <p className="text-sm font-semibold text-neutral-900">
+                                            {user.name}
+                                        </p>
+                                        <p className="text-xs text-neutral-500 truncate">
+                                            {user.email}
+                                        </p>
+                                        <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-neutral-100 text-neutral-800">
+                                            {user.role === "admin"
+                                                ? "Master Admin"
+                                                : "Verified Customer"}
+                                        </span>
+                                    </div>
 
-                                            {user.role === "admin" && (
-                                                <DropdownMenuItem
-                                                    render={<NextLink href="/admin" />}
-                                                    className="rounded-xl bg-neutral-50 font-semibold text-neutral-900"
-                                                >
-                                                    <ShieldCheck className="size-4 text-emerald-700" />
-                                                    <span>Admin Console</span>
-                                                </DropdownMenuItem>
-                                            )}
-
-                                            {user.role === "customer" && (
-                                                <>
-                                                    <DropdownMenuItem
-                                                        render={<NextLink href="/dashboard/appointments" />}
-                                                        className="rounded-xl"
-                                                    >
-                                                        <Calendar className="size-4 text-neutral-500" />
-                                                        <span>My Appointments</span>
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem
-                                                        render={<NextLink href="/dashboard" />}
-                                                        className="rounded-xl"
-                                                    >
-                                                        <LayoutDashboard className="size-4 text-neutral-500" />
-                                                        <span>Customer Dashboard</span>
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem
-                                                        render={<NextLink href="/dashboard/profile" />}
-                                                        className="rounded-xl"
-                                                    >
-                                                        <UserIcon className="size-4 text-neutral-500" />
-                                                        <span>Profile & Settings</span>
-                                                    </DropdownMenuItem>
-                                                </>
-                                            )}
-
-                                        <DropdownMenuSeparator className="my-1" />
+                                    {user.role === "admin" && (
                                         <DropdownMenuItem
-                                            onClick={logout}
-                                            className="rounded-xl text-rose-600 focus:bg-rose-50 focus:text-rose-600"
+                                            render={<NextLink href="/admin" />}
+                                            className="rounded-xl bg-neutral-50 font-semibold text-neutral-900"
                                         >
-                                            <LogOut className="size-4 text-rose-500" />
-                                            <span>Sign Out</span>
+                                            <ShieldCheck className="size-4 text-emerald-700" />
+                                            <span>Admin Console</span>
                                         </DropdownMenuItem>
+                                    )}
+
+                                    {user.role === "customer" && (
+                                        <>
+                                            <DropdownMenuItem
+                                                render={
+                                                    <NextLink href="/dashboard/appointments" />
+                                                }
+                                                className="rounded-xl"
+                                            >
+                                                <Calendar className="size-4 text-neutral-500" />
+                                                <span>My Appointments</span>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                render={
+                                                    <NextLink href="/dashboard" />
+                                                }
+                                                className="rounded-xl"
+                                            >
+                                                <LayoutDashboard className="size-4 text-neutral-500" />
+                                                <span>Customer Dashboard</span>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                render={
+                                                    <NextLink href="/dashboard/profile" />
+                                                }
+                                                className="rounded-xl"
+                                            >
+                                                <UserIcon className="size-4 text-neutral-500" />
+                                                <span>Profile & Settings</span>
+                                            </DropdownMenuItem>
+                                        </>
+                                    )}
+
+                                    <DropdownMenuSeparator className="my-1" />
+                                    <DropdownMenuItem
+                                        onClick={logout}
+                                        className="rounded-xl text-rose-600 focus:bg-rose-50 focus:text-rose-600"
+                                    >
+                                        <LogOut className="size-4 text-rose-500" />
+                                        <span>Sign Out</span>
+                                    </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         ) : (

@@ -21,6 +21,7 @@ Next.js 16.4.6 frontend for a salon booking platform. The Express/MongoDB API li
 - Verify in order: `npm run lint` → `npx tsc --noEmit` → `npm run build`
 
 Gotchas:
+
 - Port 3000 is often occupied by a stale `next start` instance. Smoke-test production routes with `npx next start -p 3001`, then `Invoke-WebRequest -MaximumRedirection 0` to observe proxy redirects (307s).
 - ESLint has `react-hooks/immutability` as an **error**: accessing a `useState` variable before its declaration (e.g. a `useEffect` placed above the state it reads) fails lint even though it's valid JS. Declare state before effects that use it.
 
@@ -28,8 +29,8 @@ Gotchas:
 
 - **Route protection**: `src/proxy.ts` (Next 16 renamed middleware → proxy; `middleware.ts` is deprecated). Server-side session check + role gate: `/admin` (admin only), `/dashboard` (customer only). Service details are public; booking requires customer authentication. Blocked users → `/?blocked=1`; sign-in redirects carry `callbackUrl`.
 - **Two API paths** (`src/lib/server-api.ts`):
-  - Public data (`fetchServices`, `fetchFeaturedServices`, `fetchService`) fetches `NEXT_PUBLIC_API_BASE_URL` (default `http://localhost:8000`) directly, server-side, `cache: "no-store"`.
-  - Authenticated calls (`bffGet/bffPost/bffPatch/bffDelete`) go through the BFF proxy `src/app/api/backend/[...path]/route.ts`, which injects the Better Auth JWT session and forwards to Express. The BFF allowlists public routes; everything else needs a session.
+    - Public data (`fetchServices`, `fetchFeaturedServices`, `fetchService`) fetches `NEXT_PUBLIC_API_BASE_URL` (default `http://localhost:8000`) directly, server-side, `cache: "no-store"`.
+    - Authenticated calls (`bffGet/bffPost/bffPatch/bffDelete`) go through the BFF proxy `src/app/api/backend/[...path]/route.ts`, which injects the Better Auth JWT session and forwards to Express. The BFF allowlists public routes; everything else needs a session.
 - **Better Auth**: server config `src/lib/auth.ts` (MongoDB adapter, JWT plugin, `hooks.before` enforces password rules: ≥6 chars, 1 upper, 1 lower), client `src/lib/auth-client.ts`, routes at `/api/auth/[...all]`. Role/`isBlocked`/`status` live on the Better Auth `user` document; Express re-verifies JWT + role on every protected endpoint.
 - **State/UI**: `src/context/AuthContext.tsx` is the single auth store (login checks blocked status, derives `memberSince` from `createdAt`). Components use Base UI (`@base-ui/react`) — `src/components/ui/dialog.tsx` etc. — not Radix; `cn` is imported from the package `"cn"`.
 

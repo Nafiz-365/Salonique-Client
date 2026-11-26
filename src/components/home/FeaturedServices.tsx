@@ -4,7 +4,11 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { Service } from "@/lib/types";
-import { fetchFeaturedServices, fetchServices, ApiService } from "@/lib/server-api";
+import {
+    fetchFeaturedServices,
+    fetchServices,
+    ApiService,
+} from "@/lib/server-api";
 import { mapApiServiceToService } from "@/lib/service";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -45,10 +49,16 @@ export function FeaturedServices() {
             }
 
             if (featuredResult.status === "rejected") {
-                console.error("Failed to load featured services.", featuredResult.reason);
+                console.error(
+                    "Failed to load featured services.",
+                    featuredResult.reason,
+                );
             }
             if (allResult.status === "rejected") {
-                console.error("Failed to load active services.", allResult.reason);
+                console.error(
+                    "Failed to load active services.",
+                    allResult.reason,
+                );
             }
 
             const featured =
@@ -66,7 +76,10 @@ export function FeaturedServices() {
             for (const service of allServices) {
                 if (
                     service.isActive !== false &&
-                    !merged.some((featuredService) => featuredService._id === service._id)
+                    !merged.some(
+                        (featuredService) =>
+                            featuredService._id === service._id,
+                    )
                 ) {
                     merged.push(service);
                 }
@@ -127,7 +140,9 @@ export function FeaturedServices() {
                 <div className="hide-scrollbar mb-4 flex items-center gap-2 overflow-x-auto pb-3 sm:mb-6 sm:pb-4">
                     {categories.map((cat) => (
                         <Button
-                            variant={selectedFilter === cat ? "default" : "outline"}
+                            variant={
+                                selectedFilter === cat ? "default" : "outline"
+                            }
                             size="sm"
                             key={cat}
                             type="button"

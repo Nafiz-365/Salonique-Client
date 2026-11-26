@@ -356,7 +356,7 @@ export function HeroSearch() {
                                         ? `${selectedDate} • ${selectedTime}`
                                         : selectedTime !== "Any time"
                                           ? `Any date • ${selectedTime}`
-                                        : "Any date • Any time"}
+                                          : "Any date • Any time"}
                                 </span>
                                 <ChevronDown className="w-3.5 h-3.5 text-neutral-400 shrink-0 ml-auto" />
                             </button>
@@ -387,18 +387,16 @@ export function HeroSearch() {
                                                 id="hero-appointment-date"
                                                 type="date"
                                                 value={selectedDate}
-                                                onChange={(e) =>
-                                                    {
-                                                        setSelectedDate(
-                                                            e.target.value,
+                                                onChange={(e) => {
+                                                    setSelectedDate(
+                                                        e.target.value,
+                                                    );
+                                                    if (!e.target.value) {
+                                                        setSelectedTime(
+                                                            "Any time",
                                                         );
-                                                        if (!e.target.value) {
-                                                            setSelectedTime(
-                                                                "Any time",
-                                                            );
-                                                        }
                                                     }
-                                                }
+                                                }}
                                                 min={minimumDate || undefined}
                                                 className="h-10 text-sm font-medium text-neutral-900"
                                             />
@@ -409,33 +407,37 @@ export function HeroSearch() {
                                                 Preferred Time Slot
                                             </span>
                                             <div className="grid grid-cols-2 gap-1.5">
-                                                {SEARCH_TIME_OPTIONS.map((time) => (
-                                                    <button
-                                                        key={time}
-                                                        type="button"
-                                                        disabled={
-                                                            time !== "Any time" &&
-                                                            !selectedDate
-                                                        }
-                                                        onClick={() =>
-                                                            setSelectedTime(
-                                                                time,
-                                                            )
-                                                        }
-                                                        className={`rounded-lg px-2 py-1.5 text-left text-xs font-semibold transition-colors ${
-                                                            selectedTime ===
-                                                            time
-                                                                ? "bg-neutral-900 text-white"
-                                                                : "bg-neutral-50 text-neutral-700 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
-                                                        }`}
-                                                    >
-                                                        {time}
-                                                    </button>
-                                                ))}
+                                                {SEARCH_TIME_OPTIONS.map(
+                                                    (time) => (
+                                                        <button
+                                                            key={time}
+                                                            type="button"
+                                                            disabled={
+                                                                time !==
+                                                                    "Any time" &&
+                                                                !selectedDate
+                                                            }
+                                                            onClick={() =>
+                                                                setSelectedTime(
+                                                                    time,
+                                                                )
+                                                            }
+                                                            className={`rounded-lg px-2 py-1.5 text-left text-xs font-semibold transition-colors ${
+                                                                selectedTime ===
+                                                                time
+                                                                    ? "bg-neutral-900 text-white"
+                                                                    : "bg-neutral-50 text-neutral-700 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
+                                                            }`}
+                                                        >
+                                                            {time}
+                                                        </button>
+                                                    ),
+                                                )}
                                             </div>
                                             {!selectedDate && (
                                                 <p className="text-xs text-neutral-500">
-                                                    Select a date to choose a time.
+                                                    Select a date to choose a
+                                                    time.
                                                 </p>
                                             )}
                                         </div>

@@ -17,11 +17,7 @@ import { toast } from "sonner";
 import { SaloniqueMark } from "@/components/common/SaloniqueMark";
 import { PortalSidebarLink } from "@/components/common/PortalSidebarLink";
 import { useAuth, type AuthUser } from "@/context/AuthContext";
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     Sidebar,
     SidebarContent,
@@ -265,10 +261,7 @@ function CustomerSidebarAccountLink({ user }: { user: AuthUser }) {
             className="flex min-w-0 items-center gap-2.5 rounded-xl bg-[#F4EFE7] px-2 py-2 transition-colors hover:bg-[#EEE6DA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9E8265] group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:rounded-full group-data-[collapsible=icon]:p-0"
         >
             <Avatar className="size-8 shrink-0 border border-[#E8E2D8]">
-                <AvatarImage
-                    src={user.avatar || undefined}
-                    alt={user.name}
-                />
+                <AvatarImage src={user.avatar || undefined} alt={user.name} />
                 <AvatarFallback className="bg-white text-xs font-semibold text-[#765A3D]">
                     {getUserInitials(user.name)}
                 </AvatarFallback>

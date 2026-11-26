@@ -472,7 +472,9 @@ export default function ServiceDetailClient({
                                                             e.target.value,
                                                         )
                                                     }
-                                                    min={minimumDate || undefined}
+                                                    min={
+                                                        minimumDate || undefined
+                                                    }
                                                     required
                                                     className="h-11 w-full rounded-xl bg-neutral-50/50 px-4 text-sm font-semibold text-neutral-900"
                                                 />
@@ -484,27 +486,29 @@ export default function ServiceDetailClient({
                                                     2. Available Time Slots
                                                 </label>
                                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                                                    {BOOKING_TIME_SLOTS.map((time) => (
-                                                        <Button
-                                                            variant={
-                                                                selectedTime ===
-                                                                time
-                                                                    ? "default"
-                                                                    : "outline"
-                                                            }
-                                                            size="sm"
-                                                            key={time}
-                                                            type="button"
-                                                            onClick={() =>
-                                                                setSelectedTime(
-                                                                    time,
-                                                                )
-                                                            }
-                                                            className="h-9 w-full rounded-xl px-1 text-center text-xs font-semibold"
-                                                        >
-                                                            {time}
-                                                        </Button>
-                                                    ))}
+                                                    {BOOKING_TIME_SLOTS.map(
+                                                        (time) => (
+                                                            <Button
+                                                                variant={
+                                                                    selectedTime ===
+                                                                    time
+                                                                        ? "default"
+                                                                        : "outline"
+                                                                }
+                                                                size="sm"
+                                                                key={time}
+                                                                type="button"
+                                                                onClick={() =>
+                                                                    setSelectedTime(
+                                                                        time,
+                                                                    )
+                                                                }
+                                                                className="h-9 w-full rounded-xl px-1 text-center text-xs font-semibold"
+                                                            >
+                                                                {time}
+                                                            </Button>
+                                                        ),
+                                                    )}
                                                 </div>
                                             </div>
 

@@ -60,11 +60,11 @@ function ServicesContent() {
             ? requestedDate
             : "";
     const requestedTime = searchParams.get("time") || "Any time";
-    const initialTime = initialDate && SEARCH_TIME_OPTIONS.some(
-        (option) => option === requestedTime,
-    )
-        ? requestedTime
-        : "Any time";
+    const initialTime =
+        initialDate &&
+        SEARCH_TIME_OPTIONS.some((option) => option === requestedTime)
+            ? requestedTime
+            : "Any time";
 
     return (
         <ServicesBrowser

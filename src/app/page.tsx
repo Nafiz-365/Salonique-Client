@@ -11,11 +11,7 @@ import {
     siteUrl,
 } from "@/lib/site-config";
 
-export const metadata = createPageMetadata(
-    HOME_TITLE,
-    HOME_DESCRIPTION,
-    "/",
-);
+export const metadata = createPageMetadata(HOME_TITLE, HOME_DESCRIPTION, "/");
 
 const websiteStructuredData = {
     "@context": "https://schema.org",
@@ -25,10 +21,7 @@ const websiteStructuredData = {
     description: HOME_DESCRIPTION,
     potentialAction: {
         "@type": "SearchAction",
-        target: new URL(
-            "/services?q={search_term_string}",
-            siteUrl,
-        ).toString(),
+        target: new URL("/services?q={search_term_string}", siteUrl).toString(),
         "query-input": "required name=search_term_string",
     },
 };

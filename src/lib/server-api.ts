@@ -120,10 +120,9 @@ export async function fetchFeaturedServices(): Promise<ApiService[]> {
 }
 
 export async function fetchService(id: string): Promise<ApiService | null> {
-    const res = await fetch(
-        `${API_BASE}/service/${encodeURIComponent(id)}`,
-        { cache: "no-store" },
-    );
+    const res = await fetch(`${API_BASE}/service/${encodeURIComponent(id)}`, {
+        cache: "no-store",
+    });
     if (res.status === 404) return null;
     if (!res.ok) throw new Error(`Failed to fetch service (${res.status})`);
     const data = await res.json();

@@ -44,7 +44,8 @@ function SignUpContent() {
     const searchParams = useSearchParams();
     const callbackUrl = getSafeCallbackPath(searchParams.get("callbackUrl"));
 
-    const { register, login, loginWithGoogle, isAuthenticated, user } = useAuth();
+    const { register, login, loginWithGoogle, isAuthenticated, user } =
+        useAuth();
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");

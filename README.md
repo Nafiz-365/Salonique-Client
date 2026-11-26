@@ -1,5 +1,10 @@
 # Salonique Client
 
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=nextdotjs)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-149ECA?logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Better_Auth-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+
 Salonique Client is the Next.js web application for the Salonique salon-booking platform. Customers can discover services, request appointments, manage their profiles, and pay for confirmed bookings. Administrators can manage services, appointments, users, and transactions.
 
 The Express API is maintained separately in [Nafiz-365/Salonique-Server](https://github.com/Nafiz-365/Salonique-Server).
@@ -16,14 +21,14 @@ The Express API is maintained separately in [Nafiz-365/Salonique-Server](https:/
 
 ## Technology
 
-| Area | Tools |
-| --- | --- |
-| Framework | Next.js 16 App Router |
-| UI | React 19, TypeScript, Tailwind CSS 4 |
-| Components | Base UI primitives, Lucide icons, Sonner notifications |
-| Authentication | Better Auth with MongoDB and JWT plugins |
-| Backend access | Next.js BFF routes forwarding to the Express API |
-| Payments | Stripe Checkout, initiated by the backend |
+| Area           | Tools                                                  |
+| -------------- | ------------------------------------------------------ |
+| Framework      | Next.js 16 App Router                                  |
+| UI             | React 19, TypeScript, Tailwind CSS 4                   |
+| Components     | Base UI primitives, Lucide icons, Sonner notifications |
+| Authentication | Better Auth with MongoDB and JWT plugins               |
+| Backend access | Next.js BFF routes forwarding to the Express API       |
+| Payments       | Stripe Checkout, initiated by the backend              |
 
 Turbopack and the React Compiler are enabled in `next.config.ts`.
 
@@ -47,22 +52,22 @@ Stripe webhook ─────────────────────�
 
 ## Routes
 
-| Route | Purpose |
-| --- | --- |
-| `/` | Home and featured services |
-| `/services` | Public service catalog |
-| `/services/[id]` | Public service details and authenticated booking |
-| `/sign-in`, `/sign-up` | Authentication |
-| `/dashboard` | Customer overview |
-| `/dashboard/appointments` | Customer appointment history and details |
-| `/dashboard/profile` | Customer profile and settings |
-| `/admin` | Admin overview |
-| `/admin/services` | Service management |
-| `/admin/appointments` | Appointment management |
-| `/admin/users` | User management |
-| `/admin/transactions` | Transaction ledger |
-| `/admin/profile` | Admin profile |
-| `/help`, `/privacy`, `/terms` | Support and policy pages |
+| Route                         | Purpose                                          |
+| ----------------------------- | ------------------------------------------------ |
+| `/`                           | Home and featured services                       |
+| `/services`                   | Public service catalog                           |
+| `/services/[id]`              | Public service details and authenticated booking |
+| `/sign-in`, `/sign-up`        | Authentication                                   |
+| `/dashboard`                  | Customer overview                                |
+| `/dashboard/appointments`     | Customer appointment history and details         |
+| `/dashboard/profile`          | Customer profile and settings                    |
+| `/admin`                      | Admin overview                                   |
+| `/admin/services`             | Service management                               |
+| `/admin/appointments`         | Appointment management                           |
+| `/admin/users`                | User management                                  |
+| `/admin/transactions`         | Transaction ledger                               |
+| `/admin/profile`              | Admin profile                                    |
+| `/help`, `/privacy`, `/terms` | Support and policy pages                         |
 
 Admin and customer dashboard pages are checked in `src/proxy.ts`. Service details are public; booking requires a customer session and is independently authorized by the Express API. Frontend route checks are not a replacement for backend authorization.
 
@@ -98,17 +103,17 @@ The client is available at [http://localhost:3000](http://localhost:3000).
 
 ## Environment Variables
 
-| Variable | Required | Purpose |
-| --- | --- | --- |
-| `MONGODB_URI` | Yes | MongoDB connection used by Better Auth. Both applications should use the same `salonique` database. |
-| `BETTER_AUTH_SECRET` | Production | Better Auth signing secret. Set a strong, private value in production; development has a local fallback. |
-| `BETTER_AUTH_URL` | No | Canonical server-side Better Auth URL; defaults to `http://localhost:3000`. |
-| `NEXT_PUBLIC_APP_URL` | No | Public app origin used by client auth and canonical SEO URLs, `robots.txt`, and the sitemap; defaults to `http://localhost:3000`. Set this to the deployed website origin in production. |
-| `API_BASE_URL` | No | Server-only Express API URL for BFF and checkout requests; defaults to `http://localhost:8000`. |
-| `NEXT_PUBLIC_API_BASE_URL` | No | Express API URL for public catalog fetches; defaults to `http://localhost:8000`. This is a public URL, not a secret. |
-| `GOOGLE_CLIENT_ID` | Optional | Enables Google sign-in when configured together with `GOOGLE_CLIENT_SECRET`. |
-| `GOOGLE_CLIENT_SECRET` | Optional | Google OAuth client secret. Keep it server-side. |
-| `IMGBB_API_KEY` | Optional | Enables image uploads through `/api/upload-image`. |
+| Variable                   | Required   | Purpose                                                                                                                                                                                  |
+| -------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MONGODB_URI`              | Yes        | MongoDB connection used by Better Auth. Both applications should use the same `salonique` database.                                                                                      |
+| `BETTER_AUTH_SECRET`       | Production | Better Auth signing secret. Set a strong, private value in production; development has a local fallback.                                                                                 |
+| `BETTER_AUTH_URL`          | No         | Canonical server-side Better Auth URL; defaults to `http://localhost:3000`.                                                                                                              |
+| `NEXT_PUBLIC_APP_URL`      | No         | Public app origin used by client auth and canonical SEO URLs, `robots.txt`, and the sitemap; defaults to `http://localhost:3000`. Set this to the deployed website origin in production. |
+| `API_BASE_URL`             | No         | Server-only Express API URL for BFF and checkout requests; defaults to `http://localhost:8000`.                                                                                          |
+| `NEXT_PUBLIC_API_BASE_URL` | No         | Express API URL for public catalog fetches; defaults to `http://localhost:8000`. This is a public URL, not a secret.                                                                     |
+| `GOOGLE_CLIENT_ID`         | Optional   | Enables Google sign-in when configured together with `GOOGLE_CLIENT_SECRET`.                                                                                                             |
+| `GOOGLE_CLIENT_SECRET`     | Optional   | Google OAuth client secret. Keep it server-side.                                                                                                                                         |
+| `IMGBB_API_KEY`            | Optional   | Enables image uploads through `/api/upload-image`.                                                                                                                                       |
 
 `NEXT_PUBLIC_IMGBB_API_KEY` is recognized for legacy configurations, but a server-only `IMGBB_API_KEY` is recommended. `NODE_ENV` is managed by Next.js.
 

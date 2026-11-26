@@ -75,11 +75,7 @@ export default function RootLayout({
                 <TooltipProvider>
                     <AuthProvider>
                         {children}
-                        <Toaster
-                            position="top-right"
-                            richColors
-                            closeButton
-                        />
+                        <Toaster position="top-right" richColors closeButton />
                     </AuthProvider>
                 </TooltipProvider>
             </body>

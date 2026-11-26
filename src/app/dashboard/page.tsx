@@ -529,10 +529,8 @@ export default function DashboardOverviewPage() {
                         <DialogDescription>
                             Are you sure you want to cancel your appointment for{" "}
                             <strong>{cancelTarget?.serviceName}</strong> on{" "}
-                            {cancelTarget
-                                ? formatDate(cancelTarget.date)
-                                : ""}
-                            ? This action cannot be undone.
+                            {cancelTarget ? formatDate(cancelTarget.date) : ""}?
+                            This action cannot be undone.
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>

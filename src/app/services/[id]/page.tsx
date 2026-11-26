@@ -71,8 +71,9 @@ export async function generateMetadata({
         description,
         `/services/${encodeURIComponent(id)}`,
     );
-    const image =
-        service.image.startsWith("http") ? service.image : "/opengraph-image";
+    const image = service.image.startsWith("http")
+        ? service.image
+        : "/opengraph-image";
 
     return {
         ...metadata,
